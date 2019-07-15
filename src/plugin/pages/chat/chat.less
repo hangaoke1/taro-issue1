@@ -1,0 +1,87 @@
+.m-chat {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    background: #F6F6F6;
+    padding-top: 20px;
+    box-sizing: border-box;
+    .m-view {
+        flex: 1;
+        overflow: auto;
+    }
+    .m-input {
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        height: 56px;
+        background: #F6F6F6;
+        .u-edtior {
+            width: 279px;
+            height: 40px;
+            background: #FFFFFF;
+            border: 0 solid #E1E3E6;
+            border-radius: 20px;
+        }
+    }
+    .iconfont {
+        color: #F6F6F6;
+    }
+    .u-voice-icon{
+        margin: 0 10px;
+    }
+    
+    .m-message {
+        display: flex;
+        padding: 0px 12px;
+        margin: 20px 0px;
+        .u-avatar {
+            width: 40px;
+            height: 40px;
+        }
+        .u-text {
+            max-width: 245px;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            text-align: justify;
+            position: relative;
+        }
+    }
+    .m-message-left {
+        .u-text {
+            background: #FFFFFF;
+            color: #333333;
+            margin-left: 10px;
+            :before{
+                content: '';
+                border:  solid 6px;
+                border-right-color: #fff;
+                border-left-color: transparent;
+                border-top-color: transparent;
+                border-bottom-color: transparent;
+                position: absolute;
+                top: 16px;
+                left: -12px;
+            }
+        }
+    }
+    .m-message-right {
+        flex-direction: row-reverse;
+        .u-text {
+            background: #337EFF;
+            color: #fff;
+            margin-right: 10px;
+            :before{
+                content: '';
+                border:  solid 6px;
+                border-left-color: #337EFF;
+                border-right-color: transparent;
+                border-top-color: transparent;
+                border-bottom-color: transparent;
+                position: absolute;
+                top: 16px;
+                right: -12px;
+            }
+        }
+    }
+}
