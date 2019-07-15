@@ -1,5 +1,6 @@
 import {queryAccont} from '../service';
 import Taro from '@tarojs/taro'
+import IMSERVICE from '../service/im';
 
 export const createAccount = param => {
     Taro.request({
@@ -12,5 +13,13 @@ export const createAccount = param => {
             'content-type': 'application/x-www-form-urlencoded'
         },
         method: 'POST'
+    }).then(json => {
+        const info = json.data.info;
+        new IMSERVICE({
+            appKey: '7540b40c6afa96fc975ce040733ae7f6',
+            account: info.accid,
+            promise: true,
+            token: info.token
+        });
     })
 }
