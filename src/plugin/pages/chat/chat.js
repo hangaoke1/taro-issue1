@@ -14,8 +14,9 @@ import './chat.less'
 
 @connect(({chat}) => chat, 
 (dispatch) => ({
-  add,
-  createAccount
+  createAccount(){
+    dispatch(createAccount())
+  }
 }))
   
 class Chat extends Component {

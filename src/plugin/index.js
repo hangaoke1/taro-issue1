@@ -1,7 +1,6 @@
+import {set} from './global_config';
 
-
-export function sayHello () {
-  console.log('Hello plugin!')
+export const _$configAppKey = (key) => {
+  if(!key) return;
+  set('appKey',key);
 }
-
-export const answer = 42

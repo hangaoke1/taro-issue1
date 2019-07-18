@@ -10,8 +10,7 @@ export const cachePromises = {}; //缓存请求的实例。key为url+params，�
  * @return {Promise}
  */
 export const request = (
-    config = { url = "", method = "GET", data = {} },
-    configEx = { json = true, cache = false }
+    { url = "", method = "GET", data = {}, json = true }
 ) => {
     return new Promise((resolve, reject) => {
         const success = response => {
@@ -30,28 +29,23 @@ export const request = (
                 httpError: true
             });
         };
-        //使用url和参数生成key，用于缓存当前Promise对象，如果参数没变，可以不用重新发请求，直接使用之前数据
-        let key = [url, object2query(params), JSON.stringify(data)].join(":");
-        if (configEx.cache && cachePromises[key]) {
-            cachePromises[key].then(success, fail);
-            return;
+
+        let header =  {
+            "content-type": "application/json"
         }
 
-        let headers =  {
-            Accept: "application/json",
-            "Content-Type": "application/x-www-form-urlencoded"
+        if (!json) {
+            header["content-type"] = "application/x-www-form-urlencoded";
         }
 
-        if (configEx.json) {
-            headers["Content-Type"] = "application/json";
+        let config = {
+            url,
+            method,
+            data,
+            header
         }
-
-        config['headers'] = headers;
 
         Taro.request(config).then(success, fail)
 
-        if (configEx.cache) {
-            cachePromises[key] = request;
-        }
     });
 }

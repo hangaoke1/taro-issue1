@@ -1,25 +1,29 @@
 import {queryAccont} from '../service';
-import Taro from '@tarojs/taro'
-import IMSERVICE from '../service/im';
+import {get,set} from '../global_config';
+import {applyKefu} from '../utils/im';
 
-export const createAccount = param => {
-    Taro.request({
-        url: 'https://qytest.netease.com/webapi/user/create.action',
-        data: {
-            deviceid: 'lusl4x7jhruzecuk6faq',
-            appKey: '7540b40c6afa96fc975ce040733ae7f6'
-        },
-        header: {
-            'content-type': 'application/x-www-form-urlencoded'
-        },
-        method: 'POST'
+
+const applyKefuSuccess = (error,msg) => {
+    console.log('hi kefu'+msg);
+}
+
+export const createAccount = (param = {}) => dispatch => {
+
+    let appKey = get('appKey');
+    if(!appKey) return;
+
+    queryAccont({
+        deviceid: 'lusl4x7jhruzecuk6faq',
+        appKey: appKey
     }).then(json => {
-        const info = json.data.info;
-        new IMSERVICE({
-            appKey: '7540b40c6afa96fc975ce040733ae7f6',
-            account: info.accid,
-            promise: true,
-            token: info.token
-        });
+        let info = json.info;
+
+        info.accid && set('account', info.accid);
+        info.bid && set('bid', info.bid);
+        info.token && set('token', info.token);
+
+        // 申请客服
+        applyKefu(applyKefuSuccess)
+
     })
 }

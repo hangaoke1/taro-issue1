@@ -1,5 +1,6 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Navigator, Button } from '@tarojs/components'
+
 import './index.less'
 
 const myPluginInterface = Taro.requirePlugin('myPlugin')
@@ -11,9 +12,7 @@ export default class Index extends Component {
   }
 
   componentWillMount () {
-    myPluginInterface.sayHello()
-    const answer = myPluginInterface.answer
-    console.log('answer: ', answer)
+    myPluginInterface._$configAppKey('7540b40c6afa96fc975ce040733ae7f6');
   }
 
   componentDidMount () { }

@@ -6,11 +6,13 @@
 	"projectname": "qiyu-miniprogram-plugin",
 	"description": "",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": false,
 		"postcss": false,
 		"minified": false,
-		"newFeature": true
+		"newFeature": true,
+		"autoAudits": false,
+		"checkInvalidKey": true
 	},
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
