@@ -3,7 +3,9 @@ const globalConfig = {
     domain: 'https://qytest.netease.com',
     account: '',
     bid: '-1',
-    token: ''
+    token: '',
+    deviceid: 'lusl4x7jhruzecuk6faq',
+    heartbeatCycle: 8000
 };
 
 export const get = (key) => globalConfig[key];

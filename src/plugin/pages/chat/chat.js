@@ -2,8 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, ScrollView, Text, Input, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 
-import {createAccount} from '../../actions/chat';
-import {add} from '../../actions/counter';
+import {createAccount,sendText} from '../../actions/chat';
  
 import Index from '../../app';
 
@@ -16,6 +15,9 @@ import './chat.less'
 (dispatch) => ({
   createAccount(){
     dispatch(createAccount())
+  },
+  sendText(value){
+    dispatch(sendText(value))
   }
 }))
   
@@ -49,6 +51,13 @@ class Chat extends Component {
 
   componentDidHide () { }
 
+  handleConfirm= (event) => {
+    const {sendText} = this.props;
+    let value = event.detail.value;
+
+    sendText(value);
+  }
+
   render () {
     return (
       <Index className='m-page-wrapper'>
@@ -77,7 +86,8 @@ class Chat extends Component {
             <View className='u-voice-icon'>
               <Iconfont type='icon-chat-voice-btn' className='u-voice-icon'></Iconfont>
             </View>
-            <Input type="text" placeholder='请输入您要咨询的问题' className='u-edtior'></Input>
+            <Input type="text" placeholder='请输入您要咨询的问题' className='u-edtior' 
+            onConfirm={this.handleConfirm}></Input>
           </View>
         </View>
       </Index>

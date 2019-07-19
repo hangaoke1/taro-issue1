@@ -1,20 +1,26 @@
 import {queryAccont} from '../service';
 import {get,set} from '../global_config';
-import {applyKefu} from '../utils/im';
+import {applyKefu,sendTextMsg} from '../utils/im';
 
 
 const applyKefuSuccess = (error,msg) => {
     console.log('hi kefu'+msg);
 }
 
+/**
+ * 
+ * @param {*} param 
+ * 创建云信的账户
+ */
 export const createAccount = (param = {}) => dispatch => {
 
     let appKey = get('appKey');
+    let deviceid = get('deviceid');
     if(!appKey) return;
 
     queryAccont({
-        deviceid: 'lusl4x7jhruzecuk6faq',
-        appKey: appKey
+        deviceid,
+        appKey
     }).then(json => {
         let info = json.info;
 
@@ -27,3 +33,9 @@ export const createAccount = (param = {}) => dispatch => {
 
     })
 }
+
+export const sendText = (text) => dispatch => {
+    sendTextMsg(text);
+}
+
+
