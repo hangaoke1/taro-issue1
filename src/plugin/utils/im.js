@@ -1,6 +1,6 @@
 import IMSERVICE from '../service/im';
 import{get} from '../global_config';
-import {assignKefu} from '../actions/nimMsgHandle';
+import {assignKefu,receiveMsg} from '../actions/nimMsgHandle';
 
 let imService = null;
 
@@ -10,7 +10,7 @@ let imService = null;
  * 收到普通文本消息
  */
 const onMsg = (msg) => {
-    
+    receiveMsg(msg);
 }
 
 /**
@@ -27,7 +27,7 @@ const onCustomsysmsg = (msg) => {
                 assignKefu(content);
                 break;
             default:
-                console.log('未知指令')
+                console.log('未知指令'+JSON.stringify(msg))
                 break;
         }
 

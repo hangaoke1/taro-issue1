@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import rootReducer from '../reducers'
+import {set} from '../global_config';
 
 const composeEnhancers =
   typeof window === 'object' &&
@@ -24,5 +25,6 @@ const enhancer = composeEnhancers(
 
 export default function configStore () {
   const store = createStore(rootReducer, enhancer)
+  set('store',store)
   return store
 }

@@ -1,6 +1,7 @@
 import {queryAccont} from '../service';
 import {get,set} from '../global_config';
 import {applyKefu,sendTextMsg} from '../utils/im';
+import {PUSH_MESSAGE} from '../constants/message';
 
 
 const applyKefuSuccess = (error,msg) => {
@@ -35,6 +36,15 @@ export const createAccount = (param = {}) => dispatch => {
 }
 
 export const sendText = (text) => dispatch => {
+    let message = {
+        "content": text,
+        "type": 'text',
+        "time": new Date().getTime(),
+        "status": 1,
+        "fromUser": 1
+    }
+
+    dispatch({type: PUSH_MESSAGE, message});
     sendTextMsg(text);
 }
 
