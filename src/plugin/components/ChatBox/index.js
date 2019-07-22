@@ -1,4 +1,4 @@
-import { useState,useReducer } from '@tarojs/taro'
+import { useState } from '@tarojs/taro'
 import { Input,View } from '@tarojs/components'
 import Iconfont from '../Iconfont';
 
@@ -22,9 +22,15 @@ export default function ChatBox(props){
             <View className='u-voice-icon'>
                 <Iconfont type='icon-chat-voice-btn' className='u-voice-icon'></Iconfont>
             </View>
-            <Input type="text" value={value} placeholder='请输入您要咨询的问题' 
-            className='u-edtior' onInput={handleInput}
-            onConfirm={handleConfirm}></Input>
+            <Input type="text" value={value} 
+            placeholder='请输入您要咨询的问题' 
+            className='u-edtior' 
+            onInput={handleInput}
+            onConfirm={handleConfirm} 
+            confirmType='send' confirmHold></Input>
+            <View className='u-plus-icon'>
+                <Iconfont type='icon-chat-more-plusx' color='#fff' size='22'></Iconfont>
+            </View>
         </View>
     )
 }

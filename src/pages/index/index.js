@@ -8,7 +8,7 @@ const myPluginInterface = Taro.requirePlugin('myPlugin')
 export default class Index extends Component {
 
   config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '网易七鱼Demo'
   }
 
   componentWillMount () {
@@ -23,12 +23,26 @@ export default class Index extends Component {
 
   componentDidHide () { }
 
+
+  handleClick = () => {
+    Taro.scanCode().then(json => {
+      let appkey = json.result.split('=')[2];
+      console.log(appkey);
+      if(appkey){
+        myPluginInterface._$configAppKey(appkey);
+      }
+    })
+  }
+
   render () {
     return (
       <View className='index'>
-        <Navigator url='plugin://myPlugin/chat'>
-          <Button>咨询客服</Button>
-      </Navigator>
+          <Navigator url='plugin://myPlugin/chat'>
+            <Button>咨询客服</Button>
+          </Navigator>
+          <View>
+            <Button onClick={this.handleClick}>扫一扫</Button>
+          </View>
       </View>
     )
   }
