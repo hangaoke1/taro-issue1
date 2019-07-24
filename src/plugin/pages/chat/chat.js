@@ -40,7 +40,6 @@ class Chat extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log(this.props, nextProps)
   }
 
   componentDidMount(){
@@ -62,7 +61,7 @@ class Chat extends Component {
 
   render () {
     const {Message} = this.props;
-
+    
     return (
       <Index className='m-page-wrapper'>
         <View className='m-chat'>

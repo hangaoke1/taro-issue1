@@ -79,8 +79,7 @@ export const applyKefu = (done) => {
 
     let content = {
         cmd: 1,
-        deviceid: 'lusl4x7jhruzecuk6faq',
-        fromType: 'wx_ma'
+        deviceid: 'lusl448dwwx222ecuk6faq'
     }
 
     sendCustomSysMsg({
@@ -101,6 +100,6 @@ export const sendTextMsg = (value) => {
             text: value
         })
     }).catch(json => {
-        debugger;
+        
     })
 } 

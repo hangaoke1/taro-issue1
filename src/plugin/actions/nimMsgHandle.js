@@ -1,13 +1,35 @@
 import {get} from '../global_config';
 import {PUSH_MESSAGE} from '../constants/message';
-
-const namespace = 'MESSAGE';
+import {timestamp2date} from '../utils/date';
 
 /**
  * 分配客服
  */
 export const assignKefu = (content) => {
-    console.log('分配客服')
+    const dispatch = get('store').dispatch;
+    let {code,staffname} = content;
+
+    switch(code){
+        case 200:
+            let time = new Date().getTime();
+
+            let message = {
+                content: `${staffname}为您服务`,
+                type: 'systip',
+                time: time
+            }
+            
+            let timeTip = {
+                content: timestamp2date(time,'HH:mm'),
+                type: 'systip',
+                time: time
+            }
+
+            console.log(timeTip)
+            dispatch({type: PUSH_MESSAGE, message: timeTip});
+            dispatch({type: PUSH_MESSAGE, message});
+        break;
+    }
  }
 
 
@@ -19,15 +41,16 @@ export const assignKefu = (content) => {
 export const receiveMsg = (msg) => {
     const dispatch = get('store').dispatch;
 
-    let message = {
-        "content": msg.text,
-        "type": msg.type,
-        "time": msg.time,
-        "status": msg.status,
-        "fromUser": 0
-    }
+    if(msg.type == 'text'){
 
-    dispatch({type: PUSH_MESSAGE, message});
-    console.log(msg);
+        let message = {
+            "content": msg.text,
+            "type": msg.type,
+            "time": msg.time,
+            "status": msg.status,
+            "fromUser": 0
+        }
     
+        dispatch({type: PUSH_MESSAGE, message});
+    }
 }
