@@ -1,3 +1,0 @@
-<block wx:if="{{$taroCompReady}}">
-    <view class="{{'u-iconfont iconfont ' + props.type}}" style="{{anonymousState__temp}}"></view>
-</block>

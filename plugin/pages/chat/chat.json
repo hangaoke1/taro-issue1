@@ -1,8 +1,0 @@
-{
-  "usingComponents": {
-    "index": "../../app",
-    "message-view": "../../components/Message/index",
-    "chat-box": "../../components/ChatBox/index"
-  },
-  "navigationBarTitleText": "网易七鱼"
-}

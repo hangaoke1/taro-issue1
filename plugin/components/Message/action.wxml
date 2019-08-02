@@ -1,3 +1,0 @@
-<block wx:if="{{$taroCompReady}}">
-    <text-view compid="{{$compid__13}}"></text-view>
-</block>
