@@ -11,5 +11,5 @@ const post = (url="", params={}) => {
 
 
 export const queryAccont = (params) => {
-    return post('http://qytest.netease.com/webapi/user/create.action', params);
+    return post('https://qytest.netease.com/webapi/user/create.action', params);
 }

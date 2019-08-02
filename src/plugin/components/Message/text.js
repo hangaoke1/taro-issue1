@@ -1,4 +1,4 @@
-import { View,Image,Text } from '@tarojs/components'
+import { View,Image,Text,Button } from '@tarojs/components'
 import './text.less';
 
 
@@ -13,6 +13,15 @@ export default function TextView(props) {
             <View className="u-text-arrow"></View>
             <View className="u-text">
                 <Text>{item.content}</Text>
+                {
+                    item.actionText ?
+                    <View className="m-action">
+                        <View className="u-action-btn">
+                            {item.actionText}
+                        </View>
+                    </View>
+                    : null
+                }
             </View>
         </View>
     )

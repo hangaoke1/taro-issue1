@@ -1,0 +1,12 @@
+<block wx:if="{{$taroCompReady}}">
+    <index compid="{{$compid__0}}">
+        <view class="m-chat">
+            <view class="m-view">
+                <scroll-view class="message-content">
+                    <message-view compid="{{$compid__1}}"></message-view>
+                </scroll-view>
+            </view>
+            <chat-box compid="{{$compid__2}}"></chat-box>
+        </view>
+    </index>
+</block>

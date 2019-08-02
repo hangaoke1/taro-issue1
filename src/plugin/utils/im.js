@@ -1,6 +1,6 @@
 import IMSERVICE from '../service/im';
 import{get} from '../global_config';
-import {assignKefu,receiveMsg} from '../actions/nimMsgHandle';
+import {assignKefu, receiveMsg, onfinish} from '../actions/nimMsgHandle';
 
 let imService = null;
 
@@ -25,6 +25,9 @@ const onCustomsysmsg = (msg) => {
         switch (content.cmd){
             case 2: 
                 assignKefu(content);
+                break;
+            case 6:
+                onfinish(content);
                 break;
             default:
                 console.log('未知指令'+JSON.stringify(msg))

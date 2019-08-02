@@ -1,6 +1,7 @@
 import { View,Image,Text } from '@tarojs/components'
 import SysTipView from './systip';
 import TextView from './text';
+import ActionView from './action';
 
 
 
@@ -20,6 +21,10 @@ export default function MessageView(props) {
 
                             {
                                 it.type === 'text' ? <TextView item={it}></TextView> : null
+                            }
+
+                            {
+                                it.type === 'action' ? <ActionView item = {it}></ActionView> : null
                             }
                         </View>
                     )

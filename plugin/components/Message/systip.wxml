@@ -1,0 +1,4 @@
+<block wx:if="{{$taroCompReady}}">
+    <view class="m-systip"> <text class="u-tip">{{item.content}}</text>
+    </view>
+</block>

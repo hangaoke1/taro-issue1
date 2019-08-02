@@ -1,0 +1,8 @@
+{
+  "component": true,
+  "usingComponents": {
+    "sys-tip-view": "./systip",
+    "text-view": "./text",
+    "action-view": "./action"
+  }
+}

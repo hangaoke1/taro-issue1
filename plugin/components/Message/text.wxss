@@ -1,0 +1,79 @@
+
+.m-message {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 24rpx;
+  margin: 40rpx 0;
+}
+.m-message .u-avatar {
+  width: 80rpx;
+  height: 80rpx;
+}
+.m-message .u-text {
+  max-width: 490rpx;
+  padding: 24rpx;
+  border-radius: 8rpx;
+  font-size: 32rpx;
+  text-align: justify;
+  position: relative;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.m-message .m-action {
+  margin: 24rpx -24rpx 0 -24rpx;
+  padding: 24rpx 24rpx 0 24rpx;
+  border-top: 2rpx solid #EDEDED;
+}
+.m-message .u-action-btn {
+  width: 442rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  border: 2rpx solid #E1E3E6;
+  border-radius: 4rpx;
+  font-size: 28rpx;
+  color: #666666;
+  letter-spacing: 0;
+  text-align: center;
+}
+.m-message .u-action-btn-default {
+  background-color: #FFFFFF;
+}
+.m-message-left .u-text {
+  background: #FFFFFF;
+  color: #333333;
+}
+.m-message-left .u-text-arrow {
+  border: solid 12rpx;
+  border-right-color: #fff;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  width: 0;
+  height: 0;
+}
+.m-message-right {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+  -webkit-flex-direction: row-reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+}
+.m-message-right .u-text {
+  background: #337EFF;
+  color: #fff;
+}
+.m-message-right .u-text-arrow {
+  border: solid 12rpx;
+  border-left-color: #337EFF;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  width: 0;
+  height: 0;
+}

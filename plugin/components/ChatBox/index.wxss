@@ -1,0 +1,49 @@
+
+.m-ChatBox {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  justify-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 112rpx;
+  background: #F6F6F6;
+}
+.m-ChatBox .u-edtior {
+  width: 558rpx;
+  height: 80rpx;
+  background: #FFFFFF;
+  border: 0 solid #E1E3E6;
+  border-radius: 40rpx;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 0 40rpx;
+}
+.m-ChatBox .iconfont {
+  color: #F6F6F6;
+}
+.m-ChatBox .u-voice-icon {
+  margin: 0 20rpx;
+}
+.m-ChatBox .u-plus-icon {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: #337EFF;
+  margin: 0 20rpx;
+}
