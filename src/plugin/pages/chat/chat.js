@@ -10,7 +10,7 @@ import FuncBox from '../../components/FuncBox';
 import Portrait from '../../components/Portrait';
 
 import { createAccount, sendText } from '../../actions/chat';
-import { toggleShowFun, toggleShowPortrait } from '../../actions/options';
+import { toggleShowFun, toggleShowPortrait, hideAction } from '../../actions/options';
 
 
 import './chat.less'
@@ -19,6 +19,9 @@ import './chat.less'
   Message,
   Options
 }), (dispatch) => ({
+  hideAction () {
+    dispatch(hideAction())
+  },
   toggleShowFun () {
     dispatch(toggleShowFun())
   },
@@ -69,6 +72,10 @@ class Chat extends Component {
     sendText(value);
   }
 
+  handleBodyClick = () => {
+    this.props.hideAction()
+  }
+
   handlePortraitClick = () => {
     this.props.toggleShowPortrait();
   }
@@ -94,7 +101,7 @@ class Chat extends Component {
       <Index className='m-page-wrapper'>
         <View className='m-chat'>
           <View className='m-view'>
-            <ScrollView className='message-content'>
+            <ScrollView className='message-content' scrollY onClick={this.handleBodyClick}>
               <MessageView Message={Message}></MessageView>
             </ScrollView>
           </View>
