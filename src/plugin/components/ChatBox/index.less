@@ -1,4 +1,5 @@
 .m-ChatBox {
+    position: relative;
     display: flex;
     justify-items: center;
     align-items: center;
@@ -11,7 +12,7 @@
         border: 0 solid #E1E3E6;
         border-radius: 20px;
         box-sizing: border-box;
-        padding: 0 20px;
+        padding: 0 60px 0 20px;
     }
     .iconfont {
         color: #F6F6F6;
@@ -19,7 +20,12 @@
     .u-voice-icon{
         margin: 0 10px;
     }
+    .u-portrait {
+        position: absolute;
+        right: 60px;
+    }
     .u-plus-icon{
+        flex: 0 0 auto;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -27,7 +33,10 @@
         height: 28px;
         border-radius: 50%;
         background: #337EFF;
-
         margin: 0 10px;
+        transition: transform 0.3s;
+    }
+    .u-show {
+        transform: rotate(45deg);
     }
 }

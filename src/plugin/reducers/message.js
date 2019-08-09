@@ -1,9 +1,8 @@
-import { combineReducers } from 'redux'
-import {PUSH_MESSAGE} from '../constants/message';
+import { PUSH_MESSAGE } from '../constants/message';
 
-export const initMessages = [];
+const initMessages = [];
 
-export const Message = (state = initMessages, action) => {
+const Message = (state = initMessages, action) => {
     switch(action.type){
         case PUSH_MESSAGE:
             return [...state, action.message];
@@ -12,4 +11,4 @@ export const Message = (state = initMessages, action) => {
     }
 } 
 
-export default combineReducers({Message});
+export default Message;

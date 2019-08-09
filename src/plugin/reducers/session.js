@@ -1,9 +1,8 @@
-import { combineReducers } from 'redux'
 import {INIT_SESSION} from '../constants/session';
 
 const initSession = {};
 
-export const Session = (state = initSession, action) => {
+const Session = (state = initSession, action) => {
     switch(action.type){
         case INIT_SESSION:
             return {...state, ...action.session};
@@ -12,4 +11,4 @@ export const Session = (state = initSession, action) => {
     }
 }
 
-export default combineReducers({Session});
+export default Session;

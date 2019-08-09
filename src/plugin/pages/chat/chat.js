@@ -1,20 +1,30 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, ScrollView, Text, Input, Image } from '@tarojs/components'
+import { View, ScrollView, Button } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-
-import {createAccount,sendText} from '../../actions/chat';
  
 import Index from '../../app';
 
-import Iconfont from '../../components/Iconfont';
 import MessageView from '../../components/Message';
 import ChatBox from '../../components/ChatBox';
+import FuncBox from '../../components/FuncBox';
+import Portrait from '../../components/Portrait';
+
+import { createAccount, sendText } from '../../actions/chat';
+import { toggleShowFun, toggleShowPortrait } from '../../actions/options';
+
 
 import './chat.less'
 
-
-@connect(({Message}) => Message, 
-(dispatch) => ({
+@connect(({ Message, Options }) => ({
+  Message,
+  Options
+}), (dispatch) => ({
+  toggleShowFun () {
+    dispatch(toggleShowFun())
+  },
+  toggleShowPortrait () {
+    dispatch(toggleShowPortrait())
+  },
   createAccount(){
     dispatch(createAccount())
   },
@@ -35,7 +45,7 @@ class Chat extends Component {
   }
 
   createAction(){
-    const {createAccount} = this.props;
+    const { createAccount } = this.props;
     createAccount();
   }
 
@@ -53,14 +63,32 @@ class Chat extends Component {
   componentDidHide () { }
 
   handleConfirm= (event) => {
-    const {sendText} = this.props;
+    const { sendText } = this.props;
     let value = event.detail.value;
 
     sendText(value);
   }
 
+  handlePortraitClick = () => {
+    this.props.toggleShowPortrait();
+  }
+
+  handlePlusClick = () => {
+    this.props.toggleShowFun();
+  }
+
+  handleFuncClick = item => {
+    console.log(item);
+  }
+
   render () {
-    const {Message} = this.props;
+    const { Message, Options } = this.props;
+    const list = [
+      { name: '拍照', type: 'img', icon: 'icon-camera' },
+      { name: '拍视频', type: 'video', icon: 'icon-vcr' },
+      { name: '小视频', type: 'video', icon: 'icon-camera' },
+      { name: '评价', type: 'video', icon: 'icon-star-evaluationx' },
+      { name: '退出', type: 'video', icon: 'icon-eraser' }]
     
     return (
       <Index className='m-page-wrapper'>
@@ -70,7 +98,13 @@ class Chat extends Component {
               <MessageView Message={Message}></MessageView>
             </ScrollView>
           </View>
-          <ChatBox handleConfirm = {this.handleConfirm}></ChatBox>
+          <ChatBox handleConfirm={this.handleConfirm} onPlusClick={this.handlePlusClick} onPortraitClick={this.handlePortraitClick}></ChatBox>
+          {
+            Options.showFunc && <FuncBox list={list} onFuncClick={this.handleFuncClick}></FuncBox>
+          }
+          {
+            Options.showPortrait && <Portrait></Portrait>
+          }
         </View>
       </Index>
     )

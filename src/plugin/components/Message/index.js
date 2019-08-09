@@ -1,9 +1,7 @@
-import { View,Image,Text } from '@tarojs/components'
+import Taro, { View } from '@tarojs/components';
 import SysTipView from './systip';
 import TextView from './text';
 import ActionView from './action';
-
-
 
 export default function MessageView(props) {
     const { Message } = props;
@@ -12,9 +10,9 @@ export default function MessageView(props) {
         <View>
             {   
                 Message ? 
-                Message.map( it => {
+                Message.map( (it, index) => {
                     return(
-                        <View>
+                        <View key={{index}}>
                             {
                                 it.type === 'systip' ? <SysTipView item={it}></SysTipView> : null
                             }
@@ -24,7 +22,7 @@ export default function MessageView(props) {
                             }
 
                             {
-                                it.type === 'action' ? <ActionView item = {it}></ActionView> : null
+                                it.type === 'action' ? <ActionView item={it}></ActionView> : null
                             }
                         </View>
                     )

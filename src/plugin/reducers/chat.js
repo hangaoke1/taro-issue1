@@ -1,9 +1,6 @@
-import { combineReducers } from 'redux'
-
-
 const corpConfig = (state = {
   appKey: 'c583f9c0cb3945b577814c39d152ff4a'
-},action) => {
+}, action) => {
   switch(action.type){
     case 'SET_APPKEY':
       return {
@@ -16,4 +13,4 @@ const corpConfig = (state = {
 }
 
 
-export const chat =  combineReducers({corpConfig});
+export default corpConfig;
