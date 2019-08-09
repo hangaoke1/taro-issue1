@@ -1,27 +1,24 @@
 // import NIM from '../vendors/nim/NIM_Web_NIM_weixin_v6.6.6';
 import NIM from '../vendors/nim/NIM_Web_NIM_weixin';
 import {get} from '../global_config';
+import {assignKefu, receiveMsg, onfinish} from '../actions/nimMsgHandle';
 
 
 
 export default class IMSERVICE {
-    constructor(initer,{onMsg,onCustomsysmsg}){
-
-        this.account = initer.account;
+    constructor(initer){
         this.appKey = initer.appKey;
+        this.account = initer.account;
         this.token = initer.token;
         this.contenting = false;
-
-        this.onMsg = onMsg;
-        this.onCustomsysmsg = onCustomsysmsg;
     }
 
     getNim(){
         return new Promise((resolve,reject) => {
 
-            const onConnect = (data) => {
+            const onConnect = (msg) => {
                 resolve(nim);
-                this.onConnect();
+                this.onConnect(msg);
             }
 
             const nim = this.nim = NIM.getInstance({
@@ -42,7 +39,125 @@ export default class IMSERVICE {
         })
     }
 
-    sendHeartbeat(){
+    /**
+     * 发送自定义消息
+     * @param {obj} content 
+     * @param {number} to 
+     * @param {} done 
+     */
+    sendCustomSysMsg(
+        content,
+        to = -1
+    ){  
+        return new Promise((resolve,reject) => {
+            this.getNim().then((nim) => {
+                nim.sendCustomSysMsg({
+                    to: to,
+                    cc: !0,
+                    filter: !0,
+                    scene: 'p2p',
+                    content: JSON.stringify(content),
+                    done: (error,msg) => {
+                        if(error){
+                            console.log(content.cmd+'--error!');
+                            reject(error);
+                        }else{
+                            console.log(content.cmd+'--success!')
+                            resolve(error,msg);
+                        }
+                    }
+                })
+            })
+        })
+    }
+
+    
+    /**
+     * 发送文本消息
+     * @param {text} value 
+     * @param {number} to 
+     */
+    sendTextMsg(
+        value,
+        to = -1
+    ) {
+        return new Promise((resolve,reject) => {
+            this.getNim().then(nim => {
+                nim.sendText({
+                    scene: 'p2p',
+                    to: to,
+                    text: value,
+                    done: (error,msg) => {
+                        if(error){
+                            reject(error);
+                        }else{
+                            resolve(msg);
+                        }
+                    }
+                })
+            })
+        })
+    }
+
+    /**
+     * 申请分配客服
+     */
+    applyKefu(){
+        return new Promise((resolve, reject) => {
+
+            let content = {
+                cmd: 1,
+                deviceid: get('deviceid')
+            }
+    
+            this.sendCustomSysMsg(content)
+            .then((msg) => {
+                resolve(msg);
+            })
+            .catch(error => {
+                reject(error);
+            })
+        })
+    }
+
+    /**
+     * 
+     * @param {*} msg 
+     * 收到普通文本消息
+     */
+    onMsg(msg){
+        receiveMsg(msg);
+    }
+
+    /**
+     * 
+     * @param {*} msg 
+     * 收到系统自定义消息
+     */
+    onCustomsysmsg(msg){
+        try{
+            let content = JSON.parse(msg.content);
+
+            switch (content.cmd){
+                case 2: 
+                    assignKefu(content);
+                    break;
+                case 6:
+                    onfinish(content);
+                    break;
+                default:
+                    console.log('未知指令'+JSON.stringify(msg))
+                    break;
+            }
+
+        }catch(e){}
+    }
+
+
+    /**
+     * 发送心跳
+     */
+    sendHeartbeat = () => {
         this.nim.sendCustomSysMsg({
             to: -1,
             cc: !0,
@@ -72,13 +187,13 @@ export default class IMSERVICE {
     }
 
     onError(data){
-        console.log('----onError----，data:'+ data);
         this.contenting = false;
+        console.log('----onError----，data:'+ data);
     }
 
     onDisconnect(data){
-        console.log('----onDisconnect----，data:'+ data);
         this.contenting = false;
+        console.log('----onDisconnect----，data:'+ data);
     }
 
 }

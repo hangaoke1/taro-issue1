@@ -1,11 +1,26 @@
 import {queryAccont} from '../service';
 import {get,set} from '../global_config';
-import {applyKefu,sendTextMsg} from '../utils/im';
 import {PUSH_MESSAGE} from '../constants/message';
+import IMSERVICE from '../service/im';
 
+let NIM = null;
 
 const applyKefuSuccess = (error,msg) => {
     console.log('hi kefu'+msg);
+}
+
+const applyKefu = () => {
+    const appKey = get('appKey');
+    const account = get('account');
+    const token = get('token');
+    
+    NIM = new IMSERVICE({
+        appKey: appKey,
+        account: account,
+        token: token
+    });
+
+    NIM.applyKefu();
 }
 
 /**
@@ -30,8 +45,8 @@ export const createAccount = (param = {}) => dispatch => {
         info.token && set('token', info.token);
 
         // 申请客服
-        applyKefu(applyKefuSuccess)
-
+        // applyKefu(applyKefuSuccess)
+        applyKefu();
     })
 }
 
@@ -45,7 +60,8 @@ export const sendText = (text) => dispatch => {
     }
 
     dispatch({type: PUSH_MESSAGE, message});
-    sendTextMsg(text);
+    // sendTextMsg(text);
+    NIM.sendTextMsg(text);
 }
 
 
