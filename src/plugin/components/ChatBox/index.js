@@ -55,7 +55,6 @@ export default function ChatBox(props){
 
     return(
         <View className='m-ChatBox'>
-            {String(focus)}
             <View className='u-voice-icon'>
                 <Iconfont type='icon-chat-voice-btn' className='u-voice-icon'></Iconfont>
             </View>
