@@ -47,7 +47,8 @@ class Chat extends Component {
     super(props);
     this.createAction();
     this.state = {
-      lastId: ''
+      lastId: '',
+      height: 0
     }
   }
 
@@ -91,10 +92,13 @@ class Chat extends Component {
     this.props.hideAction()
   }
 
+  // 处理选择表情
   handlePortraitClick = () => {
     this.props.toggleShowPortrait();
+    this.scrollToBottom()
   }
 
+  // 处理点击加号
   handlePlusClick = () => {
     this.props.toggleShowFun();
     this.scrollToBottom()
@@ -108,9 +112,18 @@ class Chat extends Component {
     eventbus.trigger('emoji_click', item)
   }
 
+  handleFocus = (event) => {
+    this.setState({ height: event.detail.height })
+    this.scrollToBottom()
+  }
+
+  handleBlur = () => {
+    this.setState({ height: 0 })
+  }
+
   render () {
     const { Message, Options } = this.props;
-    const { lastId } = this.state;
+    const { lastId, height } = this.state;
     const list = [
       { name: '拍照', type: 'img', icon: 'icon-camera' },
       { name: '拍视频', type: 'video', icon: 'icon-vcr' },
@@ -120,14 +133,14 @@ class Chat extends Component {
     
     return (
       <Index className='m-page-wrapper'>
-        <View className='m-chat'>
+        <View className='m-chat' style={`height: calc(100vh - ${height}px)`}>
           <View className='m-view'>
             <ScrollView className='message-content' scrollY scrollWithAnimation scrollIntoView={lastId} onClick={this.handleBodyClick}>
               <MessageView Message={Message}></MessageView>
               <View id='m-bottom'></View>
             </ScrollView>
           </View>
-          <ChatBox handleConfirm={this.handleConfirm} onPlusClick={this.handlePlusClick} onPortraitClick={this.handlePortraitClick}></ChatBox>
+          <ChatBox handleConfirm={this.handleConfirm} onPlusClick={this.handlePlusClick} onPortraitClick={this.handlePortraitClick} onFocus={this.handleFocus} onBlur={this.handleBlur}></ChatBox>
           {
             Options.showFunc && <FuncBox list={list} onFuncClick={this.handleFuncClick}></FuncBox>
           }

@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from '@tarojs/redux';
-import Taro, { useState, useEffect, showToast } from '@tarojs/taro';
+import Taro, { useState, useEffect } from '@tarojs/taro';
 import { Input, View } from '@tarojs/components';
 import Iconfont from '../Iconfont';
 import eventbus from '../../lib/eventbus';
@@ -26,31 +26,25 @@ export default function ChatBox(props) {
 
   // 点击表情
   const handlePortraitClick = event => {
-    if (focus) {
-        setTimeout(() => { props.onPortraitClick(event); }, 400)
-    } else {
-        props.onPortraitClick(event);
-    }
+    props.onPortraitClick(event);
   };
 
   // 点击加号
   const handlePlusClick = event => {
-      if (focus) {
-        setTimeout(() => { props.onPlusClick(event); }, 400)
-      } else {
-        props.onPlusClick(event);
-      }
+      props.onPlusClick(event);
   };
 
   // 处理聚焦
-  const handleFocus = () => {
+  const handleFocus = (event) => {
     dispatch(hideAction());
     setTimeout(() => { setFocus(true) }, 100)
+    props.onFocus(event)
   };
 
   // 处理失去焦点
-  const handleBlur = () => {
+  const handleBlur = (event) => {
     setFocus(false)
+    props.onBlur(event)
   };
 
 
@@ -81,6 +75,7 @@ export default function ChatBox(props) {
         onConfirm={handleConfirm}
         confirmType='send'
         confirmHold
+        adjustPosition={false}
         cursorSpacing={999}
       />
       <View className='u-portrait' onClick={handlePortraitClick}>
