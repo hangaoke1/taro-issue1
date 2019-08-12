@@ -18,7 +18,7 @@ class App extends Component {
     "plugins": {
       "myPlugin": {
         "version": "dev",
-        "provider": "wxae5e29812005203f"
+        "provider": "wx1f06f11c454d338d"
       }
     }
   }

@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, ScrollView, Button } from '@tarojs/components'
+import { View, ScrollView } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
  
 import Index from '../../app';
@@ -11,6 +11,7 @@ import Portrait from '../../components/Portrait';
 
 import { createAccount, sendText } from '../../actions/chat';
 import { toggleShowFun, toggleShowPortrait, hideAction } from '../../actions/options';
+import eventbus from '../../lib/eventbus';
 
 
 import './chat.less'
@@ -45,31 +46,45 @@ class Chat extends Component {
   constructor(props){
     super(props);
     this.createAction();
+    this.state = {
+      lastId: ''
+    }
   }
 
   createAction(){
-    const { createAccount } = this.props;
-    createAccount();
+    const { createAccount: _createAccount } = this.props;
+    _createAccount();
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentDidMount () {
+    eventbus.on('push_message', this.scrollToBottom)
   }
 
-  componentDidMount(){
-    console.log(this.props);
+  componentWillUnmount () {
+    eventbus.off('push_message', this.scrollToBottom)
   }
-
-  componentWillUnmount () { }
 
   componentDidShow () { }
 
   componentDidHide () { }
 
-  handleConfirm= (event) => {
-    const { sendText } = this.props;
+  // 重置底部区域
+  scrollToBottom = () => {
+    this.setState({
+      lastId: ''
+    })
+    setTimeout(() => {
+      this.setState({
+        lastId: 'm-bottom'
+      })
+    }, 100)
+  }
+
+  handleConfirm = (event) => {
+    const { sendText: _sendText } = this.props;
     let value = event.detail.value;
 
-    sendText(value);
+    _sendText(value);
   }
 
   handleBodyClick = () => {
@@ -82,27 +97,34 @@ class Chat extends Component {
 
   handlePlusClick = () => {
     this.props.toggleShowFun();
+    this.scrollToBottom()
   }
 
   handleFuncClick = item => {
     console.log(item);
   }
 
+  handleEmojiClick = item => {
+    eventbus.trigger('emoji_click', item)
+  }
+
   render () {
     const { Message, Options } = this.props;
+    const { lastId } = this.state;
     const list = [
       { name: '拍照', type: 'img', icon: 'icon-camera' },
       { name: '拍视频', type: 'video', icon: 'icon-vcr' },
-      { name: '小视频', type: 'video', icon: 'icon-camera' },
-      { name: '评价', type: 'video', icon: 'icon-star-evaluationx' },
-      { name: '退出', type: 'video', icon: 'icon-eraser' }]
+      { name: '小视频', type: 'mvideo', icon: 'icon-camera' },
+      { name: '评价', type: 'comment', icon: 'icon-star-evaluationx' },
+      { name: '退出', type: 'exit', icon: 'icon-eraser' }]
     
     return (
       <Index className='m-page-wrapper'>
         <View className='m-chat'>
           <View className='m-view'>
-            <ScrollView className='message-content' scrollY onClick={this.handleBodyClick}>
+            <ScrollView className='message-content' scrollY scrollWithAnimation scrollIntoView={lastId} onClick={this.handleBodyClick}>
               <MessageView Message={Message}></MessageView>
+              <View id='m-bottom'></View>
             </ScrollView>
           </View>
           <ChatBox handleConfirm={this.handleConfirm} onPlusClick={this.handlePlusClick} onPortraitClick={this.handlePortraitClick}></ChatBox>
@@ -110,7 +132,7 @@ class Chat extends Component {
             Options.showFunc && <FuncBox list={list} onFuncClick={this.handleFuncClick}></FuncBox>
           }
           {
-            Options.showPortrait && <Portrait></Portrait>
+            Options.showPortrait && <Portrait onEmojiClick={this.handleEmojiClick}></Portrait>
           }
         </View>
       </Index>

@@ -2,11 +2,11 @@
 	"miniprogramRoot": "miniprogram/",
 	"pluginRoot": "plugin/",
 	"compileType": "plugin",
-	"appid": "wxae5e29812005203f",
+	"appid": "wx1f06f11c454d338d",
 	"projectname": "qiyu-miniprogram-plugin",
 	"description": "",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": false,
 		"postcss": false,
 		"minified": false,
