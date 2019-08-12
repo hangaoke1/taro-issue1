@@ -3,7 +3,8 @@
   "rules": {
     "no-unused-vars": ["error", { "varsIgnorePattern": "Taro" }],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".tsx"] }],
-    "taro/this-props-function": null
+    "taro/this-props-function": null,
+    "import/prefer-default-export": null
   },
     "parser": "babel-eslint"
   }
