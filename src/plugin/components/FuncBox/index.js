@@ -20,9 +20,9 @@ export default function FuncBox(props) {
 
     return (
         <View className='m-FuncBox'>
-            { list.map((item, index) => {
+            { list.map(item => {
                 return (
-                <View className='m-FuncBox__item' key={index} onClick={() => handleClick(item)}>
+                <View className='m-FuncBox__item' key={item.type} onClick={() => handleClick(item)}>
                     <View className='item__icon'>
                         <Iconfont type={item.icon} color='#666' size='28'></Iconfont>
                     </View>
