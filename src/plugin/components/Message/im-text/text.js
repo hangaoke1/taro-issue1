@@ -1,6 +1,8 @@
 import Taro from '@tarojs/taro';
+import PropTypes from 'prop-types';
 import { View, Image, RichText } from '@tarojs/components';
-import { text2emoji } from '../../utils/index'
+import { text2emoji } from '../../../utils/index';
+
 import './text.less';
 
 export default function TextView(props) {
@@ -30,4 +32,12 @@ export default function TextView(props) {
       </View>
     </View>
   );
+}
+
+TextView.defaultProps = {
+  item: {}
+}
+
+TextView.propTypes = {
+  item: PropTypes.object
 }

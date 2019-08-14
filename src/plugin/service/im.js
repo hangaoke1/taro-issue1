@@ -1,7 +1,7 @@
 // import NIM from '../vendors/nim/NIM_Web_NIM_weixin_v6.6.6';
 import NIM from '../vendors/nim/NIM_Web_NIM_weixin';
-import {get} from '../global_config';
-import {assignKefu, receiveMsg, onfinish} from '../actions/nimMsgHandle';
+import { get } from '../global_config';
+import { assignKefu, receiveMsg, onfinish } from '../actions/nimMsgHandle';
 
 
 
@@ -100,6 +100,33 @@ export default class IMSERVICE {
     }
 
     /**
+     * 发送图片消息
+     * @param {string} tempFilePath 微信图片临时路径
+     * @param {number} to 标志发送方
+     * @return {promise<>}
+     */
+    sendImageMsg (tempFilePath, to = -1) {
+        return new Promise((resolve, reject) => {
+            this.getNim().then(nim => {
+                nim.sendFile({
+                    type: 'image',
+                    scene: 'p2p',
+                    to: to,
+                    wxFilePath: tempFilePath,
+                    done: (error, msg) => {
+                        if(error){
+                            reject(error);
+                        }else{
+                            console.log('-------hgk-------', msg);
+                            resolve(msg);
+                        }
+                    }
+                })
+            })
+        })
+    }
+
+    /**
      * 申请分配客服
      */
     applyKefu(){
@@ -126,6 +153,7 @@ export default class IMSERVICE {
      * 收到普通文本消息
      */
     onMsg(msg){
+        console.log('---onMsg---', msg)
         receiveMsg(msg);
     }
 
@@ -135,8 +163,10 @@ export default class IMSERVICE {
      * 收到系统自定义消息
      */
     onCustomsysmsg(msg){
+        console.log('---onCustomsysmsg---', msg)
         try{
             let content = JSON.parse(msg.content);
+            console.log('---onCustomsysmsg content---', content)
 
             switch (content.cmd){
                 case 2: 

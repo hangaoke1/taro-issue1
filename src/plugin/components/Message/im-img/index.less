@@ -1,0 +1,32 @@
+@prefix: m-img;
+
+.@{prefix}-left {
+  flex-direction: row;
+}
+.@{prefix}-right {
+  flex-direction: row-reverse;
+}
+.@{prefix} {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 12px;
+  .u-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  .u-content {
+    overflow: hidden;
+  }
+  .u-space {
+    width: 6px;
+  }
+  .u-img {
+    display: block;
+    max-width: 140px;
+    max-height: 140px;
+    min-width: 20px;
+    min-height: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+}

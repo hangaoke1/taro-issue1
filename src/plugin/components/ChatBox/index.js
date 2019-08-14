@@ -26,18 +26,25 @@ export default function ChatBox(props) {
 
   // 点击表情
   const handlePortraitClick = event => {
-    props.onPortraitClick(event);
+    setTimeout(() => {
+      props.onPortraitClick(event);
+      setFocus(false)
+    }, 50)
   };
 
   // 点击加号
   const handlePlusClick = event => {
+    // 设置延迟，优化体验，防止键盘弹出状态下点击加号图标导致界面闪动问题
+    setTimeout(() => {
       props.onPlusClick(event);
+      setFocus(false)
+    }, 50)
   };
 
   // 处理聚焦
   const handleFocus = (event) => {
     dispatch(hideAction());
-    setTimeout(() => { setFocus(true) }, 100)
+    setTimeout(() => { setFocus(true) }, 30)
     props.onFocus(event)
   };
 
@@ -76,7 +83,6 @@ export default function ChatBox(props) {
         confirmType='send'
         confirmHold
         adjustPosition={false}
-        cursorSpacing={999}
       />
       <View className='u-portrait' onClick={handlePortraitClick}>
         <Iconfont type='icon-chat-portraitmobile' color='#666' size='28' />

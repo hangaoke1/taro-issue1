@@ -1,5 +1,6 @@
-import { View, Button } from '@tarojs/components'
-import TextView from './text';
+import Taro from '@tarojs/taro';
+import TextView from '../im-text/text';
+
 import './action.less';
 
 export default function ActionView(props){
@@ -8,4 +9,4 @@ export default function ActionView(props){
     return(
         <TextView item={item}></TextView>
     )
-} 
+}

@@ -9,12 +9,12 @@ import ChatBox from '../../components/ChatBox';
 import FuncBox from '../../components/FuncBox';
 import Portrait from '../../components/Portrait';
 
-import { createAccount, sendText } from '../../actions/chat';
+import { createAccount, sendText, sendImage } from '../../actions/chat';
 import { toggleShowFun, toggleShowPortrait, hideAction } from '../../actions/options';
 import eventbus from '../../lib/eventbus';
 
-
-import './chat.less'
+import functionList from './function.config';
+import './chat.less';
 
 @connect(({ Message, Options }) => ({
   Message,
@@ -34,6 +34,9 @@ import './chat.less'
   },
   sendText(value){
     dispatch(sendText(value))
+  },
+  sendImage(value){
+    dispatch(sendImage(value))
   }
 }))
   
@@ -104,10 +107,34 @@ class Chat extends Component {
     this.scrollToBottom()
   }
 
+  // 扩展功能栏点击处理
   handleFuncClick = item => {
     console.log(item);
+    const { sendImage } = this.props;
+    switch (item.type) {
+      case 'album':
+        // 照片
+        Taro.chooseImage({
+          sourceType: ['album']
+        }).then(res => {
+          console.log('选择图片: ', res)
+          sendImage(res)
+        })
+        break;
+      case 'camera':
+        // 拍摄
+        Taro.chooseImage({
+          sourceType: ['camera']
+        }).then(res => {
+          console.log('照相: ', res)
+        })
+        break;
+      default:
+        console.log(`暂不支持${item.type}`);
+    }
   }
 
+  // 处理emoji表情点击
   handleEmojiClick = item => {
     eventbus.trigger('emoji_click', item)
   }
@@ -121,28 +148,32 @@ class Chat extends Component {
     this.setState({ height: 0 })
   }
 
+  /** 消息体点击事件处理 **/
+  handleImgClick = (item) => {
+    const imgMessageList = this.props.Message.filter(msg => msg.type === 'image');
+    const imgList = imgMessageList.map(msg => JSON.parse(msg.content).url);
+    Taro.previewImage({
+      current: JSON.parse(item.content).url,
+      urls: imgList
+    });
+  }
+
   render () {
     const { Message, Options } = this.props;
     const { lastId, height } = this.state;
-    const list = [
-      { name: '拍照', type: 'img', icon: 'icon-camera' },
-      { name: '拍视频', type: 'video', icon: 'icon-vcr' },
-      { name: '小视频', type: 'mvideo', icon: 'icon-camera' },
-      { name: '评价', type: 'comment', icon: 'icon-star-evaluationx' },
-      { name: '退出', type: 'exit', icon: 'icon-eraser' }]
     
     return (
       <Index className='m-page-wrapper'>
         <View className='m-chat' style={`height: calc(100vh - ${height}px)`}>
           <View className='m-view'>
             <ScrollView className='message-content' scrollY scrollWithAnimation scrollIntoView={lastId} onClick={this.handleBodyClick}>
-              <MessageView Message={Message}></MessageView>
+              <MessageView Message={Message} onImgClick={this.handleImgClick}></MessageView>
               <View id='m-bottom'></View>
             </ScrollView>
           </View>
           <ChatBox handleConfirm={this.handleConfirm} onPlusClick={this.handlePlusClick} onPortraitClick={this.handlePortraitClick} onFocus={this.handleFocus} onBlur={this.handleBlur}></ChatBox>
           {
-            Options.showFunc && <FuncBox list={list} onFuncClick={this.handleFuncClick}></FuncBox>
+            Options.showFunc && <FuncBox list={functionList} onFuncClick={this.handleFuncClick}></FuncBox>
           }
           {
             Options.showPortrait && <Portrait onEmojiClick={this.handleEmojiClick}></Portrait>

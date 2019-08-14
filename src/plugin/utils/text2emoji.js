@@ -4,7 +4,7 @@
 import data from '../components/Portrait/data.json';
 
 const reg = /(\[[^\]]+\])/ig;
-const prefix = 'http://qytest.netease.com/sdk/res/portrait/emoji/'
+const prefix = 'https://qiyukf.com/sdk/res/portrait/emoji/'
 
 export const getImgHTML = function (obj) {
   var img = '<img class="portrait_icon" data-id="' + obj.id +
@@ -14,6 +14,7 @@ export const getImgHTML = function (obj) {
   return img;
 }
 export const text2emoji = function(html) {
+  if (!html) return '';
   var pmap = data.pmap;
   var pmap2 = data.pmap2;
   html = html.replace(reg, function(all, $1) {

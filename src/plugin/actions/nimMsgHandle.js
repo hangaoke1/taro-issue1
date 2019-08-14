@@ -12,27 +12,33 @@ export const assignKefu = (content) => {
     // init session
     dispatch({type: INIT_SESSION, session: content});
 
-    let {code,staffname} = content;
-
+    let { code, staffname } = content;
+    let time = new Date().getTime();
+    let timeTip = {
+        content: timestamp2date(time,'HH:mm'),
+        type: 'systip',
+        time: time
+    }
+    let message;
+    dispatch({type: PUSH_MESSAGE, message: timeTip});
     switch(code){
         case 200:
-            let time = new Date().getTime();
-
-            let message = {
+            message = {
                 content: `${staffname}为您服务`,
                 type: 'systip',
                 time: time
             }
-            
-            let timeTip = {
-                content: timestamp2date(time,'HH:mm'),
+            dispatch({type: PUSH_MESSAGE, message});
+        break;
+        case 201:
+            // 没有客服在线
+            message = {
+                content: content.message,
                 type: 'systip',
                 time: time
             }
-
-            dispatch({type: PUSH_MESSAGE, message: timeTip});
             dispatch({type: PUSH_MESSAGE, message});
-        break;
+            break;
         case 206:
             // 进入排队的状态
             
@@ -42,14 +48,24 @@ export const assignKefu = (content) => {
 
 
 /**
- * 
- * @param {*} msg 
  * 收到普通的消息
+ * @param {object} msg
+ * @example
+ * 'text' (文本)
+ * 'image' (图片)
+ * 'audio' (音频)
+ * 'video' (视频)
+ * 'file' (文件)
+ * 'geo' (地理位置)
+ * 'custom' (自定义消息)
+ * 'tip' (提醒消息)
+ * 'robot' (机器人消息)
+ * 'notification' (群通知消息)
  */
 export const receiveMsg = (msg) => {
     const dispatch = get('store').dispatch;
 
-    if(msg.type == 'text'){
+    if (msg.type == 'text') {
 
         let message = {
             "content": msg.text,
@@ -59,6 +75,17 @@ export const receiveMsg = (msg) => {
             "fromUser": 0
         }
     
+        dispatch({type: PUSH_MESSAGE, message});
+    }
+    if (msg.type === 'image') {
+        let message = {
+            content: JSON.stringify(msg.file),
+            type: 'image',
+            time: msg.time,
+            status: msg.status,
+            fromUser: 0
+        }
+
         dispatch({type: PUSH_MESSAGE, message});
     }
 }

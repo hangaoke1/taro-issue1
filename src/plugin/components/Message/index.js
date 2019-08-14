@@ -1,11 +1,17 @@
-import Taro from '@tarojs/taro'
-import { View } from '@tarojs/components'
-import SysTipView from './systip';
-import TextView from './text';
-import ActionView from './action';
+import Taro from '@tarojs/taro';
+import { View } from '@tarojs/components';
+import SysTipView from './im-systip/systip';
+import TextView from './im-text/text';
+import ActionView from './im-action/action';
+import ImgView from './im-img/index';
 
 export default function MessageView(props) {
     const { Message } = props;
+
+    function handleImgClick (item) {
+        props.onImgClick(item)
+    }
+
     return (
         <View>
             {   
@@ -23,6 +29,9 @@ export default function MessageView(props) {
 
                             {
                                 it.type === 'action' ? <ActionView item={it}></ActionView> : null
+                            }
+                            {
+                                it.type === 'image' ? <ImgView onClick={handleImgClick} item={it}></ImgView> : null
                             }
                         </View>
                     )

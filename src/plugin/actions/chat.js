@@ -60,8 +60,24 @@ export const sendText = (text) => dispatch => {
     }
 
     dispatch({type: PUSH_MESSAGE, message});
-    // sendTextMsg(text);
     NIM.sendTextMsg(text);
 }
 
+export const sendImage = (res) => dispatch => {
+    const tempFilePaths = res.tempFilePaths;
+    
+    // TODO: 处理发送失败问题
+    Promise.all(tempFilePaths.map(tempFilePath => {
+        NIM.sendImageMsg(tempFilePath).then(msg => {
+            let message = {
+                content: JSON.stringify(msg.file),
+                type: 'image',
+                time: msg.time,
+                status: msg.status,
+                fromUser: 1
+            }
+            dispatch({type: PUSH_MESSAGE, message});
+        })
+    }))
+}
 
