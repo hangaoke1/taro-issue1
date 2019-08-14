@@ -64,28 +64,36 @@ export const assignKefu = (content) => {
  */
 export const receiveMsg = (msg) => {
     const dispatch = get('store').dispatch;
-
+    let message;
     if (msg.type == 'text') {
 
-        let message = {
+        message = {
             "content": msg.text,
             "type": msg.type,
             "time": msg.time,
             "status": msg.status,
             "fromUser": 0
         }
-    
-        dispatch({type: PUSH_MESSAGE, message});
     }
     if (msg.type === 'image') {
-        let message = {
+        message = {
             content: JSON.stringify(msg.file),
             type: 'image',
             time: msg.time,
             status: msg.status,
             fromUser: 0
         }
-
+    }
+    if (msg.type === 'audio') {
+        message = {
+            content: JSON.stringify(msg.file),
+            type: 'audio',
+            time: msg.time,
+            status: msg.status,
+            fromUser: 0
+        }
+    }
+    if (message) {
         dispatch({type: PUSH_MESSAGE, message});
     }
 }
