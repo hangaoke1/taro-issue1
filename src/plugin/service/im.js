@@ -134,7 +134,8 @@ export default class IMSERVICE {
 
             let content = {
                 cmd: 1,
-                deviceid: get('deviceid')
+                deviceid: get('deviceid'),
+                fromType: 'WEB'
             }
     
             this.sendCustomSysMsg(content)
