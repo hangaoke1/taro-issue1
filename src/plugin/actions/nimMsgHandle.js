@@ -68,11 +68,11 @@ export const receiveMsg = (msg) => {
     if (msg.type == 'text') {
 
         message = {
-            "content": msg.text,
-            "type": msg.type,
-            "time": msg.time,
-            "status": msg.status,
-            "fromUser": 0
+            content: msg.text,
+            type: msg.type,
+            time: msg.time,
+            status: msg.status,
+            fromUser: 0
         }
     }
     if (msg.type === 'image') {
@@ -88,6 +88,15 @@ export const receiveMsg = (msg) => {
         message = {
             content: JSON.stringify(msg.file),
             type: 'audio',
+            time: msg.time,
+            status: msg.status,
+            fromUser: 0
+        }
+    }
+    if (msg.type === 'video') {
+        message = {
+            content: JSON.stringify(msg.file),
+            type: 'video',
             time: msg.time,
             status: msg.status,
             fromUser: 0

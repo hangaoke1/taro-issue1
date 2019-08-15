@@ -11,7 +11,7 @@ export default function ChatBox(props) {
   const [value, setValue] = useState('');
   const [focus, setFocus] = useState(false);
   const options = useSelector(state => state.Options);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   // 发送文本
   const handleConfirm = event => {

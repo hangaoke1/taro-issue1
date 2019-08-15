@@ -13,7 +13,7 @@ export default class Index extends Component {
 
   componentWillMount () {
     // myPluginInterface._$configAppKey('6dff3dbbe41efc598f74eac5d547355c');
-    myPluginInterface._$configAppKey('7540b40c6afa96fc975ce040733ae7f6');
+    myPluginInterface._$configAppKey('019d99fdb31a74c78a017d5a153d39aa');
   }
 
   componentDidMount () { }

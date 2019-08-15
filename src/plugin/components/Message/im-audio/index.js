@@ -4,6 +4,20 @@ import eventbus from '../../../lib/eventbus';
 
 import './index.less';
 
+// const mock = {
+//   autoreply: 0,
+//   content: JSON.stringify({"size":4518,"ext":"amr","dur":2820,"url":"http://6661.qytest.netease.com/prd/res/audio/message_92be25847e14e832622bc76761f393e9.mp3","md5":"3d040401aa828fd9611c71b2e4c55860"}),
+//   fromUser: 0,
+//   time: "1565752835763",
+//   type: "audio"
+// }
+// const mock2 = {
+//   autoreply: 0,
+//   content: JSON.stringify({"size":4518,"ext":"amr","dur":2820,"url":"http://qytest.netease.com/sdk/res/audio/message.mp3","md5":"3d040401aa828fd9611c71b2e4c55860"}),
+//   fromUser: 1,
+//   time: "1565752835763",
+//   type: "audio"
+// }
 export default class ImAudio extends Component {
 
   constructor(props) {
@@ -45,7 +59,7 @@ export default class ImAudio extends Component {
     const audioInfo = item ? JSON.parse(item.content) : {};
 
     audioCtx.autoplay = false;
-    audioCtx.src = audioInfo.url;
+    audioCtx.src = audioInfo.mp3Url;
     audioCtx.onPlay(() => {
       this.setState({ playing: true })
     })
@@ -91,7 +105,7 @@ export default class ImAudio extends Component {
         <View className='u-text-arrow' />
         <View className='u-text' onClick={this.handleClick}>
           { item.fromUser ? null : <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View>}
-          {Math.ceil(audioInfo.dur / 1000)}&quot;
+          {Math.round(audioInfo.dur / 1000)}&quot;
           { item.fromUser ? <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View> : null}
         </View>
       </View>
