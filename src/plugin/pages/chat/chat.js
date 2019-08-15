@@ -192,7 +192,7 @@ class Chat extends Component {
     const { lastId, height, videoUrl } = this.state;
     
     return (
-      <View className='m-page-wrapper'>
+      <Index className='m-page-wrapper'>
         {/* 视频全局对象 */}
         { videoUrl ? <View style='position:fixed;top:0;bottom:0;right:0;left:0;z-index:999;background-color:#000;'><Video
           id='j-video'
@@ -218,7 +218,7 @@ class Chat extends Component {
             Options.showPortrait && <Portrait onEmojiClick={this.handleEmojiClick}></Portrait>
           }
         </View>
-      </View>
+      </Index>
     )
   }
 }

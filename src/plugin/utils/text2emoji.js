@@ -1,7 +1,7 @@
 /**
  * 文本转换emoji表情包
  */
-import data from '../components/Portrait/data.json';
+import data from '../assets/emoji.json';
 
 const reg = /(\[[^\]]+\])/ig;
 const prefix = 'https://qiyukf.com/sdk/res/portrait/emoji/'
