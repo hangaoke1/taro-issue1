@@ -162,28 +162,28 @@ class Chat extends Component {
 
   /** 视频处理 **/
   handlePlay = (url) => {
-    const videoCtx = Taro.createVideoContext('j-video')
     this.setState({
       videoUrl: url
     })
+    const videoCtx = Taro.createVideoContext('j-video')
     videoCtx.requestFullScreen({
       direction: 0
     })
-    videoCtx.play()
-  }
-
-  handleStop = () => {
-    const videoCtx = Taro.createVideoContext('j-video')
-    videoCtx.stop()
   }
 
   handleFullscreenchange = (e) => {
+    const videoCtx = Taro.createVideoContext('j-video')
     if (!e.detail.fullScreen) {
       // 退出全屏后停止视频
-      this.handleStop()
+      videoCtx.stop()
       this.setState({
         videoUrl: ''
       })
+    } else {
+      // HACK: ios首次打开视时，播放无效问题
+      setTimeout(() => {
+        videoCtx.play()
+      }, 100)
     }
   }
 
@@ -194,7 +194,7 @@ class Chat extends Component {
     return (
       <Index className='m-page-wrapper'>
         {/* 视频全局对象 */}
-        { videoUrl ? <View style='position:fixed;top:0;bottom:0;right:0;left:0;z-index:999;background-color:#000;'><Video
+        <View style={`display: ${videoUrl ? 'block' : 'none'};position:fixed;top:0;bottom:0;right:0;left:0;z-index:999;background-color:#000;`}><Video
           id='j-video'
           style='width: 100%;height: 100%;'
           src={videoUrl}
@@ -202,7 +202,7 @@ class Chat extends Component {
           show-fullscreen-btn={false}
           play-btn-position='bottom'
           onFullscreenchange={this.handleFullscreenchange}
-        /></View>: null}
+        /></View>
         <View className='m-chat' style={`height: calc(100vh - ${height}px)`}>
           <View className='m-view'>
             <ScrollView className='message-content' scrollY scrollWithAnimation scrollIntoView={lastId} onClick={this.handleBodyClick}>

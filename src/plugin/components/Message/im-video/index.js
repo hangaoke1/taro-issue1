@@ -1,8 +1,9 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
 import PropTypes from 'prop-types';
-import { calcMsg } from '../../../utils/index';
+import { calcMsg, calcTime } from '../../../utils/index';
 import eventbus from '../../../lib/eventbus';
+import Iconfont from '../../Iconfont';
 
 import './index.less'
 
@@ -32,7 +33,7 @@ export default class ImVideo extends Component {
     const {} = this.state;
     const { item } = this.props;
     const videoInfo = item ? JSON.parse(item.content) : {};
-    const { w = MIN_SIZE, h = MIN_SIZE } = videoInfo;
+    const { w = MIN_SIZE, h = MIN_SIZE, dur = 0 } = videoInfo;
     const { width, height }  = calcMsg(w, h, 140, 140);
   
     return item ? (
@@ -48,7 +49,10 @@ export default class ImVideo extends Component {
           <View
             className='u-video'
             style={`width: ${width}px;height: ${height}px;`}
-          />
+          >
+            <Iconfont type='icon-play-circlex' className='u-play-icon' />
+            <View className='u-video-info'>{calcTime(dur)}</View>
+          </View>
         </View>
       </View>
     ) : null;
