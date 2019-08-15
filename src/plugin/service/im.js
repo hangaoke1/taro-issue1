@@ -14,7 +14,7 @@ export default class IMSERVICE {
     }
 
     getNim(){
-        return new Promise((resolve,reject) => {
+        return new Promise((resolve, reject) => {
 
             const onConnect = (msg) => {
                 resolve(nim);
@@ -95,7 +95,7 @@ export default class IMSERVICE {
                         }
                     }
                 })
-            })
+            }).catch(reject)
         })
     }
 
@@ -122,7 +122,7 @@ export default class IMSERVICE {
                         }
                     }
                 })
-            })
+            }).catch(reject)
         })
     }
 

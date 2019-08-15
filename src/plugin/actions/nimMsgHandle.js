@@ -102,11 +102,24 @@ export const receiveMsg = (msg) => {
             fromUser: 0
         }
     }
+
+    if (msg.type === 'custom') {
+        const {cmd, content} = JSON.parse(msg.content);
+        if (cmd === 65) {
+            // 富文本
+            message = {
+                content,
+                type: 'text',
+                time: msg.time,
+                status: msg.status,
+                fromUser: 0
+            }
+        }
+    }
     if (message) {
         dispatch({type: PUSH_MESSAGE, message});
     }
 }
-
 
 /**
  * 收到会话结束的指令
