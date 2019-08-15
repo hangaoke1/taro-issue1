@@ -1,0 +1,42 @@
+@prefix: m-video;
+
+.@{prefix}-left {
+  flex-direction: row;
+}
+.@{prefix}-right {
+  flex-direction: row-reverse;
+}
+.@{prefix} {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 12px;
+  .u-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  .u-content {
+    position: relative;
+    overflow: hidden;
+  }
+  .u-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+  }
+  .u-space {
+    width: 6px;
+  }
+  .u-video {
+    display: block;
+    max-width: 140px;
+    max-height: 140px;
+    min-width: 20px;
+    min-height: 20px;
+    border-radius: 8px;
+    background: #000;
+    cursor: pointer;
+  }
+}

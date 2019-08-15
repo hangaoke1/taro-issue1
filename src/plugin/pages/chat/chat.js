@@ -1,6 +1,6 @@
-import Taro, { Component } from '@tarojs/taro'
-import { View, ScrollView } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import Taro, { Component } from '@tarojs/taro';
+import { View, ScrollView, Video } from '@tarojs/components';
+import { connect } from '@tarojs/redux';
  
 import Index from '../../app';
 
@@ -51,7 +51,9 @@ class Chat extends Component {
     this.createAction();
     this.state = {
       lastId: '',
-      height: 0
+      height: 0,
+      videoUrl: '',
+      isVideoFullScreen: false
     }
   }
 
@@ -62,6 +64,7 @@ class Chat extends Component {
 
   componentDidMount () {
     eventbus.on('push_message', this.scrollToBottom)
+    eventbus.on('video_click', this.handlePlay)
   }
 
   componentWillUnmount () {
@@ -154,16 +157,51 @@ class Chat extends Component {
     const imgList = imgMessageList.map(msg => JSON.parse(msg.content).url);
     Taro.previewImage({
       current: JSON.parse(item.content).url,
-      urls: imgList
+      urls: imgList,
     });
+  }
+
+  /** 视频处理 **/
+  handlePlay = (url) => {
+    const videoCtx = Taro.createVideoContext('j-video');
+    this.setState({
+      isVideoFullScreen: true,
+      videoUrl: url
+    });
+    videoCtx.requestFullScreen({
+      direction: 0
+    });
+    videoCtx.play();
+  }
+
+  handleFullscreenchange = (e) => {
+    if (!e.detail.fullScreen) {
+      const videoCtx = Taro.createVideoContext('j-video');
+      // 退出全屏后停止视频
+      videoCtx.stop();
+      this.setState({
+        isVideoFullScreen: false,
+        videoUrl: ''
+      });
+    }
   }
 
   render () {
     const { Message, Options } = this.props;
-    const { lastId, height } = this.state;
+    const { lastId, height, videoUrl, isVideoFullScreen } = this.state;
     
     return (
-      <Index className='m-page-wrapper'>
+      <View className='m-page-wrapper'>
+        {/* 视频全局对象 */}
+        <View style={`display: ${isVideoFullScreen ? 'block' : 'none'};position:fixed;top:0;bottom:0;right:0;left:0;z-index:999;background-color:#000;`}><Video
+          id='j-video'
+          style='width: 100%;height: 100%;'
+          src={videoUrl}
+          controls
+          show-fullscreen-btn={false}
+          play-btn-position='bottom'
+          onFullscreenchange={this.handleFullscreenchange}
+        /></View>
         <View className='m-chat' style={`height: calc(100vh - ${height}px)`}>
           <View className='m-view'>
             <ScrollView className='message-content' scrollY scrollWithAnimation scrollIntoView={lastId} onClick={this.handleBodyClick}>
@@ -179,7 +217,7 @@ class Chat extends Component {
             Options.showPortrait && <Portrait onEmojiClick={this.handleEmojiClick}></Portrait>
           }
         </View>
-      </Index>
+      </View>
     )
   }
 }
