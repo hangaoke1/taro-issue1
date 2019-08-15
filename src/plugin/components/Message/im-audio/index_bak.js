@@ -37,7 +37,7 @@ export default function ImAudio(props) {
       eventbus.off('audio_click', handleClick);
       audioCtx.destroy();
     };
-  });
+  }, []);
 
   return item ? (
     <View

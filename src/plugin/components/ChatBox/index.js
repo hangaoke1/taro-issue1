@@ -63,7 +63,7 @@ export default function ChatBox(props) {
     return () => {
       eventbus.off('emoji_click');
     };
-  });
+  }, []);
 
   return (
     <View className='m-ChatBox'>
