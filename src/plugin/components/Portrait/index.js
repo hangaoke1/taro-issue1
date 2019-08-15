@@ -6,7 +6,7 @@ import { View, Swiper, SwiperItem } from '@tarojs/components';
 
 import './index.less';
 import './emoji.less';
-import emojiData from './data.json';
+import emojiData from '../../assets/emoji.json';
 
 export default function Portrait(props) {
   const { row = 4, col = 7 } = props;
