@@ -13,7 +13,7 @@ export default class Index extends Component {
 
   componentWillMount () {
     // myPluginInterface._$configAppKey('6dff3dbbe41efc598f74eac5d547355c');
-    myPluginInterface._$configAppKey('019d99fdb31a74c78a017d5a153d39aa');
+    myPluginInterface._$configAppKey('f13509f5e8b8e1fbb388b3ddbee238c2');
   }
 
   componentDidMount () { }
@@ -28,7 +28,7 @@ export default class Index extends Component {
   handleClick = () => {
     Taro.scanCode().then(json => {
       let appkey = json.result.split('=')[2];
-      console.log(appkey);
+      console.log(json.result);
       if(appkey){
         myPluginInterface._$configAppKey(appkey);
       }

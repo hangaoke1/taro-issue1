@@ -6,7 +6,11 @@ import './action.less';
 export default function ActionView(props){
     const item = props.item;
 
+    const actionFun =  (ev) => {
+        console.log('action.......')
+    }
+
     return(
-        <TextView item={item}></TextView>
+        <TextView item={item} actionFun = {actionFun}></TextView>
     )
 }

@@ -5,9 +5,10 @@ import IMSERVICE from '../service/im';
 
 let NIM = null;
 
-const applyKefuSuccess = (error,msg) => {
-    console.log('hi kefu'+msg);
-}
+
+/**
+ * 申请分配客服
+ */
 
 const applyKefu = () => {
     const appKey = get('appKey');
@@ -45,7 +46,6 @@ export const createAccount = (param = {}) => dispatch => {
         info.token && set('token', info.token);
 
         // 申请客服
-        // applyKefu(applyKefuSuccess)
         applyKefu();
     })
 }

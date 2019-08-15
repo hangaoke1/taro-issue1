@@ -134,8 +134,28 @@ export const onfinish = (content) => {
         type: 'action',
         fromUser: 0,
         time: time,
-        actionText: '重新连接'
+        actionText: '重新连接',
+        action: 'reApplyKefu'
     }
 
     dispatch({type: PUSH_MESSAGE, message: msg});
+}
+
+
+export const onevaluation = (content) => {
+    const dispatch = get('store').dispatch;
+
+    let time = new Date().getTime();
+
+    let msg = {
+        content: content.message,
+        type: 'action',
+        fromUser: 0,
+        time: time,
+        actionText: '评价',
+        action: 'evaluation'
+    }
+
+    dispatch({type: PUSH_MESSAGE, message: msg});
+
 }

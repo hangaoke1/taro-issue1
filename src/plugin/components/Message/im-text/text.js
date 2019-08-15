@@ -26,7 +26,7 @@ export default function TextView(props) {
         <RichText nodes={content}></RichText>
         {item.actionText ? (
           <View className='m-action'>
-            <View className='u-action-btn'>{item.actionText}</View>
+            <View className='u-action-btn' onClick={(ev) => {props.actionFun(ev)}}>{item.actionText}</View>
           </View>
         ) : null}
       </View>

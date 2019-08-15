@@ -1,7 +1,7 @@
 // import NIM from '../vendors/nim/NIM_Web_NIM_weixin_v6.6.6';
 import NIM from '../vendors/nim/NIM_Web_NIM_weixin';
 import { get } from '../global_config';
-import { assignKefu, receiveMsg, onfinish } from '../actions/nimMsgHandle';
+import { assignKefu, receiveMsg, onfinish, onevaluation } from '../actions/nimMsgHandle';
 
 
 
@@ -175,6 +175,8 @@ export default class IMSERVICE {
                 case 6:
                     onfinish(content);
                     break;
+                case 50:
+                    onevaluation(content);
                 default:
                     console.log('未知指令'+JSON.stringify(msg))
                     break;

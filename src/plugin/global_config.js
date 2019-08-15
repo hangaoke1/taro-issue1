@@ -4,7 +4,7 @@ const globalConfig = {
     account: '',
     bid: '-1',
     token: '',
-    deviceid: 'lusl4x7jhruzecuk6faq',
+    deviceid: 'fefefegegqdwqefewe',
     heartbeatCycle: 8000,
     store: null
 };
