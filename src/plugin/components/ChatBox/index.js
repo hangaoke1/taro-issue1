@@ -58,7 +58,7 @@ export default function ChatBox(props) {
   useEffect(() => {
     // 处理点击表情
     eventbus.on('emoji_click', item => {
-        setValue(value + item.tag);
+        setValue(v => v + item.tag);
     });
     return () => {
       eventbus.off('emoji_click');
