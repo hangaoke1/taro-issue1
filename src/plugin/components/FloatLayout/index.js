@@ -10,24 +10,24 @@ export default class FloatLayout extends Component {
     constructor(props) {
         super(props);
 
-        if(props.defaultVisible === undefined){
+        if (props.defaultVisible === undefined) {
             this.state = {
                 visible: false
             }
-        }else{
+        } else {
             this.state = {
                 visible: props.defaultVisible
             }
         }
     }
 
-    static getDerivedStateFromProps(nextProps, prevState){
-        if(nextProps.defaultVisible === undefined && nextProps.visible != prevState.visible){
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.defaultVisible === undefined && nextProps.visible != prevState.visible) {
             return {
                 ...prevState,
                 visible: nextProps.visible
             }
-        }else{
+        } else {
             return {
                 ...prevState
             }
