@@ -1,0 +1,42 @@
+.m-FloatLayout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    .m-FloatLayout-mask {
+        opacity: 0.2;
+        background: #000000;
+        flex: 1;
+        z-index: 10;
+    }
+    .m-FloatLayout-layout {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        z-index: 10;
+    }
+    .layout-title {
+        display: flex;
+        align-content: center;
+        align-items: center;
+        padding-left: 16px;
+        height: 48px;
+        line-height: 48px;
+        font-size: 16px;
+        color: #333333;
+        letter-spacing: 0;
+        border-bottom: 1px solid #EBEDF0;
+        justify-content: space-between;
+    }
+    .u-close {
+        vertical-align: middle;
+        height: 48px;
+    }
+    .layout-body_content_scroll_body {
+        padding: 16px;
+    }
+}
