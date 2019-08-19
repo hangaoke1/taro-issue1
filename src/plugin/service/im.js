@@ -1,9 +1,5 @@
-// import NIM from '../vendors/nim/NIM_Web_NIM_weixin_v6.6.6';
-import NIM from '../vendors/nim/NIM_Web_NIM_weixin';
 import { get } from '../global_config';
 import { assignKefu, receiveMsg, onfinish, onevaluation } from '../actions/nimMsgHandle';
-
-
 
 export default class IMSERVICE {
     constructor(initer){
@@ -15,6 +11,9 @@ export default class IMSERVICE {
 
     getNim(){
         return new Promise((resolve, reject) => {
+
+            // 获取最新的云信包
+            const NIM  = get('NIM');
 
             const onConnect = (msg) => {
                 resolve(nim);
