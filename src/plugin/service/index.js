@@ -1,4 +1,5 @@
 import {request} from '../utils/ajax';
+import { get } from '../global_config';
 
 const post = (url="", params={}) => {
     return request({
@@ -11,5 +12,6 @@ const post = (url="", params={}) => {
 
 
 export const queryAccont = (params) => {
-    return post('https://qytest.netease.com/webapi/user/create.action', params);
+    const domain = get('domain');
+    return post(`${domain}/webapi/user/create.action`, params);
 }
