@@ -104,7 +104,9 @@ export const receiveMsg = (msg) => {
     }
 
     if (msg.type === 'custom') {
-        const {cmd, content} = JSON.parse(msg.content);
+        const fmtContent = JSON.parse(msg.content);
+        const { cmd, content } = fmtContent;
+        console.log('fmt', fmtContent);
         if (cmd === 65) {
             // 富文本
             message = {

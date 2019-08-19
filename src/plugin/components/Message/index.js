@@ -17,7 +17,7 @@ export default function MessageView(props) {
     }
 
     return (
-        <View className="message-view">
+        <View className='message-view'>
             {   
                 Message ? 
                 Message.map( (it, index) => {

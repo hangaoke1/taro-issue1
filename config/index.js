@@ -29,6 +29,7 @@ const config = {
   },
   copy: {
     patterns: [
+      { from: 'src/plugin/components/ParserRichText/Parser/trees/cssHandler.wxs', to: 'plugin/components/ParserRichText/Parser/trees/cssHandler.wxs' }
     ],
     options: {
     }
