@@ -28,7 +28,7 @@ export const get = (key) => globalConfig[key];
 
 export const set = (key, value) => {
     if(key == 'domain'){
-        if(value == 'https://qytest.netease.com' || value == 'https://qiyukf.netease.com'){
+        if(value == 'https://qytest.netease.com'){
             globalConfig['NIM'] = NIM_TEST;
             console.log(NIM_TEST);
         }else{
