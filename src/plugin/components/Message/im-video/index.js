@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { calcMsg, calcTime } from '../../../utils/index';
 import eventbus from '../../../lib/eventbus';
 import Iconfont from '../../Iconfont';
+import Avatar from '../im-avatar';
 
 import './index.less'
 
@@ -38,12 +39,7 @@ export default class ImVideo extends Component {
   
     return item ? (
       <View className={item.fromUser ? 'm-video m-video-right' : 'm-video m-video-left'}>
-        <View>
-          <Image
-            className='u-avatar'
-            src='http://qytest.netease.com/sdk/res/default/robot_portrait.png'
-          />
-        </View>
+        <Avatar fromUser={item.fromUser}/>
         <View className='u-space' />
         <View className='u-content' onClick={this.handleClick}>
           <View

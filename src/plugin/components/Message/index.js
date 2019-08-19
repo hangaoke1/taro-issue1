@@ -7,6 +7,8 @@ import ImgView from './im-img/index';
 import AudioView from './im-audio/index';
 import VideoView from './im-video/index';
 
+import './index.less';
+
 export default function MessageView(props) {
     const { Message } = props;
 
@@ -15,7 +17,7 @@ export default function MessageView(props) {
     }
 
     return (
-        <View>
+        <View className="message-view">
             {   
                 Message ? 
                 Message.map( (it, index) => {

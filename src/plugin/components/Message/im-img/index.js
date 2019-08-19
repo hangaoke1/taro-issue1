@@ -4,6 +4,7 @@
 import Taro from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
 import { calcMsg } from '../../../utils/index'
+import Avatar from '../im-avatar';
 
 import './index.less';
 
@@ -23,12 +24,7 @@ export default function ImgView(props) {
 
   return item ? (
     <View className={item.fromUser ? 'm-img m-img-right' : 'm-img m-img-left'}>
-      <View>
-        <Image
-          className='u-avatar'
-          src='http://qytest.netease.com/sdk/res/default/robot_portrait.png'
-        />
-      </View>
+      <Avatar fromUser={item.fromUser}/>
       <View className='u-space' />
       <View className='u-content'>
         <Image className='u-img' mode='scaleToFill' style={`width: ${width}px;height: ${height}px`} src={imgInfo.url + extendQuery} lazy-load onClick={handleClick} />

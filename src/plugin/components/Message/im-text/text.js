@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro';
 import PropTypes from 'prop-types';
 import { View, Image, RichText } from '@tarojs/components';
+import Avatar from '../im-avatar';
 import { text2emoji } from '../../../utils/index';
 
 import './text.less';
@@ -15,12 +16,7 @@ export default function TextView(props) {
         item.fromUser ? 'm-message m-message-right' : 'm-message m-message-left'
       }
     >
-      <View>
-        <Image
-          className='u-avatar'
-          src='http://qytest.netease.com/sdk/res/default/robot_portrait.png'
-        />
-      </View>
+      <Avatar fromUser={item.fromUser}/>
       <View className='u-text-arrow' />
       <View className='u-text'>
         <RichText nodes={content}></RichText>

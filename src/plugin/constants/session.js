@@ -3,6 +3,9 @@ const namespace = 'SESSION';
 export const INIT_SESSION = `${namespace}/INIT_SESSION`;
 
 
+/*
+* 会话关闭提示语
+*/
 export const REASON_MAP = {
     '-1': '会话已断开', // 账号被踢，该状态为前端维护
     '0': '客服已关闭会话',
@@ -20,3 +23,14 @@ export const REASON_MAP = {
         7 访客关闭
     */
 };
+
+/**
+ * 默认客服头像
+ */
+export const DEFAULT_KEFU_AVATAR = 'https://qiyukf.nosdn.127.net/sdk/res/default/portrait2x.png';
+
+
+/**
+ * 默认机器人头像
+ */
+export const DEFAULT_ROBOT_AVATAR = 'https://qiyukf.nosdn.127.net/sdk/res/default/robot_portrait2x.png';

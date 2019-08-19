@@ -1,6 +1,7 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
 import eventbus from '../../../lib/eventbus';
+import Avatar from '../im-avatar';
 
 import './index.less';
 
@@ -96,12 +97,7 @@ export default class ImAudio extends Component {
           item.fromUser ? 'm-audio m-audio-right' : 'm-audio m-audio-left'
         }
       >
-        <View>
-          <Image
-            className='u-avatar'
-            src='http://qytest.netease.com/sdk/res/default/robot_portrait.png'
-          />
-        </View>
+        <Avatar fromUser={item.fromUser}/>
         <View className='u-text-arrow' />
         <View className='u-text' onClick={this.handleClick}>
           { item.fromUser ? null : <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View>}

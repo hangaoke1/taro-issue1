@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro'
 import {queryAccont} from '../service';
 import {get,set} from '../global_config';
 import {PUSH_MESSAGE} from '../constants/message';

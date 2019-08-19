@@ -1,8 +1,8 @@
 import {INIT_SESSION} from '../constants/session';
 
-const initSession = {};
+export const initSession = {};
 
-const Session = (state = initSession, action) => {
+export const Session = (state = initSession, action) => {
     switch(action.type){
         case INIT_SESSION:
             return {...state, ...action.session};
