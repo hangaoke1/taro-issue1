@@ -13,6 +13,10 @@ class ParserRichText extends Taro.Component {
     }
   };
 
+  handleLinkpress = (event) => {
+    this.props.onLinkpress && this.props.onLinkpress(event);
+  }
+
   render() {
     const {
       html,
@@ -23,8 +27,9 @@ class ParserRichText extends Taro.Component {
       tagStyle,
       imgMode,
       showWithAnimation,
-      animationDuration
+      animationDuration,
     } = this.props;
+  
     return (
       <parser
         html={html}
@@ -36,6 +41,7 @@ class ParserRichText extends Taro.Component {
         img-mode={imgMode}
         show-with-animation={showWithAnimation}
         animation-duration={animationDuration}
+        onLinkpress={this.handleLinkpress}
       />
     );
   }
@@ -49,7 +55,7 @@ ParserRichText.defaultProps = {
   showWithAnimation: false,
   animationDuration: 400,
   selectable: false,
-  tagStyle: {},
+  tagStyle: { img: 'width: auto; height: auto;max-width: 220px;max-height: 400px;'},
   imgMode: 'aspectFit'
 }
 

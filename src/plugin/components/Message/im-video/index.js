@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { calcMsg, calcTime } from '../../../utils/index';
 import eventbus from '../../../lib/eventbus';
 import Iconfont from '../../Iconfont';
-import Avatar from '../im-avatar';
+import Avatar from '../u-avatar';
 
 import './index.less'
 

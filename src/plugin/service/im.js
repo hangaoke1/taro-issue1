@@ -10,7 +10,7 @@ export default class IMSERVICE {
     }
 
     getNim(){
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
 
             // 获取最新的云信包
             const NIM  = get('NIM');
@@ -116,7 +116,6 @@ export default class IMSERVICE {
                         if(error){
                             reject(error);
                         }else{
-                            console.log('-------hgk-------', msg);
                             resolve(msg);
                         }
                     }
@@ -163,10 +162,8 @@ export default class IMSERVICE {
      * 收到系统自定义消息
      */
     onCustomsysmsg(msg){
-        console.log('---onCustomsysmsg---', msg)
         try{
             let content = JSON.parse(msg.content);
-            console.log('---onCustomsysmsg content---', content)
 
             switch (content.cmd){
                 case 2: 
@@ -178,7 +175,7 @@ export default class IMSERVICE {
                 case 50:
                     onevaluation(content);
                 default:
-                    console.log('未知指令'+JSON.stringify(msg))
+                    console.log('onCustomsysmsg 未知指令'+JSON.stringify(msg))
                     break;
             }
 
@@ -199,7 +196,7 @@ export default class IMSERVICE {
                 cmd: -1000,
                 deviceid: get('deviceid')
             }),
-            done: (error,msg) => {
+            done: (error) => {
                 if(error){
                     console.log('sendHeartbeat--error!');
                 }else{

@@ -107,17 +107,32 @@ export const receiveMsg = (msg) => {
         const fmtContent = JSON.parse(msg.content);
         const { cmd, content } = fmtContent;
         console.log('fmt', fmtContent);
-        if (cmd === 65) {
-            // 富文本
-            message = {
-                content,
-                type: 'text',
-                time: msg.time,
-                status: msg.status,
-                fromUser: 0
-            }
+
+        switch(cmd) {
+            case 60:
+                // 解析机器人回复
+                message = {
+                    content: '机器人回复',
+                    type: 'text',
+                    time: msg.time,
+                    status: msg.status,
+                    fromUser: 0
+                }
+                break;
+            case 65:
+                // 富文本
+                message = {
+                    content,
+                    type: 'text',
+                    time: msg.time,
+                    status: msg.status,
+                    fromUser: 0
+                }
+                break;
+            default:;
         }
     }
+
     if (message) {
         dispatch({type: PUSH_MESSAGE, message});
     }
@@ -128,7 +143,7 @@ export const receiveMsg = (msg) => {
  */
 export const onfinish = (content) => {
     const dispatch = get('store').dispatch;
-    let session = get('store').getState().Session.Session;
+    // let session = get('store').getState().Session.Session;
 
     let {close_reason, richmessage, message} = content;
     let time = new Date().getTime();

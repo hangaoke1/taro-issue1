@@ -4,7 +4,7 @@
 import Taro from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
 import { calcMsg } from '../../../utils/index'
-import Avatar from '../im-avatar';
+import Avatar from '../u-avatar';
 
 import './index.less';
 

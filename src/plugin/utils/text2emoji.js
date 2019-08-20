@@ -7,7 +7,7 @@ const reg = /(\[[^\]]+\])/ig;
 const prefix = 'https://qiyukf.com/sdk/res/portrait/emoji/'
 
 export const getImgHTML = function (obj) {
-  var img = '<img class="portrait_icon" style="display: inline-block;width: 21px;height: 21px;vertical-align: middle;" data-id="' + obj.id +
+  var img = '<img ignore class="portrait_icon" style="display: inline-block;width: 21px;height: 21px;vertical-align: middle;" data-id="' + obj.id +
             '" src="' + obj.src + 
             '" title="' + obj.tag + 
             '" alt="' + obj.tag + '">';
