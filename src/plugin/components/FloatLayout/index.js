@@ -57,7 +57,7 @@ export default class FloatLayout extends Component {
     }
 
     render() {
-        const { title, contentHeight } = this.props;
+        const { title, contentHeight, visibleRenderChildren } = this.props;
         const { visible } = this.state;
 
         return (
@@ -78,7 +78,7 @@ export default class FloatLayout extends Component {
                         </View>
                         <View className="layout-body">
                             <ScrollView className="layout-body_content" scrollY={true} style={{
-                                height: contentHeight + 'px'
+                                maxHeight: contentHeight + 'px'
                             }}>
                                 <View className="layout-body_content_scroll_body">
                                     {this.props.children}

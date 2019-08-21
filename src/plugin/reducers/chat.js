@@ -1,11 +1,15 @@
-const corpConfig = (state = {
-  appKey: 'c583f9c0cb3945b577814c39d152ff4a'
+import {SET_EVALUATION_VISIBLE} from '../constants/chat';
+
+
+
+const CorpStatus = (state = {
+  evaluationVisible: false
 }, action) => {
   switch(action.type){
-    case 'SET_APPKEY':
+    case SET_EVALUATION_VISIBLE:
       return {
         ...state,
-        appKey: action.appKey
+        evaluationVisible: action.value
       }
     default:
       return state;
@@ -13,4 +17,4 @@ const corpConfig = (state = {
 }
 
 
-export default corpConfig;
+export default CorpStatus;

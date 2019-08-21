@@ -8,17 +8,22 @@ import MessageView from '../../components/Message';
 import ChatBox from '../../components/ChatBox';
 import FuncBox from '../../components/FuncBox';
 import Portrait from '../../components/Portrait';
+import FloatLayout from '../../components/FloatLayout';
+import Evaluation from '../../components/Evaluation';
 
 import { createAccount, sendText, sendImage } from '../../actions/chat';
 import { toggleShowFun, toggleShowPortrait, hideAction } from '../../actions/options';
+import { closeEvaluationModal } from '../../actions/actionHandle';
 import eventbus from '../../lib/eventbus';
 
 import functionList from './function.config';
 import './chat.less';
 
-@connect(({ Message, Options }) => ({
+@connect(({ Message, Options, CorpStatus,Session }) => ({
   Message,
-  Options
+  Options,
+  CorpStatus,
+  Session
 }), (dispatch) => ({
   hideAction () {
     dispatch(hideAction())
@@ -37,6 +42,9 @@ import './chat.less';
   },
   sendImage(value){
     dispatch(sendImage(value))
+  },
+  closeEvaluationModal(){
+    dispatch(closeEvaluationModal())
   }
 }))
   
@@ -191,8 +199,13 @@ class Chat extends Component {
     }
   }
 
+  closeEvaluationModal = () => {
+    const { closeEvaluationModal } = this.props;
+    closeEvaluationModal();
+  }
+
   render () {
-    const { Message, Options } = this.props;
+    const { Message, Options,CorpStatus,Session } = this.props;
     const { lastId, height, videoUrl } = this.state;
     
     return (
@@ -222,6 +235,11 @@ class Chat extends Component {
             Options.showPortrait && <Portrait onEmojiClick={this.handleEmojiClick}></Portrait>
           }
         </View>
+        <FloatLayout visible={CorpStatus.evaluationVisible} 
+            title="请对本次服务进行评价" 
+            onClose={this.closeEvaluationModal}>
+              {Session.evaluation ? <Evaluation/> : null}
+          </FloatLayout>
       </Index>
     )
   }
