@@ -116,7 +116,7 @@ class Chat extends Component {
   // 扩展功能栏点击处理
   handleFuncClick = item => {
     console.log(item);
-    const { sendImage } = this.props;
+    const { sendImage: _sendImage } = this.props;
     switch (item.type) {
       case 'album':
         // 照片
@@ -124,7 +124,7 @@ class Chat extends Component {
           sourceType: ['album']
         }).then(res => {
           console.log('选择图片: ', res)
-          sendImage(res)
+          _sendImage(res)
         })
         break;
       case 'camera':

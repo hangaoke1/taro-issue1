@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro';
-import { escape, text2emoji } from '../../utils';
+import { RichText } from '@tarojs/components';
+import { filterHtml, text2emoji } from '../../utils';
 
 import './parserRichText.less';
 
@@ -7,15 +8,18 @@ import './parserRichText.less';
  * ParserRichText 富文本组件
  */
 class ParserRichText extends Taro.Component {
-
   config = {
     usingComponents: {
       parser: './Parser/index'
     }
   };
 
-  handleLinkpress = (event) => {
+  handleLinkpress = event => {
     this.props.onLinkpress && this.props.onLinkpress(event);
+  };
+
+  handleError = error => {
+    console.log('error:', error)
   }
 
   render() {
@@ -31,9 +35,9 @@ class ParserRichText extends Taro.Component {
       animationDuration,
       isRich
     } = this.props;
-    
+
     if (!isRich) {
-      html = escape(html);
+      html = filterHtml(html);
     }
 
     html = text2emoji(html);
@@ -50,8 +54,9 @@ class ParserRichText extends Taro.Component {
         show-with-animation={showWithAnimation}
         animation-duration={animationDuration}
         onLinkpress={this.handleLinkpress}
+        onError={this.handleError}
       />
-    );
+    )
   }
 }
 
@@ -62,10 +67,12 @@ ParserRichText.defaultProps = {
   autosetTitle: true,
   showWithAnimation: false,
   animationDuration: 400,
-  selectable: false,
-  tagStyle: { img: 'width: auto; height: auto;max-width: 220px;max-height: 400px;'},
+  selectable: true,
+  tagStyle: {
+    img: 'width: auto; height: auto;max-width: 220px;max-height: 400px;'
+  },
   imgMode: 'aspectFit',
   isRich: true
-}
+};
 
 export default ParserRichText;

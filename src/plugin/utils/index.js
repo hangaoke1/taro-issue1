@@ -6,3 +6,4 @@ export * from './calc-time';
 export * from './query2object';
 export * from './fmt-robot';
 export * from './xss';
+export * from './uuid';

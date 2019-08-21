@@ -27,6 +27,10 @@ export default function RobotView(props) {
       <View className='u-text-arrow' />
       <View className='u-text'>
         <ParserRichText html={content} onLinkpress={handleLinkpress}></ParserRichText>
+        <View className='u-action'>
+          <View className='u-button'>有用</View>
+          <View className='u-button'>没用</View>
+        </View>
       </View>
     </View>
   );

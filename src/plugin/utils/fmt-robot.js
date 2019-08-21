@@ -11,6 +11,7 @@ export const fmtRobot = function (msg, content) {
     answer_list,
     answer_label,
     answer_type,
+    answer_flag,
     evaluation = 0,
     evaluation_content,
     evaluation_reason = 0,
@@ -58,7 +59,7 @@ export const fmtRobot = function (msg, content) {
   if (operator_hint === 1) {
     ret.push({
       content: operator_hint_desc,
-      type: 'text',
+      type: [2, 3].includes(answer_flag) ? 'rich' : 'text',
       time: msg.time,
       fromUser: 0
     })
