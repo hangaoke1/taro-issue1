@@ -1,7 +1,7 @@
-import {get} from '../global_config';
-import {PUSH_MESSAGE} from '../constants/message';
-import {INIT_SESSION,REASON_MAP} from '../constants/session';
-import {timestamp2date} from '../utils/date';
+import { get } from '../global_config';
+import { PUSH_MESSAGE } from '../constants/message';
+import { INIT_SESSION,REASON_MAP } from '../constants/session';
+import { timestamp2date, fmtRobot } from '../utils';
 
 /**
  * 分配客服
@@ -110,20 +110,17 @@ export const receiveMsg = (msg) => {
 
         switch(cmd) {
             case 60:
-                // 解析机器人回复
-                message = {
-                    content: '机器人回复',
-                    type: 'text',
-                    time: msg.time,
-                    status: msg.status,
-                    fromUser: 0
-                }
+                // 机器人答案返回
+                const msgList = fmtRobot(msg, fmtContent)
+                msgList.forEach(item => {
+                    dispatch({type: PUSH_MESSAGE, message: item});
+                })
                 break;
             case 65:
                 // 富文本
                 message = {
                     content,
-                    type: 'text',
+                    type: 'rich',
                     time: msg.time,
                     status: msg.status,
                     fromUser: 0

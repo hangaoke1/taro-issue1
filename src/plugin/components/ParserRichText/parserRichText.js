@@ -1,4 +1,5 @@
 import Taro from '@tarojs/taro';
+import { escape, text2emoji } from '../../utils';
 
 import './parserRichText.less';
 
@@ -18,7 +19,7 @@ class ParserRichText extends Taro.Component {
   }
 
   render() {
-    const {
+    let {
       html,
       autocopy,
       autopause,
@@ -28,8 +29,15 @@ class ParserRichText extends Taro.Component {
       imgMode,
       showWithAnimation,
       animationDuration,
+      isRich
     } = this.props;
-  
+    
+    if (!isRich) {
+      html = escape(html);
+    }
+
+    html = text2emoji(html);
+
     return (
       <parser
         html={html}
@@ -48,7 +56,7 @@ class ParserRichText extends Taro.Component {
 }
 
 ParserRichText.defaultProps = {
-  html: [],
+  html: '',
   autocopy: true,
   autopause: true,
   autosetTitle: true,
@@ -56,7 +64,8 @@ ParserRichText.defaultProps = {
   animationDuration: 400,
   selectable: false,
   tagStyle: { img: 'width: auto; height: auto;max-width: 220px;max-height: 400px;'},
-  imgMode: 'aspectFit'
+  imgMode: 'aspectFit',
+  isRich: true
 }
 
 export default ParserRichText;

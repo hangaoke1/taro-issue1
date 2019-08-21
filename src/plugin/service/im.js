@@ -162,6 +162,7 @@ export default class IMSERVICE {
      * 收到系统自定义消息
      */
     onCustomsysmsg(msg){
+        console.log('---onCustomsysmsg---', msg)
         try{
             let content = JSON.parse(msg.content);
 

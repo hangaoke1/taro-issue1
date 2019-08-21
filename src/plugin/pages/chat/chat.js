@@ -89,7 +89,11 @@ class Chat extends Component {
   handleConfirm = (event) => {
     const { sendText: _sendText } = this.props;
     let value = event.detail.value;
-
+    
+    // 禁止发送空文本
+    if (!value.trim()) {
+      return;
+    }
     _sendText(value);
   }
 

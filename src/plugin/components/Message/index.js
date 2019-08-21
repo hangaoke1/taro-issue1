@@ -6,6 +6,7 @@ import ActionView from './im-action/action';
 import ImgView from './im-img/index';
 import AudioView from './im-audio/index';
 import VideoView from './im-video/index';
+import RobotView from './im-robot/index';
 
 import './index.less';
 
@@ -28,7 +29,7 @@ export default function MessageView(props) {
                             }
 
                             {
-                                it.type === 'text' ? <TextView item={it}></TextView> : null
+                                ['text', 'rich'].includes(it.type) ? <TextView item={it}></TextView> : null
                             }
 
                             {
@@ -40,7 +41,12 @@ export default function MessageView(props) {
                             {
                                 it.type === 'audio' ? <AudioView item={it}></AudioView> : null
                             }
-                            {   it.type === 'video' ? <VideoView item={it}></VideoView> : null}
+                            {   
+                                it.type === 'video' ? <VideoView item={it}></VideoView> : null
+                            }
+                            {
+                                ['qa-list', 'qa'].includes(it.type) ? <RobotView item={it}></RobotView> : null
+                            }
                         </View>
                     )
                 })
