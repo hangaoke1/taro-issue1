@@ -1,11 +1,11 @@
 import Taro from '@tarojs/taro';
-import { RichText } from '@tarojs/components';
 import { filterHtml, text2emoji } from '../../utils';
 
 import './parserRichText.less';
 
 /**
  * ParserRichText 富文本组件
+ * cover from https://github.com/jin-yufeng/Parser
  */
 class ParserRichText extends Taro.Component {
   config = {

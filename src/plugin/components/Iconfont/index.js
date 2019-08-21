@@ -9,5 +9,6 @@ export default function Iconfont(props) {
         display: 'inline-block',
         color: color,
         fontSize: size + 'px'
-    }}></View>
+    }}
+    ></View>
 }
