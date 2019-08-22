@@ -1,6 +1,7 @@
 //DomHandler.js
 const CssTokenizer = require('./CssTokenizer.js');
 const CanIUse = require('./api.js').versionHigherThan('2.7.1');
+
 const Common = 1,
   Rich = 2;
 const trustTag = {
@@ -210,6 +211,7 @@ DomHandler.prototype.onopentag = function(name, attrs) {
       };
       break;
     case 'font':
+      console.log('-----处理文本尺寸-----', attrs)
       name = 'span';
       if (attrs.color) {
         attrs.style += (';color:' + attrs.color);
@@ -218,6 +220,10 @@ DomHandler.prototype.onopentag = function(name, attrs) {
       if (attrs.face) {
         attrs.style += (";font-family:" + attrs.face);
         delete attrs.face;
+      }
+      if (attrs.size) {
+        attrs.style += (";font-size:" + attrs.size * 5 + 'px')
+        delete attrs.size
       }
       break;
     case 'a':

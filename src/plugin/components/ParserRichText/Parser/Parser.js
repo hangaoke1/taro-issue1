@@ -1,6 +1,7 @@
 //Parser.js
 const Tokenizer = require("./Tokenizer.js");
 const DomHandler = require("./DomHandler.js");
+
 const trustAttrs = {
   align: true,
   alt: true,
@@ -26,8 +27,9 @@ const trustAttrs = {
   src: true,
   start: true,
   style: true,
+  size: true,
   type: true,
-  width: true,
+  width: true
 };
 const voidTag = {
   area: true,
