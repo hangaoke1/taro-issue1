@@ -36,3 +36,12 @@ export const RECEIVE_EVALUATION_RESULT_CMD = 55;
 /**
 * 收到的自定义指令 ------end--------
 */
+
+
+/**
+ * 导航栏标题配置
+ */
+// 常态标题
+export const NAVIGATIONBAR_TITLE = '网易七鱼';
+// 连接中标题
+export const NAVIGATIONBAR_TITLE_CONNECTING = '正在连接';

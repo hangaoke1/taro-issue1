@@ -1,8 +1,10 @@
+import Taro from '@tarojs/taro'
 import { get } from '../global_config';
 import { assignKefu, receiveMsg, onfinish, onevaluation,onevaluationresult } from '../actions/nimMsgHandle';
 import { FROM_TYPE, SEND_EVALUATION_CMD, APPLY_KEFU_CMD,
         ASSIGN_KEFU_CMD,FINISH_SESSION_CMD,RECEIVE_EVALUATION_CMD,
-        RECEIVE_EVALUATION_RESULT_CMD } from '../constants';
+        RECEIVE_EVALUATION_RESULT_CMD,NAVIGATIONBAR_TITLE_CONNECTING,
+        NAVIGATIONBAR_TITLE } from '../constants';
 
 let contenting = false;
 
@@ -135,6 +137,12 @@ export default class IMSERVICE {
     applyKefu(stafftype = 0){
         return new Promise((resolve, reject) => {
 
+            // 申请客服的时候导航栏控制
+            Taro.showNavigationBarLoading();
+            Taro.setNavigationBarTitle({
+                title: NAVIGATIONBAR_TITLE_CONNECTING
+            })
+
             let content = {
                 cmd: APPLY_KEFU_CMD,
                 deviceid: get('deviceid'),
@@ -195,7 +203,12 @@ export default class IMSERVICE {
             let content = JSON.parse(msg.content);
 
             switch (content.cmd){
-                case ASSIGN_KEFU_CMD: 
+                case ASSIGN_KEFU_CMD:
+                    // 申请客服成功后的导航栏控制
+                    Taro.hideNavigationBarLoading();
+                    Taro.setNavigationBarTitle({
+                        title: NAVIGATIONBAR_TITLE
+                    }) 
                     assignKefu(content);
                     break;
                 case FINISH_SESSION_CMD:
