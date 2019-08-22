@@ -1,4 +1,4 @@
-import { get } from '../global_config';
+import { get, set } from '../global_config';
 import { PUSH_MESSAGE } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
 import { timestamp2date, fmtRobot } from '../utils';
@@ -11,6 +11,9 @@ export const assignKefu = (content) => {
 
     // init session
     dispatch({type: INIT_SESSION, session: content});
+
+    let isRobot = content.stafftype === 1 || content.robotInQueue ===  1;
+    set('isRobot', isRobot);
 
     let { code, staffname } = content;
     let time = new Date().getTime();
@@ -72,7 +75,8 @@ export const receiveMsg = (msg) => {
             type: msg.type,
             time: msg.time,
             status: msg.status,
-            fromUser: 0
+            fromUser: 0,
+            msg
         }
     }
     if (msg.type === 'image') {
@@ -81,7 +85,8 @@ export const receiveMsg = (msg) => {
             type: 'image',
             time: msg.time,
             status: msg.status,
-            fromUser: 0
+            fromUser: 0,
+            msg
         }
     }
     if (msg.type === 'audio') {
@@ -90,7 +95,8 @@ export const receiveMsg = (msg) => {
             type: 'audio',
             time: msg.time,
             status: msg.status,
-            fromUser: 0
+            fromUser: 0,
+            msg
         }
     }
     if (msg.type === 'video') {
@@ -99,7 +105,8 @@ export const receiveMsg = (msg) => {
             type: 'video',
             time: msg.time,
             status: msg.status,
-            fromUser: 0
+            fromUser: 0,
+            msg
         }
     }
 
@@ -123,7 +130,8 @@ export const receiveMsg = (msg) => {
                     type: 'rich',
                     time: msg.time,
                     status: msg.status,
-                    fromUser: 0
+                    fromUser: 0,
+                    msg
                 }
                 break;
             default:;

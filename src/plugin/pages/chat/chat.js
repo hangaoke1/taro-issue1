@@ -52,7 +52,8 @@ class Chat extends Component {
     this.state = {
       lastId: '',
       height: 0,
-      videoUrl: ''
+      videoUrl: '',
+      scrollWithAnimation: true
     }
   }
 
@@ -70,14 +71,17 @@ class Chat extends Component {
     eventbus.off('push_message', this.scrollToBottom)
   }
 
-  componentDidShow () { }
+  componentDidShow () {
+    this.scrollToBottom(false);
+  }
 
   componentDidHide () { }
 
   // 重置底部区域
-  scrollToBottom = () => {
+  scrollToBottom = (scrollWithAnimation = true) => {
     this.setState({
-      lastId: ''
+      lastId: '',
+      scrollWithAnimation
     })
     setTimeout(() => {
       this.setState({
@@ -193,7 +197,7 @@ class Chat extends Component {
 
   render () {
     const { Message, Options } = this.props;
-    const { lastId, height, videoUrl } = this.state;
+    const { lastId, height, videoUrl, scrollWithAnimation } = this.state;
     
     return (
       <Index className='m-page-wrapper'>
@@ -209,7 +213,7 @@ class Chat extends Component {
         /></View>
         <View className='m-chat' style={`height: calc(100vh - ${height}px)`}>
           <View className='m-view'>
-            <ScrollView className='message-content' scrollY scrollWithAnimation scrollIntoView={lastId} onClick={this.handleBodyClick}>
+            <ScrollView className='message-content' scrollY scrollWithAnimation={scrollWithAnimation} scrollIntoView={lastId} onClick={this.handleBodyClick}>
               <MessageView Message={Message} onImgClick={this.handleImgClick}></MessageView>
               <View id='m-bottom'></View>
             </ScrollView>

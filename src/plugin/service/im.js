@@ -126,14 +126,16 @@ export default class IMSERVICE {
 
     /**
      * 申请分配客服
+     * @param {number} stafftype 0:申请客服，不管是机器人还是人工客服；1：只申请人工客服；
      */
-    applyKefu(){
+    applyKefu(stafftype = 0){
         return new Promise((resolve, reject) => {
 
             let content = {
                 cmd: 1,
                 deviceid: get('deviceid'),
-                fromType: 'WEB'
+                fromType: 'WEB',
+                stafftype
             }
     
             this.sendCustomSysMsg(content)

@@ -39,7 +39,8 @@ export const fmtRobot = function (msg, content) {
       evaluation,
       evalcontent: evaluation_content,
       evaluation_reason,
-      evaluation_guide
+      evaluation_guide,
+      msg
     })
   
     // 仅答案
@@ -53,7 +54,8 @@ export const fmtRobot = function (msg, content) {
       evaluation,
       evalcontent: evaluation_content,
       evaluation_reason,
-      evaluation_guide
+      evaluation_guide,
+      msg
     })
   }
 
@@ -63,7 +65,8 @@ export const fmtRobot = function (msg, content) {
       content: operator_hint_desc,
       type: [2, 3].includes(answer_flag) ? 'rich' : 'text',
       time: msg.time,
-      fromUser: 0
+      fromUser: 0,
+      msg
     })
   }
 

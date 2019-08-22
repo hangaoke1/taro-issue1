@@ -6,7 +6,7 @@ import Avatar from '../u-avatar';
 import ParserRichText from '../../ParserRichText/parserRichText';
 import Iconfont from '../../Iconfont';
 
-import { sendText } from '../../../actions/chat';
+import { sendText, evalRobotAnswer, parseUrlAction } from '../../../actions/chat';
 
 import './index.less';
 
@@ -16,7 +16,7 @@ import './index.less';
 export default function RobotView(props) {
   // 0: 不显示 1: 未评价 2: 有用 3: 没用
   const item = props.item;
-  let { content, evaluation: initEvaluation = 0, type } = item;
+  let { content, evaluation: initEvaluation = 0, type, msg } = item;
   const [evaluation, setEvaluation] = useState(initEvaluation);
   const dispatch = useDispatch();
 
@@ -25,19 +25,27 @@ export default function RobotView(props) {
     return () => {};
   }, [initEvaluation]);
 
-  function handleLinkpress(href) {
-    console.log('----点击富文本a标签----', href);
+  // 点击富文本链接
+  function handleLinkpress(event) {
+    const { detail } = event;
+    console.log('----点击富文本a标签----', detail);
+    parseUrlAction(detail)
   }
 
+  // 评价机器人答案
   function handleAction(val) {
-    // TODO: 处理评价反馈至云信
+    let userEvaluation = val;
+    const msgidClient = msg.idClient;
     if (evaluation === val) {
-      setEvaluation(1);
-    } else {
-      setEvaluation(val);
+      userEvaluation = 1
     }
+    setEvaluation(userEvaluation);
+    evalRobotAnswer(msgidClient, userEvaluation).then(() => {
+      console.log('-----🙏success 评价完成🙏----')
+    })
   }
 
+  // 点击关联问题
   function handleQuestionClick(q) {
     const { question } = q;
     dispatch(sendText(question))

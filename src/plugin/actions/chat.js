@@ -9,9 +9,10 @@ let NIM = null;
 
 /**
  * 申请分配客服
+ * @param {number} stafftype 申请客服类型
  */
 
-const applyKefu = () => {
+export const applyKefu = (stafftype = 0) => {
     const appKey = get('appKey');
     const account = get('account');
     const token = get('token');
@@ -22,7 +23,7 @@ const applyKefu = () => {
         token: token
     });
 
-    NIM.applyKefu();
+    NIM.applyKefu(stafftype);
 }
 
 /**
@@ -47,10 +48,14 @@ export const createAccount = (param = {}) => dispatch => {
         info.token && set('token', info.token);
 
         // 申请客服
-        applyKefu();
+        applyKefu(0);
     })
 }
 
+/**
+ * 发送文本消息
+ * @param {string} text 文本内容
+ */
 export const sendText = (text) => dispatch => {
     let message = {
         "content": text,
@@ -64,6 +69,10 @@ export const sendText = (text) => dispatch => {
     NIM.sendTextMsg(text);
 }
 
+/**
+ * 发送图片消息
+ * @param {object} res 微信sdk返回对象
+ */
 export const sendImage = (res) => dispatch => {
     const tempFilePaths = res.tempFilePaths;
     
@@ -82,3 +91,34 @@ export const sendImage = (res) => dispatch => {
     }))
 }
 
+/**
+ * 评价机器人返回信息
+ * @param {string} msgidClient 客户端消息唯一标志
+ * @param {number} evaluation 1没评价，2有用，3没用
+ * @return {promise}
+ */
+export const evalRobotAnswer = (msgidClient, evaluation) => {
+    const msg = {
+        cmd: 64,
+        msgidClient,
+        evaluation
+    }
+    console.log('----评价机器人答案----', msg)
+    return NIM.sendCustomSysMsg(msg);
+}
+
+/**
+ * 处理文本链接点击
+ * @param {string} url 链接地址
+ */
+export const parseUrlAction = (url) => {
+    if (url === 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
+        const isRobot = get('isRobot');
+        if (!isRobot) {
+            console.log('<---非机器人情况下无法转人工--->')
+        } else {
+            NIM.applyKefu(1);
+            console.log('<---转人工处理--->')
+        }
+    }
+}
