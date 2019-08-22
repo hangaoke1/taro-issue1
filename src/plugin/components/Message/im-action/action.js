@@ -11,7 +11,12 @@ export default function ActionView(props) {
         anctionHandle(item.action);
     }
 
+    const richProps = {
+        ...item,
+        type: 'rich'
+    }
+
     return (
-        <TextView item={item} actionFun={actionFun}></TextView>
+        <TextView item={richProps} actionFun={actionFun}></TextView>
     )
 }

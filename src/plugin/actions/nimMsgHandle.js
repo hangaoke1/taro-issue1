@@ -1,5 +1,5 @@
 import { get,set } from '../global_config';
-import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY } from '../constants/message';
+import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY,UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
 import { timestamp2date, fmtRobot } from '../utils';
 
@@ -32,13 +32,21 @@ export const assignKefu = (content) => {
                 time: time
             }
             dispatch({type: PUSH_MESSAGE, message});
+
+            // 会话成功后，重新连接的按钮禁用
+            let updateActionMsg = {
+                disabled: 1,
+                action: 'reApplyKefu'
+            }
+            dispatch({type: UPDATE_MESSAGE_BYACTION, message: updateActionMsg});
         break;
         case 201:
             // 没有客服在线
             message = {
-                content: content.message,
-                type: 'systip',
-                time: time
+                content: content.richmessage || content.message,
+                type: 'rich',
+                time: time,
+                fromUser: 0
             }
             dispatch({type: PUSH_MESSAGE, message});
             break;

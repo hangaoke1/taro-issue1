@@ -23,7 +23,7 @@ export const applyKefu = (stafftype = 0) => {
         account: account,
         token: token
     });
-
+    
     NIM.applyKefu(stafftype);
 }
 

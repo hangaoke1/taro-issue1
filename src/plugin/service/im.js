@@ -4,12 +4,13 @@ import { FROM_TYPE, SEND_EVALUATION_CMD, APPLY_KEFU_CMD,
         ASSIGN_KEFU_CMD,FINISH_SESSION_CMD,RECEIVE_EVALUATION_CMD,
         RECEIVE_EVALUATION_RESULT_CMD } from '../constants';
 
+let contenting = false;
+
 export default class IMSERVICE {
     constructor(initer){
         this.appKey = initer.appKey;
         this.account = initer.account;
         this.token = initer.token;
-        this.contenting = false;
     }
 
     getNim(){
@@ -35,7 +36,7 @@ export default class IMSERVICE {
                 oncustomsysmsg: this.onCustomsysmsg
             });
 
-            if(this.contenting){
+            if(contenting){
                 resolve(nim);
             }
         })
@@ -140,7 +141,7 @@ export default class IMSERVICE {
                 fromType: FROM_TYPE,
                 stafftype
             }
-    
+            
             this.sendCustomSysMsg(content)
             .then((msg) => {
                 resolve(msg);
@@ -242,18 +243,18 @@ export default class IMSERVICE {
 
     onConnect(data){
         console.log('----onConnect----，data:'+ data);
-        this.contenting = true;
+        contenting = true;
         // 连接成功后发送访客心跳
         this.sendHeartbeat();
     }
 
     onError(data){
-        this.contenting = false;
+        contenting = false;
         console.log('----onError----，data:'+ data);
     }
 
     onDisconnect(data){
-        this.contenting = false;
+        contenting = false;
         console.log('----onDisconnect----，data:'+ data);
     }
 
