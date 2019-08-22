@@ -26,25 +26,25 @@ import './chat.less';
   Session
 }), (dispatch) => ({
   hideAction () {
-    dispatch(hideAction())
+    dispatch(hideAction());
   },
   toggleShowFun () {
-    dispatch(toggleShowFun())
+    dispatch(toggleShowFun());
   },
   toggleShowPortrait () {
-    dispatch(toggleShowPortrait())
+    dispatch(toggleShowPortrait());
   },
   createAccount(){
-    dispatch(createAccount())
+    dispatch(createAccount());
   },
   sendText(value){
-    dispatch(sendText(value))
+    dispatch(sendText(value));
   },
   sendImage(value){
-    dispatch(sendImage(value))
+    dispatch(sendImage(value));
   },
   closeEvaluationModal(){
-    dispatch(closeEvaluationModal())
+    dispatch(closeEvaluationModal());
   }
 }))
   
@@ -71,12 +71,12 @@ class Chat extends Component {
   }
 
   componentDidMount () {
-    eventbus.on('push_message', this.scrollToBottom)
-    eventbus.on('video_click', this.handlePlay)
+    eventbus.on('push_message', this.scrollToBottom);
+    eventbus.on('video_click', this.handlePlay);
   }
 
   componentWillUnmount () {
-    eventbus.off('push_message', this.scrollToBottom)
+    eventbus.off('push_message', this.scrollToBottom);
   }
 
   componentDidShow () {
@@ -90,12 +90,12 @@ class Chat extends Component {
     this.setState({
       lastId: '',
       scrollWithAnimation
-    })
+    });
     setTimeout(() => {
       this.setState({
         lastId: 'm-bottom'
       })
-    }, 100)
+    }, 100);
   }
 
   handleConfirm = (event) => {
@@ -110,19 +110,19 @@ class Chat extends Component {
   }
 
   handleBodyClick = () => {
-    this.props.hideAction()
+    this.props.hideAction();
   }
 
   // 处理选择表情
   handlePortraitClick = () => {
     this.props.toggleShowPortrait();
-    this.scrollToBottom()
+    this.scrollToBottom();
   }
 
   // 处理点击加号
   handlePlusClick = () => {
     this.props.toggleShowFun();
-    this.scrollToBottom()
+    this.scrollToBottom();
   }
 
   // 扩展功能栏点击处理
@@ -135,17 +135,17 @@ class Chat extends Component {
         Taro.chooseImage({
           sourceType: ['album']
         }).then(res => {
-          console.log('选择图片: ', res)
-          _sendImage(res)
-        })
+          console.log('选择图片: ', res);
+          _sendImage(res);
+        });
         break;
       case 'camera':
         // 拍摄
         Taro.chooseImage({
           sourceType: ['camera']
         }).then(res => {
-          console.log('照相: ', res)
-        })
+          console.log('照相: ', res);
+        });
         break;
       default:
         console.log(`暂不支持${item.type}`);
@@ -154,16 +154,16 @@ class Chat extends Component {
 
   // 处理emoji表情点击
   handleEmojiClick = item => {
-    eventbus.trigger('emoji_click', item)
+    eventbus.trigger('emoji_click', item);
   }
 
   handleFocus = (event) => {
-    this.setState({ height: event.detail.height })
-    this.scrollToBottom()
+    this.setState({ height: event.detail.height });
+    this.scrollToBottom();
   }
 
   handleBlur = () => {
-    this.setState({ height: 0 })
+    this.setState({ height: 0 });
   }
 
   /** 消息体点击事件处理 **/
@@ -180,26 +180,26 @@ class Chat extends Component {
   handlePlay = (url) => {
     this.setState({
       videoUrl: url
-    })
-    const videoCtx = Taro.createVideoContext('j-video')
+    });
+    const videoCtx = Taro.createVideoContext('j-video');
     videoCtx.requestFullScreen({
       direction: 0
-    })
+    });
   }
 
   handleFullscreenchange = (e) => {
-    const videoCtx = Taro.createVideoContext('j-video')
+    const videoCtx = Taro.createVideoContext('j-video');
     if (!e.detail.fullScreen) {
       // 退出全屏后停止视频
-      videoCtx.stop()
+      videoCtx.stop();
       this.setState({
         videoUrl: ''
-      })
+      });
     } else {
       // HACK: ios首次打开视时，播放无效问题
       setTimeout(() => {
-        videoCtx.play()
-      }, 100)
+        videoCtx.play();
+      }, 100);
     }
   }
 

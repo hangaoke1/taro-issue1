@@ -2,6 +2,14 @@
 const CssTokenizer = require('./CssTokenizer.js');
 const CanIUse = require('./api.js').versionHigherThan('2.7.1');
 
+const fontMap = {
+  1: '12px',
+  2: '13px',
+  3: '16px',
+  4: '18px',
+  5: '24px',
+  6: '36px'
+}
 const Common = 1,
   Rich = 2;
 const trustTag = {
@@ -222,8 +230,8 @@ DomHandler.prototype.onopentag = function(name, attrs) {
         delete attrs.face;
       }
       if (attrs.size) {
-        attrs.style += (";font-size:" + attrs.size * 5 + 'px')
-        delete attrs.size
+        attrs.style += (";font-size:" + fontMap[attrs.size]);
+        delete attrs.size;
       }
       break;
     case 'a':
