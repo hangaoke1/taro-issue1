@@ -1,5 +1,8 @@
 import { get } from '../global_config';
-import { assignKefu, receiveMsg, onfinish, onevaluation } from '../actions/nimMsgHandle';
+import { assignKefu, receiveMsg, onfinish, onevaluation,onevaluationresult } from '../actions/nimMsgHandle';
+import { FROM_TYPE, SEND_EVALUATION_CMD, APPLY_KEFU_CMD,
+        ASSIGN_KEFU_CMD,FINISH_SESSION_CMD,RECEIVE_EVALUATION_CMD,
+        RECEIVE_EVALUATION_RESULT_CMD } from '../constants';
 
 export default class IMSERVICE {
     constructor(initer){
@@ -132,9 +135,9 @@ export default class IMSERVICE {
         return new Promise((resolve, reject) => {
 
             let content = {
-                cmd: 1,
+                cmd: APPLY_KEFU_CMD,
                 deviceid: get('deviceid'),
-                fromType: 'WEB',
+                fromType: FROM_TYPE,
                 stafftype
             }
     
@@ -143,6 +146,28 @@ export default class IMSERVICE {
                 resolve(msg);
             })
             .catch(error => {
+                reject(error);
+            })
+        })
+    }
+
+    /**
+     * 访客发送评价
+     * @param {*} data 
+     */
+    sendEvaluation(data){
+        return new Promise((resolve, reject) => {
+
+            let content = {
+                cmd: SEND_EVALUATION_CMD,
+                fromType: FROM_TYPE,
+                ...data
+            }
+
+            this.sendCustomSysMsg(content)
+            .then(msg => { 
+                resolve(msg);
+            }).catch(error => {
                 reject(error);
             })
         })
@@ -169,14 +194,18 @@ export default class IMSERVICE {
             let content = JSON.parse(msg.content);
 
             switch (content.cmd){
-                case 2: 
+                case ASSIGN_KEFU_CMD: 
                     assignKefu(content);
                     break;
-                case 6:
+                case FINISH_SESSION_CMD:
                     onfinish(content);
                     break;
-                case 50:
+                case RECEIVE_EVALUATION_CMD:
                     onevaluation(content);
+                    break;
+                case RECEIVE_EVALUATION_RESULT_CMD:
+                    onevaluationresult(content);
+                    break;
                 default:
                     console.log('onCustomsysmsg 未知指令'+JSON.stringify(msg))
                     break;

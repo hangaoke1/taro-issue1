@@ -1,5 +1,5 @@
 import Taro, { useState,useEffect } from '@tarojs/taro';
-import { useSelector } from '@tarojs/redux';
+import { useSelector,useDispatch } from '@tarojs/redux';
 import { View,Button } from '@tarojs/components';
 import Render2Level from './render2Level';
 import Render345Level from './render345Level';
@@ -7,28 +7,31 @@ import RenderTag from './RenderTag';
 import RenderMark from './renderMark';
 import RenderSolve from './RenderSolve';
 
+import {sendEvaluation} from '../../actions/chat';
+
 import './index.less';
 
+const submitParam = {
+    evaluation: 100
+};
 
 export default function Evaluation(props) {
 
     const session = useSelector(state => state.Session);
-
-    let evaluation = null;
+    const evaluation = session.evaluation;
+    submitParam.sessionid = session.sessionid;
 
     let initTagList = [],initValue = 100,initName = '非常满意';
-    if (session.evaluation) {
-        evaluation = JSON.parse(session.evaluation);
 
-        if(evaluation && evaluation.list){
-            evaluation.list.forEach(item => {
-                if(item.value == 100){
-                    item.tagList && (initTagList = item.tagList);
-                    item.name && (initName = item.name);
-                }
-            })
-        }
+    if(evaluation && evaluation.list){
+        evaluation.list.forEach(item => {
+            if(item.value == 100){
+                item.tagList && (initTagList = item.tagList);
+                item.name && (initName = item.name);
+            }
+        })
     }
+    
 
     const [tagList, setTagList] = useState(initTagList);
     const [selectValue, setSelectValue] = useState(initValue);
@@ -37,24 +40,34 @@ export default function Evaluation(props) {
     const [remarks, setRemarks] = useState("");
     const [resolved, setResolved] = useState(null);
 
+    const dispatch = useDispatch()
+
 
 
     const handleSelect = (tagList, selectValue, selectName) => {
         setTagList(tagList);
         setSelectValue(selectValue);
         setSelectName(selectName);
+        submitParam.evaluation = selectValue;
     }
 
     const handleSelectTag = (value) => {
         setSelectTags(value);
+        submitParam.tagList = JSON.stringify(value);
     }
 
     const handleInput = (event) => {
-        setRemarks(event.value);
+        setRemarks(event.detail.value);
+        submitParam.remarks = event.detail.value;
     }
 
     const handleSelectSolve = (value) => {
         setResolved(value);
+        submitParam.evaluation_resolved = value;
+    }
+
+    const handleSubmit = () => {
+        dispatch(sendEvaluation(submitParam));
     }
 
     return (
@@ -64,7 +77,7 @@ export default function Evaluation(props) {
                     {
                         evaluation.type == 2 ?
                             <Render2Level list={evaluation.list} onSelect={handleSelect} selectValue={selectValue}/> : 
-                            <Render345Level list={evaluation.list} />
+                            <Render345Level list={evaluation.list} onSelect={handleSelect} selectValue={selectValue}/>
                     }
                 </View>
                 <View className="m-evaluation_icon_text">
@@ -74,7 +87,7 @@ export default function Evaluation(props) {
                 <RenderMark onInput={handleInput} remarks={remarks} />
                 <RenderSolve resolved={resolved} onSelect={handleSelectSolve} />
                 <View className="m-evaluation_submit">
-                    <Button className="u-submit">提交评价</Button>
+                    <Button className="u-submit" onClick={handleSubmit}>提交评价</Button>
                 </View>
             </View>
             : null
