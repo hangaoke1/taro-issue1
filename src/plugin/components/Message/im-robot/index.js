@@ -28,7 +28,6 @@ export default function RobotView(props) {
   // 点击富文本链接
   function handleLinkpress(event) {
     const { detail } = event;
-    console.log('----点击富文本a标签----', detail);
     parseUrlAction(detail)
   }
 

@@ -219,7 +219,7 @@ DomHandler.prototype.onopentag = function(name, attrs) {
       };
       break;
     case 'font':
-      console.log('-----处理文本尺寸-----', attrs)
+      // console.log('-----处理文本尺寸-----', attrs);
       name = 'span';
       if (attrs.color) {
         attrs.style += (';color:' + attrs.color);

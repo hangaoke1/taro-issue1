@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { View } from '@tarojs/components';
 import Avatar from '../u-avatar';
 import ParserRichText from '../../ParserRichText/parserRichText';
+import { parseUrlAction } from '../../../actions/chat';
 
 import './text.less';
 
@@ -11,9 +12,9 @@ export default function TextView(props) {
   const { content, type } = item;
   const isRich = type === 'rich';
 
-  function handleLinkpress (href) {
-    // TODO: 处理富文本a标签点击事件
-    console.log('----点击富文本a标签----', href);
+  function handleLinkpress (event) {
+    const { detail } = event;
+    parseUrlAction(detail);
   }
 
   return (

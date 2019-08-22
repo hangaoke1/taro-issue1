@@ -112,6 +112,7 @@ export const evalRobotAnswer = (msgidClient, evaluation) => {
  * @param {string} url 链接地址
  */
 export const parseUrlAction = (url) => {
+    console.log('----点击富文本a标签----', url);
     if (url === 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
         const isRobot = get('isRobot');
         if (!isRobot) {
