@@ -3,6 +3,7 @@ import {queryAccont} from '../service';
 import {get,set} from '../global_config';
 import {PUSH_MESSAGE} from '../constants/message';
 import IMSERVICE from '../service/im';
+import {SET_EVALUATION_VISIBLE} from '../constants/chat';
 
 let NIM = null;
 
@@ -121,4 +122,17 @@ export const parseUrlAction = (url) => {
             console.log('<---转人工处理--->')
         }
     }
+}
+
+/**
+ * 访客发送评价
+ * @param {*} param 
+ */
+export const sendEvaluation = (data = {}) => dispatch => {
+    NIM.sendEvaluation(data).then(json => {
+        dispatch({
+            type: SET_EVALUATION_VISIBLE,
+            value: false
+        })
+    })
 }

@@ -1,5 +1,5 @@
-import { get, set } from '../global_config';
-import { PUSH_MESSAGE } from '../constants/message';
+import { get,set } from '../global_config';
+import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
 import { timestamp2date, fmtRobot } from '../utils';
 
@@ -176,7 +176,10 @@ export const onfinish = (content) => {
     dispatch({type: PUSH_MESSAGE, message: msg});
 }
 
-
+/**
+ *  收到客服的邀评
+ * @param {*} content 
+ */
 export const onevaluation = (content) => {
     const dispatch = get('store').dispatch;
 
@@ -188,9 +191,36 @@ export const onevaluation = (content) => {
         fromUser: 0,
         time: time,
         actionText: '评价',
-        action: 'evaluation'
+        action: 'evaluation',
+        key: `evaluation-${content.sessionid}`
     }
 
     dispatch({type: PUSH_MESSAGE, message: msg});
 
+}
+
+/**
+ * 收到评价成功的推送
+ * @param {*} content 
+ */
+export const onevaluationresult = (content) => {
+    const dispatch = get('store').dispatch;
+
+    let time = new Date().getTime();
+
+    let message = {
+        content: content.message,
+        type: 'rich',
+        time: time,
+        fromUser: 0
+    }
+
+    let updateActionMsg = {
+        key: `evaluation-${content.sessionid}`,
+        actionText: '已评价',
+        disabled: 1
+    }
+
+    dispatch({type: PUSH_MESSAGE, message});
+    dispatch({type: UPDATE_MESSAGE_BYKEY, message: updateActionMsg});
 }
