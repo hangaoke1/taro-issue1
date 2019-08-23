@@ -50,10 +50,18 @@ export const assignKefu = (content) => {
             }
             dispatch({type: PUSH_MESSAGE, message});
             break;
-        case 206:
+        case 203:
             // 进入排队的状态
-
-        break;
+            message = {
+              content: `排队中，您排在第${content.before}位，排到将自动接入。`,
+              type: 'action',
+              time: time,
+              actionText: '取消排队',
+              fromUser: 0,
+              action: 'cancelQueue'
+            }
+            dispatch({type: PUSH_MESSAGE, message});
+          break;
     }
  }
 

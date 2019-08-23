@@ -221,6 +221,11 @@ export default class IMSERVICE {
 
       switch (content.cmd) {
         case ASSIGN_KEFU_CMD:
+          // 申请客服成功后的导航栏控制
+          Taro.hideNavigationBarLoading();
+          Taro.setNavigationBarTitle({
+              title: NAVIGATIONBAR_TITLE
+          })
           assignKefu(content);
           break;
         case FINISH_SESSION_CMD:
