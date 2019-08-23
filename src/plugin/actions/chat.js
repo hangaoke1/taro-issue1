@@ -131,15 +131,16 @@ export const evalRobotAnswer = (msgidClient, evaluation) => {
  */
 export const parseUrlAction = url => {
   console.log('----点击富文本a标签----', url);
+
+  // 处理转人工请求
   if (url === 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
     const isRobot = get('isRobot');
     if (!isRobot) {
-      console.log('<---非机器人情况下无法转人工--->');
+      console.log('----非机器人情况下无法转人工----');
     } else {
       NIM.applyKefu({
         stafftype: 1
       });
-      console.log('<---转人工处理--->');
     }
   }
 };
@@ -162,7 +163,6 @@ export const sendEvaluation = (data = {}) => dispatch => {
  * @param {object} message 新消息内容
  * @param {number} index 消息序号
  */
-export const changeMessageByIndex = function(message, index) {
-  const dispatch = get('store').dispatch;
+export const changeMessageByIndex = (message, index) => dispatch => {
   dispatch({ type: UPDATE_MESSAGE_BYINDEX, message, index });
 };

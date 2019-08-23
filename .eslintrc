@@ -6,6 +6,7 @@
     "react/no-array-index-key": null,
     "taro/this-props-function": null,
     "import/prefer-default-export": null,
+    "no-shadow": 0,
   },
     "parser": "babel-eslint"
   }

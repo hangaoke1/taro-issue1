@@ -1,4 +1,4 @@
-import Taro, { useState, useEffect } from '@tarojs/taro';
+import Taro from '@tarojs/taro';
 import { useDispatch } from '@tarojs/redux';
 import PropTypes from 'prop-types';
 import { View, Text, Textarea } from '@tarojs/components';
@@ -6,7 +6,13 @@ import Avatar from '../u-avatar';
 import ParserRichText from '../../ParserRichText/parserRichText';
 import Iconfont from '../../Iconfont';
 
-import { sendText, evalRobotAnswer, evaluationContent, parseUrlAction, changeMessageByIndex } from '../../../actions/chat';
+import {
+  sendText,
+  evalRobotAnswer,
+  evaluationContent,
+  parseUrlAction,
+  changeMessageByIndex
+} from '../../../actions/chat';
 
 import './index.less';
 
@@ -16,25 +22,40 @@ import './index.less';
 export default function RobotView(props) {
   // 0: 不显示 1: 未评价 2: 有用 3: 没用
   const { item, index } = props;
-  let { content, evaluation, evaluation_reason, evaluation_content, type, msg = {} } = item;
+  let {
+    content,
+    evaluation,
+    evaluation_reason,
+    evaluation_content,
+    type,
+    msg = {}
+  } = item;
   const msgidClient = msg.idClient;
   const dispatch = useDispatch();
+
+  // 根据index修改消息内容
+  function changeMessage(message, index) {
+    dispatch(changeMessageByIndex(message, index));
+  }
 
   // 点击富文本链接
   function handleLinkpress(event) {
     const { detail } = event;
-    parseUrlAction(detail)
+    parseUrlAction(detail);
   }
 
   // 评价机器人答案
   function handleAction(val) {
     let userEvaluation = val;
     if (evaluation === val) {
-      userEvaluation = 1
+      userEvaluation = 1;
     }
 
     // TODO修改数据状态
-    changeMessageByIndex(Object.assign({}, item, { evaluation: userEvaluation }), index);
+    changeMessage(
+      Object.assign({}, item, { evaluation: userEvaluation }),
+      index
+    );
 
     evalRobotAnswer(msgidClient, userEvaluation).then(() => {
       console.log('-----🙏success 评价完成🙏----');
@@ -50,8 +71,13 @@ export default function RobotView(props) {
 
   // 差评原因修改
   function handleEvalReson(event) {
-    const usrEvaluationContent = event.detail.value
-    changeMessageByIndex(Object.assign({}, item, { evaluation_content: usrEvaluationContent }), index);
+    const usrEvaluationContent = event.detail.value;
+
+    changeMessage(
+      Object.assign({}, item, { evaluation_content: usrEvaluationContent }),
+      index
+    );
+
     evaluationContent(msgidClient, usrEvaluationContent).then(() => {
       console.log('-----🙏success 差评原因提交完成🙏----');
     });
@@ -60,7 +86,7 @@ export default function RobotView(props) {
   // 点击关联问题
   function handleQuestionClick(q) {
     const { question } = q;
-    dispatch(sendText(question))
+    dispatch(sendText(question));
   }
 
   return (
@@ -76,7 +102,11 @@ export default function RobotView(props) {
         {type === 'qa-list' && item.list.length ? (
           <View className='u-qalist'>
             {item.list.map(q => (
-              <View className='u-qaitem' key={q.id} onClick={() => handleQuestionClick(q)}>
+              <View
+                className='u-qaitem'
+                key={q.id}
+                onClick={() => handleQuestionClick(q)}
+              >
                 <View className='u-dot' />
                 {q.question}
               </View>
@@ -104,7 +134,13 @@ export default function RobotView(props) {
             </View>
           </View>
         ) : null}
-        { evaluation_reason === 1 && evaluation === 3 ? <Textarea className='u-textarea' value={evaluation_content} onBlur={handleEvalReson} />: null}
+        {evaluation_reason === 1 && evaluation === 3 ? (
+          <Textarea
+            className='u-textarea'
+            value={evaluation_content}
+            onBlur={handleEvalReson}
+          />
+        ) : null}
       </View>
     </View>
   );
