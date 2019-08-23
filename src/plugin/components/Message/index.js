@@ -19,8 +19,8 @@ export default function MessageView(props) {
 
     return (
         <View className='message-view'>
-            {   
-                Message ? 
+            {
+                Message ?
                 Message.map( (it, index) => {
                     return(
                         <View key={index}>
@@ -33,7 +33,7 @@ export default function MessageView(props) {
                             }
 
                             {
-                                it.type === 'action' ? <ActionView item={it}></ActionView> : null
+                                ['action', 'entries'].includes(it.type) ? <ActionView item={it}></ActionView> : null
                             }
                             {
                                 it.type === 'image' ? <ImgView onClick={handleImgClick} item={it}></ImgView> : null
@@ -41,7 +41,7 @@ export default function MessageView(props) {
                             {
                                 it.type === 'audio' ? <AudioView item={it}></AudioView> : null
                             }
-                            {   
+                            {
                                 it.type === 'video' ? <VideoView item={it}></VideoView> : null
                             }
                             {

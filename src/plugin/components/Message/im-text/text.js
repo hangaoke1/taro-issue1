@@ -27,13 +27,7 @@ export default function TextView(props) {
       <View className='u-text-arrow' />
       <View className='u-text'>
         <ParserRichText html={content} onLinkpress={handleLinkpress} isRich={isRich}></ParserRichText>
-        {item.actionText ? (
-          <View className='m-action'>
-            <View className={item.disabled ? 'u-action-btn u-action-btn-disabled' : 'u-action-btn'} 
-                  onClick={(ev) => {props.actionFun(ev)}}>{item.actionText}
-            </View>
-          </View>
-        ) : null}
+        {props.children}
       </View>
     </View>
   );

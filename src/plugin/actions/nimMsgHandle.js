@@ -1,5 +1,5 @@
 import { get,set } from '../global_config';
-import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYINDEX } from '../constants/message';
+import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
 import { timestamp2date, fmtRobot } from '../utils';
 
@@ -32,19 +32,27 @@ export const assignKefu = (content) => {
                 time: time
             }
             dispatch({type: PUSH_MESSAGE, message});
+
+            // 会话成功后，重新连接的按钮禁用
+            let updateActionMsg = {
+                disabled: 1,
+                action: 'reApplyKefu'
+            }
+            dispatch({type: UPDATE_MESSAGE_BYACTION, message: updateActionMsg});
         break;
         case 201:
             // 没有客服在线
             message = {
-                content: content.message,
-                type: 'systip',
-                time: time
+                content: content.richmessage || content.message,
+                type: 'rich',
+                time: time,
+                fromUser: 0
             }
             dispatch({type: PUSH_MESSAGE, message});
             break;
         case 206:
             // 进入排队的状态
-            
+
         break;
     }
  }
@@ -155,7 +163,7 @@ export const onfinish = (content) => {
 
     let tip;
     tip = REASON_MAP[close_reason] || '会话已断开';
-    
+
     if (close_reason == 0 || close_reason == 2) {
         tip = richmessage || message || REASON_MAP[close_reason];
     }
@@ -163,7 +171,7 @@ export const onfinish = (content) => {
     // if(session && session.kefu.isRobot && data.close_reason == 1) {
     //     tip = '本次会话已超时结束';
     // }
-    
+
     let msg = {
         content: tip,
         type: 'action',
@@ -178,7 +186,7 @@ export const onfinish = (content) => {
 
 /**
  *  收到客服的邀评
- * @param {*} content 
+ * @param {*} content
  */
 export const onevaluation = (content) => {
     const dispatch = get('store').dispatch;
@@ -201,7 +209,7 @@ export const onevaluation = (content) => {
 
 /**
  * 收到评价成功的推送
- * @param {*} content 
+ * @param {*} content
  */
 export const onevaluationresult = (content) => {
     const dispatch = get('store').dispatch;
@@ -223,6 +231,23 @@ export const onevaluationresult = (content) => {
 
     dispatch({type: PUSH_MESSAGE, message});
     dispatch({type: UPDATE_MESSAGE_BYKEY, message: updateActionMsg});
+}
+
+export const receiveShuntEntries = (content) => {
+  const dispatch = get('store').dispatch;
+
+  let time = new Date().getTime();
+
+  let message = {
+    content: content.message,
+    type: 'entries',
+    time: time,
+    fromUser: 0,
+    action: 'selectEntries',
+    entries: JSON.parse(content.entries)
+  }
+
+  dispatch({type: PUSH_MESSAGE, message});
 }
 
 /**

@@ -12,19 +12,21 @@ let NIM = null;
  * @param {number} stafftype 申请客服类型
  */
 
-export const applyKefu = (stafftype = 0) => {
-  const appKey = get('appKey');
-  const account = get('account');
-  const token = get('token');
+export const applyKefu = (extraParms = {
+  stafftype: 0
+}) => {
+    const appKey = get('appKey');
+    const account = get('account');
+    const token = get('token');
 
-  NIM = new IMSERVICE({
-    appKey: appKey,
-    account: account,
-    token: token
-  });
+    NIM = new IMSERVICE({
+        appKey: appKey,
+        account: account,
+        token: token
+    });
 
-  NIM.applyKefu(stafftype);
-};
+    NIM.applyKefu(extraParms);
+}
 
 /**
  *
@@ -47,7 +49,7 @@ export const createAccount = (param = {}) => dispatch => {
     info.token && set('token', info.token);
 
     // 申请客服
-    applyKefu(0);
+    applyKefu();
   });
 };
 
@@ -134,7 +136,9 @@ export const parseUrlAction = url => {
     if (!isRobot) {
       console.log('<---非机器人情况下无法转人工--->');
     } else {
-      NIM.applyKefu(1);
+      NIM.applyKefu({
+        stafftype: 1
+      });
       console.log('<---转人工处理--->');
     }
   }

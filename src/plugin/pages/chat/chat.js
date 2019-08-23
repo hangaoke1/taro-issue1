@@ -11,6 +11,8 @@ import Portrait from '../../components/Portrait';
 import FloatLayout from '../../components/FloatLayout';
 import Evaluation from '../../components/Evaluation';
 
+import { NAVIGATIONBAR_TITLE } from '../../constants';
+
 import { createAccount, sendText, sendImage } from '../../actions/chat';
 import { toggleShowFun, toggleShowPortrait, hideAction } from '../../actions/options';
 import { closeEvaluationModal } from '../../actions/actionHandle';
@@ -51,7 +53,7 @@ import './chat.less';
 class Chat extends Component {
 
   config = {
-    navigationBarTitleText: '网易七鱼'
+    navigationBarTitleText: NAVIGATIONBAR_TITLE
   }
 
   constructor(props){
