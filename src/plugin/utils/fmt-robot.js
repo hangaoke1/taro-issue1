@@ -13,7 +13,7 @@ export const fmtRobot = function (msg, content) {
     answer_type,
     answer_flag,
     evaluation = 0,
-    evaluation_content,
+    evaluation_content = '',
     evaluation_reason = 0,
     evaluation_guide = '感谢你的评价，请填写具体原因供我们改进',
     operator_hint = 0,

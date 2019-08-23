@@ -33,6 +33,9 @@ export const RECEIVE_EVALUATION_CMD = 50;
 // 评价成功后收到评价结果通知
 export const RECEIVE_EVALUATION_RESULT_CMD = 55;
 
+// 收到机器人提示
+export const REVEIVE_ROBOT_TIP_CMD = 70;
+
 /**
 * 收到的自定义指令 ------end--------
 */

@@ -1,5 +1,5 @@
 import { get,set } from '../global_config';
-import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY } from '../constants/message';
+import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYINDEX } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
 import { timestamp2date, fmtRobot } from '../utils';
 
@@ -223,4 +223,20 @@ export const onevaluationresult = (content) => {
 
     dispatch({type: PUSH_MESSAGE, message});
     dispatch({type: UPDATE_MESSAGE_BYKEY, message: updateActionMsg});
+}
+
+/**
+ * 接收到机器人提示
+ * @param {object} content 
+ */
+export const onRobotTip = function (content) {
+    const dispatch = get('store').dispatch;
+
+    let message = {
+        content: content.message,
+        type: 'rich',
+        time: content.timestamp,
+        fromUser: 0
+    }
+    dispatch({type: PUSH_MESSAGE, message});
 }

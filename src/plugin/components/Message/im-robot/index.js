@@ -1,12 +1,12 @@
 import Taro, { useState, useEffect } from '@tarojs/taro';
 import { useDispatch } from '@tarojs/redux';
 import PropTypes from 'prop-types';
-import { View, Text } from '@tarojs/components';
+import { View, Text, Textarea } from '@tarojs/components';
 import Avatar from '../u-avatar';
 import ParserRichText from '../../ParserRichText/parserRichText';
 import Iconfont from '../../Iconfont';
 
-import { sendText, evalRobotAnswer, parseUrlAction } from '../../../actions/chat';
+import { sendText, evalRobotAnswer, evaluationContent, parseUrlAction, changeMessageByIndex } from '../../../actions/chat';
 
 import './index.less';
 
@@ -15,15 +15,10 @@ import './index.less';
  */
 export default function RobotView(props) {
   // 0: 不显示 1: 未评价 2: 有用 3: 没用
-  const item = props.item;
-  let { content, evaluation: initEvaluation = 0, type, msg } = item;
-  const [evaluation, setEvaluation] = useState(initEvaluation);
+  const { item, index } = props;
+  let { content, evaluation, evaluation_reason, evaluation_content, type, msg = {} } = item;
+  const msgidClient = msg.idClient;
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    setEvaluation(initEvaluation);
-    return () => {};
-  }, [initEvaluation]);
 
   // 点击富文本链接
   function handleLinkpress(event) {
@@ -34,14 +29,32 @@ export default function RobotView(props) {
   // 评价机器人答案
   function handleAction(val) {
     let userEvaluation = val;
-    const msgidClient = msg.idClient;
     if (evaluation === val) {
       userEvaluation = 1
     }
-    setEvaluation(userEvaluation);
+
+    // TODO修改数据状态
+    changeMessageByIndex(Object.assign({}, item, { evaluation: userEvaluation }), index);
+
     evalRobotAnswer(msgidClient, userEvaluation).then(() => {
-      console.log('-----🙏success 评价完成🙏----')
-    })
+      console.log('-----🙏success 评价完成🙏----');
+    });
+
+    // 用户差评且无需评价原因
+    if (userEvaluation === 3 && evaluation_reason === 0) {
+      evaluationContent(msgidClient, '').then(() => {
+        console.log('-----🙏success 差评原因提交完成🙏----');
+      });
+    }
+  }
+
+  // 差评原因修改
+  function handleEvalReson(event) {
+    const usrEvaluationContent = event.detail.value
+    changeMessageByIndex(Object.assign({}, item, { evaluation_content: usrEvaluationContent }), index);
+    evaluationContent(msgidClient, usrEvaluationContent).then(() => {
+      console.log('-----🙏success 差评原因提交完成🙏----');
+    });
   }
 
   // 点击关联问题
@@ -91,6 +104,7 @@ export default function RobotView(props) {
             </View>
           </View>
         ) : null}
+        { evaluation_reason === 1 && evaluation === 3 ? <Textarea className='u-textarea' value={evaluation_content} onBlur={handleEvalReson} />: null}
       </View>
     </View>
   );

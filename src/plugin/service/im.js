@@ -1,8 +1,8 @@
 import { get } from '../global_config';
-import { assignKefu, receiveMsg, onfinish, onevaluation,onevaluationresult } from '../actions/nimMsgHandle';
+import { assignKefu, receiveMsg, onfinish, onevaluation, onevaluationresult, onRobotTip } from '../actions/nimMsgHandle';
 import { FROM_TYPE, SEND_EVALUATION_CMD, APPLY_KEFU_CMD,
         ASSIGN_KEFU_CMD,FINISH_SESSION_CMD,RECEIVE_EVALUATION_CMD,
-        RECEIVE_EVALUATION_RESULT_CMD } from '../constants';
+        RECEIVE_EVALUATION_RESULT_CMD, REVEIVE_ROBOT_TIP_CMD } from '../constants';
 
 export default class IMSERVICE {
     constructor(initer){
@@ -192,6 +192,7 @@ export default class IMSERVICE {
         console.log('---onCustomsysmsg---', msg)
         try{
             let content = JSON.parse(msg.content);
+            console.log('fmt: ', content)
 
             switch (content.cmd){
                 case ASSIGN_KEFU_CMD: 
@@ -205,6 +206,9 @@ export default class IMSERVICE {
                     break;
                 case RECEIVE_EVALUATION_RESULT_CMD:
                     onevaluationresult(content);
+                    break;
+                case REVEIVE_ROBOT_TIP_CMD:
+                    onRobotTip(content);
                     break;
                 default:
                     console.log('onCustomsysmsg 未知指令'+JSON.stringify(msg))
