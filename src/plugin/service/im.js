@@ -1,10 +1,11 @@
 import Taro from '@tarojs/taro'
 import { get } from '../global_config';
-import { assignKefu, receiveMsg, onfinish, onevaluation,onevaluationresult } from '../actions/nimMsgHandle';
+import { assignKefu, receiveMsg, onfinish, onevaluation,onevaluationresult,
+        receiveShuntEntries } from '../actions/nimMsgHandle';
 import { FROM_TYPE, SEND_EVALUATION_CMD, APPLY_KEFU_CMD,
         ASSIGN_KEFU_CMD,FINISH_SESSION_CMD,RECEIVE_EVALUATION_CMD,
         RECEIVE_EVALUATION_RESULT_CMD,NAVIGATIONBAR_TITLE_CONNECTING,
-        NAVIGATIONBAR_TITLE } from '../constants';
+        NAVIGATIONBAR_TITLE,RECEIVE_SHUNT_ENTRIES_CMD } from '../constants';
 
 let contenting = false;
 
@@ -46,14 +47,14 @@ export default class IMSERVICE {
 
     /**
      * 发送自定义消息
-     * @param {obj} content 
-     * @param {number} to 
-     * @param {} done 
+     * @param {obj} content
+     * @param {number} to
+     * @param {} done
      */
     sendCustomSysMsg(
         content,
         to = -1
-    ){  
+    ){
         return new Promise((resolve,reject) => {
             this.getNim().then((nim) => {
                 nim.sendCustomSysMsg({
@@ -76,11 +77,11 @@ export default class IMSERVICE {
         })
     }
 
-    
+
     /**
      * 发送文本消息
-     * @param {text} value 
-     * @param {number} to 
+     * @param {text} value
+     * @param {number} to
      */
     sendTextMsg(
         value,
@@ -134,7 +135,9 @@ export default class IMSERVICE {
      * 申请分配客服
      * @param {number} stafftype 0:申请客服，不管是机器人还是人工客服；1：只申请人工客服；
      */
-    applyKefu(stafftype = 0){
+    applyKefu(extraParms = {
+      stafftype: 0
+    }){
         return new Promise((resolve, reject) => {
 
             // 申请客服的时候导航栏控制
@@ -147,9 +150,9 @@ export default class IMSERVICE {
                 cmd: APPLY_KEFU_CMD,
                 deviceid: get('deviceid'),
                 fromType: FROM_TYPE,
-                stafftype
+               ...extraParms
             }
-            
+
             this.sendCustomSysMsg(content)
             .then((msg) => {
                 resolve(msg);
@@ -162,7 +165,7 @@ export default class IMSERVICE {
 
     /**
      * 访客发送评价
-     * @param {*} data 
+     * @param {*} data
      */
     sendEvaluation(data){
         return new Promise((resolve, reject) => {
@@ -174,7 +177,7 @@ export default class IMSERVICE {
             }
 
             this.sendCustomSysMsg(content)
-            .then(msg => { 
+            .then(msg => {
                 resolve(msg);
             }).catch(error => {
                 reject(error);
@@ -183,8 +186,8 @@ export default class IMSERVICE {
     }
 
     /**
-     * 
-     * @param {*} msg 
+     *
+     * @param {*} msg
      * 收到普通文本消息
      */
     onMsg(msg){
@@ -193,8 +196,8 @@ export default class IMSERVICE {
     }
 
     /**
-     * 
-     * @param {*} msg 
+     *
+     * @param {*} msg
      * 收到系统自定义消息
      */
     onCustomsysmsg(msg){
@@ -208,7 +211,7 @@ export default class IMSERVICE {
                     Taro.hideNavigationBarLoading();
                     Taro.setNavigationBarTitle({
                         title: NAVIGATIONBAR_TITLE
-                    }) 
+                    })
                     assignKefu(content);
                     break;
                 case FINISH_SESSION_CMD:
@@ -219,6 +222,14 @@ export default class IMSERVICE {
                     break;
                 case RECEIVE_EVALUATION_RESULT_CMD:
                     onevaluationresult(content);
+                    break;
+                case RECEIVE_SHUNT_ENTRIES_CMD:
+                    // 申请客服成功后的导航栏控制
+                    Taro.hideNavigationBarLoading();
+                    Taro.setNavigationBarTitle({
+                        title: NAVIGATIONBAR_TITLE
+                    })
+                    receiveShuntEntries(content);
                     break;
                 default:
                     console.log('onCustomsysmsg 未知指令'+JSON.stringify(msg))

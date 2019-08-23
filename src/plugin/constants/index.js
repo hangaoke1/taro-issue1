@@ -33,6 +33,9 @@ export const RECEIVE_EVALUATION_CMD = 50;
 // 评价成功后收到评价结果通知
 export const RECEIVE_EVALUATION_RESULT_CMD = 55;
 
+// 收到访客端分流入口推送
+export const RECEIVE_SHUNT_ENTRIES_CMD = 90;
+
 /**
 * 收到的自定义指令 ------end--------
 */

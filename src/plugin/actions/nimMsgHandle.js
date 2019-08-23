@@ -52,7 +52,7 @@ export const assignKefu = (content) => {
             break;
         case 206:
             // 进入排队的状态
-            
+
         break;
     }
  }
@@ -163,7 +163,7 @@ export const onfinish = (content) => {
 
     let tip;
     tip = REASON_MAP[close_reason] || '会话已断开';
-    
+
     if (close_reason == 0 || close_reason == 2) {
         tip = richmessage || message || REASON_MAP[close_reason];
     }
@@ -171,7 +171,7 @@ export const onfinish = (content) => {
     // if(session && session.kefu.isRobot && data.close_reason == 1) {
     //     tip = '本次会话已超时结束';
     // }
-    
+
     let msg = {
         content: tip,
         type: 'action',
@@ -186,7 +186,7 @@ export const onfinish = (content) => {
 
 /**
  *  收到客服的邀评
- * @param {*} content 
+ * @param {*} content
  */
 export const onevaluation = (content) => {
     const dispatch = get('store').dispatch;
@@ -209,7 +209,7 @@ export const onevaluation = (content) => {
 
 /**
  * 收到评价成功的推送
- * @param {*} content 
+ * @param {*} content
  */
 export const onevaluationresult = (content) => {
     const dispatch = get('store').dispatch;
@@ -231,4 +231,21 @@ export const onevaluationresult = (content) => {
 
     dispatch({type: PUSH_MESSAGE, message});
     dispatch({type: UPDATE_MESSAGE_BYKEY, message: updateActionMsg});
+}
+
+export const receiveShuntEntries = (content) => {
+  const dispatch = get('store').dispatch;
+
+  let time = new Date().getTime();
+
+  let message = {
+    content: content.message,
+    type: 'entries',
+    time: time,
+    fromUser: 0,
+    action: 'selectEntries',
+    entries: JSON.parse(content.entries)
+  }
+
+  dispatch({type: PUSH_MESSAGE, message});
 }
