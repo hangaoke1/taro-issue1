@@ -8,7 +8,8 @@ import {
   onevaluationresult,
   receiveShuntEntries,
   onRobotTip,
-  onBotEntry
+  onBotEntry,
+  onBotLongMessage
 } from '../actions/nimMsgHandle';
 import {
   FROM_TYPE,
@@ -22,7 +23,8 @@ import {
   NAVIGATIONBAR_TITLE,
   RECEIVE_SHUNT_ENTRIES_CMD,
   REVEIVE_ROBOT_TIP_CMD,
-  RECEIVE_BOT_ENTRY_CMD
+  RECEIVE_BOT_ENTRY_CMD,
+  RECEIVE_BOT_LONG_MESSAGE_CMD
 } from '../constants';
 
 let contenting = false;
@@ -254,6 +256,10 @@ export default class IMSERVICE {
         case RECEIVE_BOT_ENTRY_CMD:
           // 接收到bot推送入口
           onBotEntry(content);
+          break;
+        case RECEIVE_BOT_LONG_MESSAGE_CMD:
+          // bot超长信息处理
+          onBotLongMessage(content, msg)
           break;
         default:
           console.log('onCustomsysmsg 未知指令' + JSON.stringify(msg));

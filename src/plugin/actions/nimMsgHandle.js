@@ -1,3 +1,4 @@
+import { Base64 } from 'js-base64';
 import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
@@ -276,10 +277,35 @@ export const onRobotTip = (content) => {
 }
 
 /**
- * 实时推送bot入口信息
+ * 收到bot入口信息
  * @param {object} content 内容
  */
 export const onBotEntry = (content) => {
     const dispatch = get('store').dispatch;
     dispatch({ type: SET_BOT_LIST, value: content.bot || []});
 }
+
+/**
+ * bot超长信息拆分处理
+ * @param {object} content 内容
+ */
+export const onBotLongMessage = (() => {
+    let cache = {};
+    return (content) => {
+        const index = content.split_index;
+        const count = content.split_count;
+        const id = content.split_id;
+        const splitContent = content.split_content || '';
+        const idClient = content.msg_id || '';
+        if (!cache[id]) { cache[id] = {} };
+        cache[id][index] = splitContent || '';
+        if (Object.keys(cache[id]).length === count) {
+            let content = '';
+            for(let i = 0; i < count - 1; i++) {
+                content += cache[id][index];
+            }
+            let msg = Base64.decode(content);
+            console.log('------msg------', msg);
+        }
+    }
+})()
