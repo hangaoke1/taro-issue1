@@ -9,7 +9,15 @@ export const SEND_EVALUATION_CMD = 51;
 // 申请客服
 export const APPLY_KEFU_CMD = 1;
 
-/** 发送的自定义指令 ------end-------- */
+// 访客主动取消排队
+export const CANCEL_QUEUE_CMD = 26;
+
+// 主动询问排队的最新状态
+export const ASK_QUEUE_STATUS_CMD = 16;
+
+/**
+* 发送的自定义指令 ------end--------
+*/
 
 
 
@@ -39,7 +47,12 @@ export const RECEIVE_BOT_ENTRY_CMD = 211
 // BOT超长消息通过自定义系统通知拆分发送
 export const RECEIVE_BOT_LONG_MESSAGE_CMD = 405
 
-/** 收到的自定义指令 ------end-------- */
+// 收到排队时最新状态的更新
+export const RECEIVE_QUEUE_NUM_CMD = 15;
+
+/**
+* 收到的自定义指令 ------end--------
+*/
 
 
 /**
@@ -49,3 +62,6 @@ export const RECEIVE_BOT_LONG_MESSAGE_CMD = 405
 export const NAVIGATIONBAR_TITLE = '网易七鱼';
 // 连接中标题
 export const NAVIGATIONBAR_TITLE_CONNECTING = '正在连接';
+
+// 询问排队状态的轮询时间间隔
+export const QUEUE_TIMER = 10000;
