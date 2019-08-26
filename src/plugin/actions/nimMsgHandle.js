@@ -1,9 +1,9 @@
-import { Base64 } from 'js-base64';
 import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
 import { SET_BOT_LIST } from '../constants/bot';
 import { timestamp2date, fmtRobot } from '../utils';
+import Base64 from '../lib/base64';
 
 /**
  * 分配客服
