@@ -1,7 +1,7 @@
-import Taro, { Component } from '@tarojs/taro'
-import { View, ScrollView, Video } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
- 
+import Taro, { Component } from '@tarojs/taro';
+import { View, ScrollView, Video } from '@tarojs/components';
+import { connect } from '@tarojs/redux';
+
 import Index from '../../app';
 
 import MessageView from '../../components/Message';
@@ -14,49 +14,55 @@ import Evaluation from '../../components/Evaluation';
 import { NAVIGATIONBAR_TITLE } from '../../constants';
 
 import { createAccount, sendText, sendImage } from '../../actions/chat';
-import { toggleShowFun, toggleShowPortrait, hideAction } from '../../actions/options';
+import {
+  toggleShowFun,
+  toggleShowPortrait,
+  hideAction
+} from '../../actions/options';
 import { closeEvaluationModal } from '../../actions/actionHandle';
 import eventbus from '../../lib/eventbus';
 
 import functionList from './function.config';
 import './chat.less';
 
-@connect(({ Message, Options, CorpStatus,Session }) => ({
-  Message,
-  Options,
-  CorpStatus,
-  Session
-}), (dispatch) => ({
-  hideAction () {
-    dispatch(hideAction());
-  },
-  toggleShowFun () {
-    dispatch(toggleShowFun());
-  },
-  toggleShowPortrait () {
-    dispatch(toggleShowPortrait());
-  },
-  createAccount(){
-    dispatch(createAccount());
-  },
-  sendText(value){
-    dispatch(sendText(value));
-  },
-  sendImage(value){
-    dispatch(sendImage(value));
-  },
-  closeEvaluationModal(){
-    dispatch(closeEvaluationModal());
-  }
-}))
-  
+@connect(
+  ({ Message, Options, CorpStatus, Session, Bot }) => ({
+    Message,
+    Options,
+    CorpStatus,
+    Session,
+    Bot
+  }),
+  dispatch => ({
+    hideAction() {
+      dispatch(hideAction());
+    },
+    toggleShowFun() {
+      dispatch(toggleShowFun());
+    },
+    toggleShowPortrait() {
+      dispatch(toggleShowPortrait());
+    },
+    createAccount() {
+      dispatch(createAccount());
+    },
+    sendText(value) {
+      dispatch(sendText(value));
+    },
+    sendImage(value) {
+      dispatch(sendImage(value));
+    },
+    closeEvaluationModal() {
+      dispatch(closeEvaluationModal());
+    }
+  })
+)
 class Chat extends Component {
-
   config = {
     navigationBarTitleText: NAVIGATIONBAR_TITLE
-  }
+  };
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.createAction();
     this.state = {
@@ -64,68 +70,71 @@ class Chat extends Component {
       height: 0,
       videoUrl: '',
       scrollWithAnimation: true
-    }
+    };
   }
 
-  createAction(){
+  createAction() {
     const { createAccount: _createAccount } = this.props;
     _createAccount();
   }
 
-  componentDidMount () {
+  componentDidMount() {
     eventbus.on('push_message', this.scrollToBottom);
     eventbus.on('video_click', this.handlePlay);
-  }
-
-  componentWillUnmount () {
-    eventbus.off('push_message', this.scrollToBottom);
-  }
-
-  componentDidShow () {
     this.scrollToBottom(false);
   }
 
-  componentDidHide () { }
+  componentWillUnmount() {
+    eventbus.off('push_message', this.scrollToBottom);
+  }
+
+  componentDidShow() {}
+
+  componentDidHide() {}
 
   // 重置底部区域
   scrollToBottom = (scrollWithAnimation = true) => {
+    if (this.timer) {
+      return;
+    }
     this.setState({
       lastId: '',
       scrollWithAnimation
     });
-    setTimeout(() => {
+    this.timer = setTimeout(() => {
       this.setState({
         lastId: 'm-bottom'
-      })
-    }, 100);
-  }
+      });
+      this.timer = null;
+    }, 150);
+  };
 
-  handleConfirm = (event) => {
-    const { sendText: _sendText } = this.props;
+  handleConfirm = event => {
+    const { sendText } = this.props;
     let value = event.detail.value;
-    
+
     // 禁止发送空文本
     if (!value.trim()) {
       return;
     }
-    _sendText(value);
-  }
+    sendText(value);
+  };
 
   handleBodyClick = () => {
     this.props.hideAction();
-  }
+  };
 
   // 处理选择表情
   handlePortraitClick = () => {
     this.props.toggleShowPortrait();
     this.scrollToBottom();
-  }
+  };
 
   // 处理点击加号
   handlePlusClick = () => {
     this.props.toggleShowFun();
     this.scrollToBottom();
-  }
+  };
 
   // 扩展功能栏点击处理
   handleFuncClick = item => {
@@ -152,34 +161,36 @@ class Chat extends Component {
       default:
         console.log(`暂不支持${item.type}`);
     }
-  }
+  };
 
   // 处理emoji表情点击
   handleEmojiClick = item => {
     eventbus.trigger('emoji_click', item);
-  }
+  };
 
-  handleFocus = (event) => {
+  handleFocus = event => {
     this.setState({ height: event.detail.height });
     this.scrollToBottom();
-  }
+  };
 
   handleBlur = () => {
     this.setState({ height: 0 });
-  }
+  };
 
   /** 消息体点击事件处理 **/
-  handleImgClick = (item) => {
-    const imgMessageList = this.props.Message.filter(msg => msg.type === 'image');
+  handleImgClick = item => {
+    const imgMessageList = this.props.Message.filter(
+      msg => msg.type === 'image'
+    );
     const imgList = imgMessageList.map(msg => JSON.parse(msg.content).url);
     Taro.previewImage({
       current: JSON.parse(item.content).url,
-      urls: imgList,
+      urls: imgList
     });
-  }
+  };
 
   /** 视频处理 **/
-  handlePlay = (url) => {
+  handlePlay = url => {
     this.setState({
       videoUrl: url
     });
@@ -187,9 +198,15 @@ class Chat extends Component {
     videoCtx.requestFullScreen({
       direction: 0
     });
-  }
+  };
 
-  handleFullscreenchange = (e) => {
+  // 点击bot快捷入口
+  handleBotClick = bot => {
+    const { sendText } = this.props;
+    sendText(bot.label);
+  };
+
+  handleFullscreenchange = e => {
     const videoCtx = Taro.createVideoContext('j-video');
     if (!e.detail.fullScreen) {
       // 退出全屏后停止视频
@@ -203,52 +220,82 @@ class Chat extends Component {
         videoCtx.play();
       }, 100);
     }
-  }
+  };
 
   closeEvaluationModal = () => {
     const { closeEvaluationModal } = this.props;
     closeEvaluationModal();
-  }
+  };
 
-  render () {
-    const { Message, Options, CorpStatus, Session } = this.props;
+  render() {
+    const { Message, Options, CorpStatus, Session, Bot } = this.props;
     const { lastId, height, videoUrl, scrollWithAnimation } = this.state;
-    
+
     return (
       <Index className='m-page-wrapper'>
         {/* 视频全局对象 */}
-        <View style={`display: ${videoUrl ? 'block' : 'none'};position:fixed;top:0;bottom:0;right:0;left:0;z-index:999;background-color:#000;`}><Video
-          id='j-video'
-          style='width: 100%;height: 100%;'
-          src={videoUrl}
-          controls
-          show-fullscreen-btn={false}
-          play-btn-position='bottom'
-          onFullscreenchange={this.handleFullscreenchange}
-        /></View>
+        <View
+          style={`display: ${
+            videoUrl ? 'block' : 'none'
+          };position:fixed;top:0;bottom:0;right:0;left:0;z-index:999;background-color:#000;`}
+        >
+          <Video
+            id='j-video'
+            style='width: 100%;height: 100%;'
+            src={videoUrl}
+            controls
+            show-fullscreen-btn={false}
+            play-btn-position='bottom'
+            onFullscreenchange={this.handleFullscreenchange}
+          />
+        </View>
         <View className='m-chat' style={`height: calc(100vh - ${height}px)`}>
           <View className='m-view'>
-            <ScrollView className='message-content' scrollY scrollWithAnimation={scrollWithAnimation} scrollIntoView={lastId} onClick={this.handleBodyClick}>
-              <MessageView Message={Message} onImgClick={this.handleImgClick}></MessageView>
+            <ScrollView
+              className='message-content'
+              scrollY
+              scrollWithAnimation={scrollWithAnimation}
+              scrollIntoView={lastId}
+              onClick={this.handleBodyClick}
+            >
+              <MessageView
+                Message={Message}
+                onImgClick={this.handleImgClick}
+              ></MessageView>
               <View id='m-bottom'></View>
             </ScrollView>
           </View>
-          <ChatBox handleConfirm={this.handleConfirm} onPlusClick={this.handlePlusClick} onPortraitClick={this.handlePortraitClick} onFocus={this.handleFocus} onBlur={this.handleBlur}></ChatBox>
-          {
-            Options.showFunc && <FuncBox list={functionList} onFuncClick={this.handleFuncClick}></FuncBox>
-          }
-          {
-            Options.showPortrait && <Portrait onEmojiClick={this.handleEmojiClick}></Portrait>
-          }
+          {Bot.botList.length ? (
+            <ScrollView scrollX className='m-bot'>
+              { Bot.botList.map(bot => <View className='m-bot-item' key={bot.id} onClick={e => this.handleBotClick(bot, e)}>{bot.label}</View>)}
+            </ScrollView>
+          ) : null}
+          <ChatBox
+            handleConfirm={this.handleConfirm}
+            onPlusClick={this.handlePlusClick}
+            onPortraitClick={this.handlePortraitClick}
+            onFocus={this.handleFocus}
+            onBlur={this.handleBlur}
+          ></ChatBox>
+          {Options.showFunc && (
+            <FuncBox
+              list={functionList}
+              onFuncClick={this.handleFuncClick}
+            ></FuncBox>
+          )}
+          {Options.showPortrait && (
+            <Portrait onEmojiClick={this.handleEmojiClick}></Portrait>
+          )}
         </View>
-        <FloatLayout visible={CorpStatus.evaluationVisible} 
-          title='请对本次服务进行评价' 
+        <FloatLayout
+          visible={CorpStatus.evaluationVisible}
+          title='请对本次服务进行评价'
           onClose={this.closeEvaluationModal}
         >
-              {Session.evaluation ? <Evaluation /> : null}
-          </FloatLayout>
+          {Session.evaluation ? <Evaluation /> : null}
+        </FloatLayout>
       </Index>
-    )
+    );
   }
 }
 

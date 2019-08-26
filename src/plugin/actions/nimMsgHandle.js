@@ -1,6 +1,7 @@
 import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
+import { SET_BOT_LIST } from '../constants/bot';
 import { timestamp2date, fmtRobot } from '../utils';
 
 /**
@@ -262,7 +263,7 @@ export const receiveShuntEntries = (content) => {
  * 接收到机器人提示
  * @param {object} content 
  */
-export const onRobotTip = function (content) {
+export const onRobotTip = (content) => {
     const dispatch = get('store').dispatch;
 
     let message = {
@@ -272,4 +273,13 @@ export const onRobotTip = function (content) {
         fromUser: 0
     }
     dispatch({type: PUSH_MESSAGE, message});
+}
+
+/**
+ * 实时推送bot入口信息
+ * @param {object} content 内容
+ */
+export const onBotEntry = (content) => {
+    const dispatch = get('store').dispatch;
+    dispatch({ type: SET_BOT_LIST, value: content.bot || []});
 }

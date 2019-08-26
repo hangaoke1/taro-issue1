@@ -39,6 +39,9 @@ export const REVEIVE_ROBOT_TIP_CMD = 70;
 // 收到访客端分流入口推送
 export const RECEIVE_SHUNT_ENTRIES_CMD = 90;
 
+// 服务先知-机器人会话中用户输入消息时实时匹配企业接口，实时推送bot入口信息
+export const RECEIVE_BOT_ENTRY_CMD = 211
+
 /**
 * 收到的自定义指令 ------end--------
 */

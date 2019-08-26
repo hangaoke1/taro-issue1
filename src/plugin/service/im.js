@@ -7,7 +7,8 @@ import {
   onevaluation,
   onevaluationresult,
   receiveShuntEntries,
-  onRobotTip
+  onRobotTip,
+  onBotEntry
 } from '../actions/nimMsgHandle';
 import {
   FROM_TYPE,
@@ -20,7 +21,8 @@ import {
   NAVIGATIONBAR_TITLE_CONNECTING,
   NAVIGATIONBAR_TITLE,
   RECEIVE_SHUNT_ENTRIES_CMD,
-  REVEIVE_ROBOT_TIP_CMD
+  REVEIVE_ROBOT_TIP_CMD,
+  RECEIVE_BOT_ENTRY_CMD
 } from '../constants';
 
 let contenting = false;
@@ -238,6 +240,7 @@ export default class IMSERVICE {
           onevaluationresult(content);
           break;
         case REVEIVE_ROBOT_TIP_CMD:
+          // 接收到机器人提示
           onRobotTip(content);
           break;
         case RECEIVE_SHUNT_ENTRIES_CMD:
@@ -247,6 +250,10 @@ export default class IMSERVICE {
             title: NAVIGATIONBAR_TITLE
           });
           receiveShuntEntries(content);
+          break;
+        case RECEIVE_BOT_ENTRY_CMD:
+          // 接收到bot推送入口
+          onBotEntry(content);
           break;
         default:
           console.log('onCustomsysmsg 未知指令' + JSON.stringify(msg));
