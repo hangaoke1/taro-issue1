@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Image } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import { calcMsg, calcTime } from '../../../utils/index';
 import eventbus from '../../../lib/eventbus';
@@ -12,13 +12,22 @@ const MIN_SIZE = 20;
 
 // const mock = {
 //   autoreply: 0,
-//   content: JSON.stringify({"ext":"MP4","dur":5238,"size":2500103,"w":360,"show_name":"视频发送于2019-08-14 15:14","expire":1566371662530,"name":"1cd68faa28b18ec1d2d3c7d20c587323.MP4","h":640,"url":"https://nim.nosdn.127.net/NzE4MTkzOTQ=/bmltYV83NzMzMTcxMF8xNTY1NzUwMTc2ODMwXzdmMWE4NzVlLWFiZjItNDY0ZC1iNTA3LTAyZWRlNDNlOWRhOQ==","md5":"1cd68faa28b18ec1d2d3c7d20c587323"}),
+//   content: {"ext":"MP4","dur":5238,"size":2500103,"w":360,"show_name":"视频发送于2019-08-14 15:14","expire":1566371662530,"name":"1cd68faa28b18ec1d2d3c7d20c587323.MP4","h":640,"url":"https://nim.nosdn.127.net/NzE4MTkzOTQ=/bmltYV83NzMzMTcxMF8xNTY1NzUwMTc2ODMwXzdmMWE4NzVlLWFiZjItNDY0ZC1iNTA3LTAyZWRlNDNlOWRhOQ==","md5":"1cd68faa28b18ec1d2d3c7d20c587323"},
 //   fromUser: 1,
 //   time: "1565752835763",
 //   type: "audio"
 // }
 
 export default class ImVideo extends Component {
+
+  static propTypes = {
+    item: PropTypes.object,
+    index: PropTypes.number
+  }
+
+  static defaultProps = {
+    index: 0
+  }
 
   componentWillMount () { }
 
@@ -53,13 +62,4 @@ export default class ImVideo extends Component {
       </View>
     ) : null;
   }
-}
-
-ImVideo.propTypes = {
-  item: PropTypes.object,
-  index: PropTypes.number
-}
-
-ImVideo.defaultProps = {
-  index: 0
 }

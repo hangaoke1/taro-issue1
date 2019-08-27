@@ -20,13 +20,10 @@ import './index.less';
 //   type: "audio"
 // }
 export default class ImAudio extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      playing: false,
-      audioCtx: null
-    }
+  
+  state = {
+    playing: false,
+    audioCtx: null
   }
   
   handleClick = () => {
