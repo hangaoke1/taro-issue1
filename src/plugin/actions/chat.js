@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro';
 import { queryAccont } from '../service';
 import { get, set } from '../global_config';
 import IMSERVICE from '../service/im';
-import { PUSH_MESSAGE, UPDATE_MESSAGE_BYINDEX } from '../constants/message';
+import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID } from '../constants/message';
 import { SET_EVALUATION_VISIBLE } from '../constants/chat';
 
 let NIM = null;
@@ -67,7 +67,9 @@ export const sendText = text => dispatch => {
   };
 
   dispatch({ type: PUSH_MESSAGE, message });
-  NIM.sendTextMsg(text);
+  NIM.sendTextMsg(text).then(msg => {
+    console.log('文本发送完成', msg)
+  });
 };
 
 /**
@@ -82,6 +84,7 @@ export const sendImage = res => dispatch => {
     tempFilePaths.map(tempFilePath => {
       NIM.sendImageMsg(tempFilePath).then(msg => {
         let message = {
+          idClient: msg.idClient,
           content: msg.file,
           type: 'image',
           time: msg.time,
@@ -176,10 +179,10 @@ export const cancelQueue = (data = {}) => dispatch => {
 /**
  * 根据序号修改消息内容
  * @param {object} message 新消息内容
- * @param {number} index 消息序号
+ * @param {number} uuid 消息序号
  */
-export const changeMessageByIndex = (message, index) => dispatch => {
-  dispatch({ type: UPDATE_MESSAGE_BYINDEX, message, index });
+export const changeMessageByUUID = (message) => dispatch => {
+  dispatch({ type: UPDATE_MESSAGE_BYUUID, message });
 };
 
 export const askQueueStatus = () => {

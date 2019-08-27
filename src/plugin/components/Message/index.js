@@ -21,9 +21,9 @@ export default function MessageView(props) {
         <View className='message-view'>
             {
                 Message ?
-                Message.map( (it, index) => {
+                Message.map( (it) => {
                     return(
-                        <View key={index}>
+                        <View key={it.uuid}>
                             {
                                 it.type === 'systip' ? <SysTipView item={it}></SysTipView> : null
                             }
@@ -45,7 +45,7 @@ export default function MessageView(props) {
                                 it.type === 'video' ? <VideoView item={it}></VideoView> : null
                             }
                             {
-                                ['qa-list', 'qa'].includes(it.type) ? <RobotView item={it} index={index}></RobotView> : null
+                                ['qa-list', 'qa'].includes(it.type) ? <RobotView item={it}></RobotView> : null
                             }
                         </View>
                     )

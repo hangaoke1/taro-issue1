@@ -11,7 +11,7 @@ import {
   evalRobotAnswer,
   evaluationContent,
   parseUrlAction,
-  changeMessageByIndex
+  changeMessageByUUID
 } from '../../../actions/chat';
 
 import './index.less';
@@ -34,8 +34,8 @@ export default function RobotView(props) {
   const dispatch = useDispatch();
 
   // 根据index修改消息内容
-  function changeMessage(message, index) {
-    dispatch(changeMessageByIndex(message, index));
+  function changeMessage(message) {
+    dispatch(changeMessageByUUID(message));
   }
 
   // 点击富文本链接
