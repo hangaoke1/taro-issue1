@@ -15,6 +15,9 @@ export const CANCEL_QUEUE_CMD = 26;
 // 主动询问排队的最新状态
 export const ASK_QUEUE_STATUS_CMD = 16;
 
+// 访客端发送心跳指令
+export const HEART_BEAT_CMD = -1000;
+
 /**
 * 发送的自定义指令 ------end--------
 */
@@ -49,6 +52,9 @@ export const RECEIVE_BOT_LONG_MESSAGE_CMD = 405
 
 // 收到排队时最新状态的更新
 export const RECEIVE_QUEUE_NUM_CMD = 15;
+
+// 访客端收到被转接指令
+export const RECRIVE_TRANSFER_CMD = 95;
 
 /**
 * 收到的自定义指令 ------end--------

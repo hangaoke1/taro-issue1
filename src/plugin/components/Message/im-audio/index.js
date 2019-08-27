@@ -20,12 +20,12 @@ import './index.less';
 //   type: "audio"
 // }
 export default class ImAudio extends Component {
-  
+
   state = {
     playing: false,
     audioCtx: null
   }
-  
+
   handleClick = () => {
     if (!this.state.audioCtx) return;
 
@@ -42,13 +42,13 @@ export default class ImAudio extends Component {
       this.state.audioCtx.play();
     }
   }
-  
+
   stop = () => {
     if (this.state.audioCtx) {
       this.state.audioCtx.stop();
     }
   }
- 
+
   componentWillMount () { }
 
   componentDidMount () {
@@ -94,7 +94,7 @@ export default class ImAudio extends Component {
           item.fromUser ? 'm-audio m-audio-right' : 'm-audio m-audio-left'
         }
       >
-        <Avatar fromUser={item.fromUser} />
+        <Avatar fromUser={item.fromUser} staff={item.staff} />
         <View className='u-text-arrow' />
         <View className='u-text' onClick={this.handleClick}>
           { item.fromUser ? null : <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View>}

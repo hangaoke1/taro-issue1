@@ -24,7 +24,7 @@ export default function ImgView(props) {
 
   return item ? (
     <View className={item.fromUser ? 'm-img m-img-right' : 'm-img m-img-left'}>
-      <Avatar fromUser={item.fromUser} />
+      <Avatar fromUser={item.fromUser} staff={item.staff} />
       <View className='u-space' />
       <View className='u-content'>
         <Image className='u-img' mode='scaleToFill' style={`width: ${width}px;height: ${height}px`} src={imgInfo.url + extendQuery} lazy-load onClick={handleClick} />
