@@ -1,5 +1,4 @@
-/* eslint-disable */
-
+/* eslint-disable no-restricted-globals */
 /**
  * base64 加密/解密
  */
@@ -88,7 +87,9 @@ function Base64() {
   var _utf8_decode = function(utftext) {
     var string = '';
     var i = 0;
-    var c = (c1 = c2 = 0);
+    var c2;
+    var c3;
+    var c = (c2 = 0);
     while (i < utftext.length) {
       c = utftext.charCodeAt(i);
       if (c < 128) {

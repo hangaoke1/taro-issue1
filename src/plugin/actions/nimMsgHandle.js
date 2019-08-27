@@ -292,6 +292,7 @@ export const onBotEntry = (content) => {
 export const onBotLongMessage = (() => {
     let cache = {};
     return (content) => {
+        const dispatch = get('store').dispatch;
         const index = content.split_index;
         const count = content.split_count;
         const id = content.split_id;
@@ -300,12 +301,16 @@ export const onBotLongMessage = (() => {
         if (!cache[id]) { cache[id] = {} };
         cache[id][index] = splitContent || '';
         if (Object.keys(cache[id]).length === count) {
-            let content = '';
-            for(let i = 0; i < count - 1; i++) {
-                content += cache[id][index];
+            let message = {}
+            let contentStr = '';
+            for(let i = 0; i < count; i++) {
+                contentStr = contentStr + cache[id][i];
             }
-            let msg = Base64.decode(content);
-            console.log('------msg------', msg);
+            message.content = JSON.parse(Base64.decode(contentStr));
+            message.idClient = idClient;
+            // TODO: form / 抽屉 特殊处理
+            // dispatch({type: PUSH_MESSAGE, message});
+            delete cache[id];
         }
     }
 })()

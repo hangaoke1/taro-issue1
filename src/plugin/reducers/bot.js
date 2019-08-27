@@ -1,6 +1,6 @@
 import { SET_BOT_LIST } from '../constants/bot';
 
-const bot = (state = {
+const Bot = (state = {
   botList: []
 }, action) => {
   switch(action.type){
@@ -15,4 +15,4 @@ const bot = (state = {
 }
 
 
-export default bot;
+export default Bot;
