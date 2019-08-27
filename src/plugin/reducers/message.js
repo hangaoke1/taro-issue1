@@ -20,7 +20,7 @@ const Message = (state = initMessages, action) => {
                 return [...updateMessage(state, action, 'uuid')];
         case UPDATE_MESSAGE_BYINDEX:
             return [...updateMessage(state, action, 'index')];
-        default: 
+        default:
             return state;
     }
 }

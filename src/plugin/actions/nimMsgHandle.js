@@ -29,6 +29,7 @@ export const assignKefu = (content) => {
     switch(code){
         case 200:
             message = {
+                content: `${content.message}` || `${staffname}为您服务`,
                 type: 'systip',
                 content: `${staffname}为您服务`,
                 time: time
@@ -87,7 +88,22 @@ export const assignKefu = (content) => {
  */
 export const receiveMsg = (msg) => {
     const dispatch = get('store').dispatch;
-    let message;
+    const session = get('store').getState().Session;
+    let message,extralMessage = {};
+
+    if(session.sessionid){
+      extralMessage = {
+        sessionid: session.sessionid,
+        staff: {
+          staffname: session.staffname,
+          avatar: session.iconurl,
+          staffid: session.staffid,
+          stafftype: session.stafftype,
+          realStaffid: session.realStaffid
+        }
+      }
+    }
+
     if (msg.type == 'text') {
 
         message = {
@@ -141,7 +157,7 @@ export const receiveMsg = (msg) => {
                 // 机器人答案返回
                 const msgList = fmtRobot(msg, fmtContent)
                 msgList.forEach(item => {
-                    dispatch({type: PUSH_MESSAGE, message: item});
+                    dispatch({type: PUSH_MESSAGE, message: {...item,...extralMessage}});
                 })
                 break;
             case 65:
@@ -166,12 +182,16 @@ export const receiveMsg = (msg) => {
                     msg
                 }
                 break
+            case 95:
+              // 转接的先放这吧
+              receiveTransfer(fmtContent);
+              break;
             default:;
         }
     }
 
     if (message) {
-        dispatch({type: PUSH_MESSAGE, message});
+        dispatch({type: PUSH_MESSAGE, message: {...message,...extralMessage}});
     }
 }
 
@@ -349,4 +369,24 @@ export const onQueueStatus = (content) => {
     type: UPDATE_MESSAGE_BYKEY,
     message: updateMessage
   })
+}
+
+
+export const receiveTransfer = (content) => {
+
+  // 会话id有变化，需要更新新的会话id
+  const dispatch = get('store').dispatch;
+  const session = get('store').getState().Session;
+
+  // 如果转接显示提示的开关关掉，不显示转接提示
+  if (!session.shop.setting.session_transfer_switch) return;
+
+  let time = new Date().getTime();
+  let message = {
+    content: `${content.message}` || `已经为您转接${content.staffname}`,
+    type: 'systip',
+    time
+  }
+
+  dispatch({type: PUSH_MESSAGE, message});
 }

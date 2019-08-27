@@ -10,7 +10,8 @@ import {
   onRobotTip,
   onBotEntry,
   onBotLongMessage,
-  onQueueStatus
+  onQueueStatus,
+  receiveTransfer
 } from '../actions/nimMsgHandle';
 import {
   FROM_TYPE,
@@ -29,7 +30,9 @@ import {
   CANCEL_QUEUE_CMD,
   RECEIVE_QUEUE_NUM_CMD,
   ASK_QUEUE_STATUS_CMD,
-  QUEUE_TIMER
+  QUEUE_TIMER,
+  HEART_BEAT_CMD,
+  RECRIVE_TRANSFER_CMD
 } from '../constants';
 
 let contenting = false;
@@ -93,10 +96,8 @@ export default class IMSERVICE {
           content: JSON.stringify(content),
           done: (error, msg) => {
             if (error) {
-              console.log(content.cmd + '--error!');
               reject(error);
             } else {
-              console.log(content.cmd + '--success!');
               resolve(error, msg);
             }
           }
@@ -243,7 +244,6 @@ export default class IMSERVICE {
    * 收到普通文本消息
    */
   onMsg(msg) {
-    console.log('---onMsg---', msg);
     receiveMsg(msg);
   }
 
@@ -253,7 +253,6 @@ export default class IMSERVICE {
    * 收到系统自定义消息
    */
   onCustomsysmsg(msg) {
-    console.log('---onCustomsysmsg---', msg);
     try {
       let content = JSON.parse(msg.content);
       console.log('fmt: ', content);
@@ -317,23 +316,12 @@ export default class IMSERVICE {
    * 发送心跳
    */
   sendHeartbeat = () => {
-    this.nim.sendCustomSysMsg({
-      to: -1,
-      cc: !0,
-      filter: !0,
-      scene: 'p2p',
-      content: JSON.stringify({
-        cmd: -1000,
-        deviceid: get('deviceid')
-      }),
-      done: error => {
-        if (error) {
-          console.log('sendHeartbeat--error!');
-        } else {
-          console.log('sendHeartbeat--success!');
-        }
-      }
-    });
+
+    let content = {
+      cmd: HEART_BEAT_CMD,
+      deviceid: get('deviceid')
+    }
+    this.sendCustomSysMsg(content);
 
     setTimeout(this.sendHeartbeat.bind(this), get('heartbeatCycle'));
   };

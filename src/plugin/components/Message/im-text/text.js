@@ -23,7 +23,7 @@ export default function TextView(props) {
         item.fromUser ? 'm-message m-message-right' : 'm-message m-message-left'
       }
     >
-      <Avatar fromUser={item.fromUser} />
+      <Avatar fromUser={item.fromUser} staff={item.staff} />
       <View className='u-text-arrow' />
       <View className='u-text'>
         <ParserRichText html={content} onLinkpress={handleLinkpress} isRich={isRich}></ParserRichText>

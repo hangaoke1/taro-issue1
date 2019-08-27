@@ -1,5 +1,3 @@
-import Taro from '@tarojs/taro';
-import { useSelector } from '@tarojs/redux'
 import { View, Image } from '@tarojs/components';
 import { DEFAULT_KEFU_AVATAR, DEFAULT_ROBOT_AVATAR } from '../../../constants/session';
 
@@ -7,16 +5,16 @@ import './index.less';
 
 export default function Avatar(props) {
 
-    const session = useSelector(state => state.Session);
+    const { staff } = props;
 
     let avatarSrc = null;
 
     if(!props.fromUser){
         // 客服是机器人
-        if(session.stafftype == 1 || session.robotInQueue == 1){
-            avatarSrc = session.iconurl || DEFAULT_ROBOT_AVATAR;
+        if(staff.stafftype == 1 || staff.robotInQueue == 1){
+            avatarSrc = staff.avatar || DEFAULT_ROBOT_AVATAR;
         }else{
-            avatarSrc = session.iconurl || DEFAULT_KEFU_AVATAR;
+            avatarSrc = staff.avatar || DEFAULT_KEFU_AVATAR;
         }
     }else{
         avatarSrc = DEFAULT_KEFU_AVATAR
@@ -30,4 +28,9 @@ export default function Avatar(props) {
             />
         </View>
     )
+}
+
+
+Avatar.defaultProps = {
+  staff: {}
 }
