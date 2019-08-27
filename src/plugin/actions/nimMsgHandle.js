@@ -1,6 +1,7 @@
 import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
+import { INIT_EVALUATION_SETTING } from '../constants/evaluation';
 import { SET_BOT_LIST } from '../constants/bot';
 import { timestamp2date, fmtRobot } from '../utils';
 import Base64 from '../lib/base64';
@@ -15,6 +16,11 @@ export const assignKefu = (content) => {
 
     // init session
     dispatch({type: INIT_SESSION, session: content});
+    // init evaluation
+    dispatch({type: INIT_EVALUATION_SETTING, value: {
+      evaluation: JSON.parse(content.evaluation),
+      sessionid: content.sessionid
+    }});
 
     let isRobot = content.stafftype === 1 || content.robotInQueue ===  1;
     set('isRobot', isRobot);
@@ -249,7 +255,7 @@ export const onevaluation = (content) => {
         content: content.message,
         fromUser: 0,
         time: time,
-        actionText: '评价',
+        actionText: content.evaluationTimes ? '再次评价' : '评价',
         action: 'evaluation',
         key: `evaluation-${content.sessionid}`
     }
