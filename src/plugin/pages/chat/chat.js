@@ -10,6 +10,7 @@ import FuncBox from '../../components/FuncBox';
 import Portrait from '../../components/Portrait';
 import FloatLayout from '../../components/FloatLayout';
 import Evaluation from '../../components/Evaluation';
+import BotList from '../../components/BotList';
 
 import { NAVIGATIONBAR_TITLE } from '../../constants';
 
@@ -294,6 +295,7 @@ class Chat extends Component {
         >
           {Session.evaluation ? <Evaluation /> : null}
         </FloatLayout>
+        <BotList></BotList>
       </Index>
     );
   }

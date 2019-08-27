@@ -38,9 +38,10 @@ export default class FloatLayout extends Component {
         const { onClickMask, maskClosable } = this.props;
 
         if (maskClosable) {
-            this.setState({
-                visible: false
-            })
+            // this.setState({
+            //     visible: false
+            // })
+            this.onClose();
         }
 
         onClickMask && onClickMask();
@@ -57,7 +58,7 @@ export default class FloatLayout extends Component {
     }
 
     render() {
-        const { title, contentHeight, visibleRenderChildren } = this.props;
+        const { title, contentHeight, bodyPadding, visibleRenderChildren } = this.props;
         const { visible } = this.state;
 
         return (
@@ -81,7 +82,7 @@ export default class FloatLayout extends Component {
                                 maxHeight: contentHeight + 'px'
                             }}
                             >
-                                <View className='layout-body_content_scroll_body'>
+                                <View className='layout-body_content_scroll_body' style={{ padding: bodyPadding + 'px'}}>
                                     {this.props.children}
                                 </View>
                             </ScrollView>
@@ -98,7 +99,8 @@ FloatLayout.defaultProps = {
     title: '',
     visible: false,
     contentHeight: 500,
-    maskClosable: false
+    maskClosable: false,
+    bodyPadding: 32
 }
 
 
@@ -109,5 +111,6 @@ FloatLayout.propType = {
     onClickMask: PropTypes.func,
     maskClosable: PropTypes.bool,
     onClose: PropTypes.func,
-    defaultVisible: PropTypes.bool
+    defaultVisible: PropTypes.bool,
+    bodyPadding: PropTypes.number
 }

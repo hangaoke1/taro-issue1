@@ -4,6 +4,8 @@ import { INIT_SESSION,REASON_MAP } from '../constants/session';
 import { SET_BOT_LIST } from '../constants/bot';
 import { timestamp2date, fmtRobot } from '../utils';
 import Base64 from '../lib/base64';
+import eventbus from '../lib/eventbus';
+import { genUUID16 } from '../lib/uuid';
 
 /**
  * 分配客服
@@ -172,14 +174,19 @@ export const receiveMsg = (msg) => {
                 }
                 break;
             case 203:
-                // bot消息解析
+                // TODO: bot消息解析
                 message = {
                     type: 'bot',
                     content: fmtContent,
                     time: msg.time,
                     status: msg.status,
                     fromUser: 0,
-                    msg
+                    msg,
+                    uuid: genUUID16()
+                }
+                // 显示抽屉
+                if (fmtContent.template.id === 'drawer_list') {
+                    eventbus.trigger('show_card_list', message.uuid);
                 }
                 break
             case 95:
