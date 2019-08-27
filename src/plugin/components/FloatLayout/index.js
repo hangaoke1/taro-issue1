@@ -1,116 +1,124 @@
-import Taro, { Component } from '@tarojs/taro'
-import { View, Text, ScrollView } from '@tarojs/components'
+import Taro, { Component } from '@tarojs/taro';
+import { View, Text, ScrollView } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import Iconfont from '../Iconfont';
 
 import './index.less';
 
 export default class FloatLayout extends Component {
+  constructor(props) {
+    super(props);
 
-    constructor(props) {
-        super(props);
+    if (props.defaultVisible === undefined) {
+      this.state = {
+        visible: false
+      };
+    } else {
+      this.state = {
+        visible: props.defaultVisible
+      };
+    }
+  }
 
-        if (props.defaultVisible === undefined) {
-            this.state = {
-                visible: false
-            }
-        } else {
-            this.state = {
-                visible: props.defaultVisible
-            }
-        }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (
+      nextProps.defaultVisible === undefined &&
+      nextProps.visible != prevState.visible
+    ) {
+      return {
+        ...prevState,
+        visible: nextProps.visible
+      };
+    } else {
+      return {
+        ...prevState
+      };
+    }
+  }
+
+  onClickMask = () => {
+    const { onClickMask, maskClosable } = this.props;
+
+    if (maskClosable) {
+      // this.setState({
+      //     visible: false
+      // })
+      this.onClose();
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.defaultVisible === undefined && nextProps.visible != prevState.visible) {
-            return {
-                ...prevState,
-                visible: nextProps.visible
-            }
-        } else {
-            return {
-                ...prevState
-            }
-        }
-    }
+    onClickMask && onClickMask();
+  };
 
-    onClickMask = () => {
-        const { onClickMask, maskClosable } = this.props;
+  onClose = () => {
+    const { onClose } = this.props;
 
-        if (maskClosable) {
-            // this.setState({
-            //     visible: false
-            // })
-            this.onClose();
-        }
+    this.setState({
+      visible: false
+    });
 
-        onClickMask && onClickMask();
-    }
+    onClose && onClose();
+  };
 
-    onClose = () => {
-        const { onClose } = this.props;
+  render() {
+    const {
+      title,
+      contentHeight,
+      bodyPadding,
+      visibleRenderChildren
+    } = this.props;
+    const { visible } = this.state;
 
-        this.setState({
-            visible: false
-        })
-
-        onClose && onClose();
-    }
-
-    render() {
-        const { title, contentHeight, bodyPadding, visibleRenderChildren } = this.props;
-        const { visible } = this.state;
-
-        return (
-            visible ?
-                <View className='m-FloatLayout'>
-                    <View className='m-FloatLayout-mask' onClick={this.onClickMask}></View>
-                    <View className='m-FloatLayout-layout'>
-                        <View className='layout-header'>
-                            {
-                                title ?
-                                    <View className='layout-title'>
-                                        <Text>{title}</Text>
-                                        <View className='u-close' onClick={this.onClose}>
-                                            <Iconfont type='icon-close' color='#666' size='36'></Iconfont>
-                                        </View>
-                                    </View> : null
-                            }
-                        </View>
-                        <View className='layout-body'>
-                            <ScrollView className='layout-body_content' scrollY style={{
-                                maxHeight: contentHeight + 'px'
-                            }}
-                            >
-                                <View className='layout-body_content_scroll_body' style={{ padding: bodyPadding + 'px'}}>
-                                    {this.props.children}
-                                </View>
-                            </ScrollView>
-                        </View>
-                    </View>
+    return (
+      <View className={`m-FloatLayout ${visible ? 'm-FloatLayout--active': ''}`}>
+        <View className='m-FloatLayout-mask' onClick={this.onClickMask}></View>
+        <View className='m-FloatLayout-layout'>
+          <View className='layout-header'>
+            {title ? (
+              <View className='layout-title'>
+                <Text>{title}</Text>
+                <View className='u-close' onClick={this.onClose}>
+                  <Iconfont type='icon-close' color='#666' size='36'></Iconfont>
                 </View>
-                : null
-        )
-    }
+              </View>
+            ) : null}
+          </View>
+          <View className='layout-body'>
+            <ScrollView
+              className='layout-body_content'
+              scrollY
+              style={{
+                maxHeight: contentHeight + 'px'
+              }}
+            >
+              <View
+                className='layout-body_content_scroll_body'
+                style={{ padding: bodyPadding + 'px' }}
+              >
+                {this.props.children}
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </View>
+    );
+  }
 }
-
 
 FloatLayout.defaultProps = {
-    title: '',
-    visible: false,
-    contentHeight: 500,
-    maskClosable: false,
-    bodyPadding: 32
-}
-
+  title: '',
+  visible: false,
+  contentHeight: 500,
+  maskClosable: false,
+  bodyPadding: 32
+};
 
 FloatLayout.propType = {
-    title: PropTypes.string,
-    visible: PropTypes.bool,
-    contentHeight: PropTypes.number,
-    onClickMask: PropTypes.func,
-    maskClosable: PropTypes.bool,
-    onClose: PropTypes.func,
-    defaultVisible: PropTypes.bool,
-    bodyPadding: PropTypes.number
-}
+  title: PropTypes.string,
+  visible: PropTypes.bool,
+  contentHeight: PropTypes.number,
+  onClickMask: PropTypes.func,
+  maskClosable: PropTypes.bool,
+  onClose: PropTypes.func,
+  defaultVisible: PropTypes.bool,
+  bodyPadding: PropTypes.number
+};
