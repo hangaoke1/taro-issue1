@@ -1,7 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
+import PropTypes from 'prop-types';
 import Iconfont from '../Iconfont';
-import PropTypes from 'prop-types'
 
 import './index.less';
 
@@ -62,25 +62,26 @@ export default class FloatLayout extends Component {
 
         return (
             visible ?
-                <View className="m-FloatLayout">
-                    <View className="m-FloatLayout-mask" onClick={this.onClickMask}></View>
-                    <View className="m-FloatLayout-layout">
-                        <View className="layout-header">
+                <View className='m-FloatLayout'>
+                    <View className='m-FloatLayout-mask' onClick={this.onClickMask}></View>
+                    <View className='m-FloatLayout-layout'>
+                        <View className='layout-header'>
                             {
                                 title ?
-                                    <View className="layout-title">
+                                    <View className='layout-title'>
                                         <Text>{title}</Text>
-                                        <View className="u-close" onClick={this.onClose}>
-                                            <Iconfont type="icon-close" color="#666" size="36"></Iconfont>
+                                        <View className='u-close' onClick={this.onClose}>
+                                            <Iconfont type='icon-close' color='#666' size='36'></Iconfont>
                                         </View>
                                     </View> : null
                             }
                         </View>
-                        <View className="layout-body">
-                            <ScrollView className="layout-body_content" scrollY={true} style={{
+                        <View className='layout-body'>
+                            <ScrollView className='layout-body_content' scrollY style={{
                                 maxHeight: contentHeight + 'px'
-                            }}>
-                                <View className="layout-body_content_scroll_body">
+                            }}
+                            >
+                                <View className='layout-body_content_scroll_body'>
                                     {this.props.children}
                                 </View>
                             </ScrollView>

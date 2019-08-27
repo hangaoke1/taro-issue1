@@ -7,6 +7,7 @@ import ImgView from './im-img/index';
 import AudioView from './im-audio/index';
 import VideoView from './im-video/index';
 import RobotView from './im-robot/index';
+import BotView from './im-bot/index';
 
 import './index.less';
 
@@ -46,6 +47,9 @@ export default function MessageView(props) {
                             }
                             {
                                 ['qa-list', 'qa'].includes(it.type) ? <RobotView item={it}></RobotView> : null
+                            }
+                            {
+                                it.type === 'bot' ? <BotView item={it}></BotView> : null
                             }
                         </View>
                     )

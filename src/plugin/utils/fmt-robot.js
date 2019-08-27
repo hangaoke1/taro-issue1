@@ -30,9 +30,9 @@ export const fmtRobot = function (msg, content) {
     }
 
     ret.push({
+      type: 'qa-list',
       content: answer_label,
       list: list,
-      type: 'qa-list',
       time: msg.time,
       fromUser: 0,
       answer_flag,
@@ -46,8 +46,8 @@ export const fmtRobot = function (msg, content) {
     // 仅答案
   } else if (len === 1) {
     ret.push({
-      content: (list[0] || {}).answer || '',
       type: 'qa',
+      content: (list[0] || {}).answer || '',
       time: msg.time,
       fromUser: 0,
       answer_flag,
@@ -62,8 +62,8 @@ export const fmtRobot = function (msg, content) {
   // 是否显示附加提示
   if (operator_hint === 1) {
     ret.push({
-      content: operator_hint_desc,
       type: [2, 3].includes(answer_flag) ? 'rich' : 'text',
+      content: operator_hint_desc,
       time: msg.time,
       fromUser: 0,
       msg

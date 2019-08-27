@@ -20,8 +20,8 @@ export const assignKefu = (content) => {
     let { code, staffname } = content;
     let time = new Date().getTime();
     let timeTip = {
-        content: timestamp2date(time,'HH:mm'),
         type: 'systip',
+        content: timestamp2date(time,'HH:mm'),
         time: time
     }
     let message;
@@ -29,8 +29,8 @@ export const assignKefu = (content) => {
     switch(code){
         case 200:
             message = {
-                content: `${staffname}为您服务`,
                 type: 'systip',
+                content: `${staffname}为您服务`,
                 time: time
             }
             dispatch({type: PUSH_MESSAGE, message});
@@ -45,8 +45,8 @@ export const assignKefu = (content) => {
         case 201:
             // 没有客服在线
             message = {
-                content: content.richmessage || content.message,
                 type: 'rich',
+                content: content.richmessage || content.message,
                 time: time,
                 fromUser: 0
             }
@@ -55,8 +55,8 @@ export const assignKefu = (content) => {
         case 203:
             // 进入排队的状态
             message = {
-              content: `排队中，您排在第${content.before}位，排到将自动接入。`,
               type: 'action',
+              content: `排队中，您排在第${content.before}位，排到将自动接入。`,
               time: time,
               actionText: '取消排队',
               fromUser: 0,
@@ -91,8 +91,8 @@ export const receiveMsg = (msg) => {
     if (msg.type == 'text') {
 
         message = {
+            type: 'text',
             content: msg.text,
-            type: msg.type,
             time: msg.time,
             status: msg.status,
             fromUser: 0,
@@ -101,8 +101,8 @@ export const receiveMsg = (msg) => {
     }
     if (msg.type === 'image') {
         message = {
-            content: msg.file,
             type: 'image',
+            content: msg.file,
             time: msg.time,
             status: msg.status,
             fromUser: 0,
@@ -111,8 +111,8 @@ export const receiveMsg = (msg) => {
     }
     if (msg.type === 'audio') {
         message = {
-            content: msg.file,
             type: 'audio',
+            content: msg.file,
             time: msg.time,
             status: msg.status,
             fromUser: 0,
@@ -121,8 +121,8 @@ export const receiveMsg = (msg) => {
     }
     if (msg.type === 'video') {
         message = {
-            content: msg.file,
             type: 'video',
+            content: msg.file,
             time: msg.time,
             status: msg.status,
             fromUser: 0,
@@ -147,8 +147,8 @@ export const receiveMsg = (msg) => {
             case 65:
                 // 富文本
                 message = {
-                    content,
                     type: 'rich',
+                    content,
                     time: msg.time,
                     status: msg.status,
                     fromUser: 0,
@@ -157,7 +157,14 @@ export const receiveMsg = (msg) => {
                 break;
             case 203:
                 // bot消息解析
-                console.log('---fmtContent---', fmtContent)
+                message = {
+                    type: 'bot',
+                    content: fmtContent,
+                    time: msg.time,
+                    status: msg.status,
+                    fromUser: 0,
+                    msg
+                }
                 break
             default:;
         }
@@ -190,8 +197,8 @@ export const onfinish = (content) => {
     // }
 
     let msg = {
-        content: tip,
         type: 'action',
+        content: tip,
         fromUser: 0,
         time: time,
         actionText: '重新连接',
@@ -211,8 +218,8 @@ export const onevaluation = (content) => {
     let time = new Date().getTime();
 
     let msg = {
-        content: content.message,
         type: 'action',
+        content: content.message,
         fromUser: 0,
         time: time,
         actionText: '评价',
@@ -234,8 +241,8 @@ export const onevaluationresult = (content) => {
     let time = new Date().getTime();
 
     let message = {
-        content: content.message,
         type: 'rich',
+        content: content.message,
         time: time,
         fromUser: 0
     }
@@ -261,8 +268,8 @@ export const receiveShuntEntries = (content) => {
   let time = new Date().getTime();
 
   let message = {
-    content: content.message,
     type: 'entries',
+    content: content.message,
     time: time,
     fromUser: 0,
     action: 'selectEntries',
@@ -280,8 +287,8 @@ export const onRobotTip = (content) => {
     const dispatch = get('store').dispatch;
 
     let message = {
-        content: content.message,
         type: 'rich',
+        content: content.message,
         time: content.timestamp,
         fromUser: 0
     }
@@ -303,7 +310,7 @@ export const onBotEntry = (content) => {
  */
 export const onBotLongMessage = (() => {
     let cache = {};
-    return (content) => {
+    return (content, msg) => {
         const index = content.split_index;
         const count = content.split_count;
         const id = content.split_id;
@@ -320,7 +327,7 @@ export const onBotLongMessage = (() => {
             message.content = Base64.decode(contentStr);
             message.idClient = idClient;
             message.type = 'custom';
-            receiveMsg(message)
+            receiveMsg(Object.assign({}, msg, message));
             delete cache[id];
         }
     }
