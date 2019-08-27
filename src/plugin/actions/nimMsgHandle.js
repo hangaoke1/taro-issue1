@@ -101,7 +101,7 @@ export const receiveMsg = (msg) => {
     }
     if (msg.type === 'image') {
         message = {
-            content: JSON.stringify(msg.file),
+            content: msg.file,
             type: 'image',
             time: msg.time,
             status: msg.status,
@@ -111,7 +111,7 @@ export const receiveMsg = (msg) => {
     }
     if (msg.type === 'audio') {
         message = {
-            content: JSON.stringify(msg.file),
+            content: msg.file,
             type: 'audio',
             time: msg.time,
             status: msg.status,
@@ -121,7 +121,7 @@ export const receiveMsg = (msg) => {
     }
     if (msg.type === 'video') {
         message = {
-            content: JSON.stringify(msg.file),
+            content: msg.file,
             type: 'video',
             time: msg.time,
             status: msg.status,
@@ -130,6 +130,7 @@ export const receiveMsg = (msg) => {
         }
     }
 
+    // 自定义消息解析
     if (msg.type === 'custom') {
         const fmtContent = JSON.parse(msg.content);
         const { cmd, content } = fmtContent;
@@ -154,6 +155,10 @@ export const receiveMsg = (msg) => {
                     msg
                 }
                 break;
+            case 203:
+                // bot消息解析
+                console.log('---fmtContent---', fmtContent)
+                break
             default:;
         }
     }
@@ -299,7 +304,6 @@ export const onBotEntry = (content) => {
 export const onBotLongMessage = (() => {
     let cache = {};
     return (content) => {
-        const dispatch = get('store').dispatch;
         const index = content.split_index;
         const count = content.split_count;
         const id = content.split_id;
@@ -313,10 +317,10 @@ export const onBotLongMessage = (() => {
             for(let i = 0; i < count; i++) {
                 contentStr = contentStr + cache[id][i];
             }
-            message.content = JSON.parse(Base64.decode(contentStr));
+            message.content = Base64.decode(contentStr);
             message.idClient = idClient;
-            // TODO: form / 抽屉 特殊处理
-            // dispatch({type: PUSH_MESSAGE, message});
+            message.type = 'custom';
+            receiveMsg(message)
             delete cache[id];
         }
     }

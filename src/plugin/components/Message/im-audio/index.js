@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Image } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import eventbus from '../../../lib/eventbus';
 import Avatar from '../u-avatar';
 
@@ -7,14 +7,14 @@ import './index.less';
 
 // const mock = {
 //   autoreply: 0,
-//   content: JSON.stringify({"size":4518,"ext":"amr","dur":2820,"url":"http://6661.qytest.netease.com/prd/res/audio/message_92be25847e14e832622bc76761f393e9.mp3","md5":"3d040401aa828fd9611c71b2e4c55860"}),
+//   content: {"size":4518,"ext":"amr","dur":2820,"url":"http://6661.qytest.netease.com/prd/res/audio/message_92be25847e14e832622bc76761f393e9.mp3","md5":"3d040401aa828fd9611c71b2e4c55860"},
 //   fromUser: 0,
 //   time: "1565752835763",
 //   type: "audio"
 // }
 // const mock2 = {
 //   autoreply: 0,
-//   content: JSON.stringify({"size":4518,"ext":"amr","dur":2820,"url":"http://qytest.netease.com/sdk/res/audio/message.mp3","md5":"3d040401aa828fd9611c71b2e4c55860"}),
+//   content: {"size":4518,"ext":"amr","dur":2820,"url":"http://qytest.netease.com/sdk/res/audio/message.mp3","md5":"3d040401aa828fd9611c71b2e4c55860"},
 //   fromUser: 1,
 //   time: "1565752835763",
 //   type: "audio"
@@ -57,7 +57,7 @@ export default class ImAudio extends Component {
   componentDidMount () {
     const audioCtx = Taro.createInnerAudioContext();
     const item = this.props.item;
-    const audioInfo = item ? JSON.parse(item.content) : {};
+    const audioInfo = item ? item.content : {};
 
     audioCtx.autoplay = false;
     audioCtx.src = audioInfo.mp3Url;
@@ -89,7 +89,7 @@ export default class ImAudio extends Component {
   render () {
     const { item } = this.props;
     const { playing } = this.state;
-    const audioInfo = item ? JSON.parse(item.content) : {};
+    const audioInfo = item ? item.content : {};
 
     return item ? (
       <View
@@ -97,7 +97,7 @@ export default class ImAudio extends Component {
           item.fromUser ? 'm-audio m-audio-right' : 'm-audio m-audio-left'
         }
       >
-        <Avatar fromUser={item.fromUser}/>
+        <Avatar fromUser={item.fromUser} />
         <View className='u-text-arrow' />
         <View className='u-text' onClick={this.handleClick}>
           { item.fromUser ? null : <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View>}

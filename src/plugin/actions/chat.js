@@ -82,7 +82,7 @@ export const sendImage = res => dispatch => {
     tempFilePaths.map(tempFilePath => {
       NIM.sendImageMsg(tempFilePath).then(msg => {
         let message = {
-          content: JSON.stringify(msg.file),
+          content: msg.file,
           type: 'image',
           time: msg.time,
           status: msg.status,

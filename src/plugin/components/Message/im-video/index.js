@@ -26,20 +26,20 @@ export default class ImVideo extends Component {
 
   handleClick = () => {
     const { item } = this.props;
-    const videoInfo = item ? JSON.parse(item.content) : {};
+    const videoInfo = item ? item.content : {};
     eventbus.trigger('video_click', videoInfo.url)
   }
  
   render () {
     const {} = this.state;
     const { item } = this.props;
-    const videoInfo = item ? JSON.parse(item.content) : {};
+    const videoInfo = item ? item.content : {};
     const { w = MIN_SIZE, h = MIN_SIZE, dur = 0 } = videoInfo;
     const { width, height }  = calcMsg(w, h, 140, 140);
   
     return item ? (
       <View className={item.fromUser ? 'm-video m-video-right' : 'm-video m-video-left'}>
-        <Avatar fromUser={item.fromUser}/>
+        <Avatar fromUser={item.fromUser} />
         <View className='u-space' />
         <View className='u-content' onClick={this.handleClick}>
           <View

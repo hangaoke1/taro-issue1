@@ -12,19 +12,19 @@ const MIN_SIZE = 20;
 
 export default function ImgView(props) {
   const item = props.item;
-  const imgInfo = item ? JSON.parse(item.content) : {};
+  const imgInfo = item ? item.content : {};
   const { w = MIN_SIZE, h = MIN_SIZE } = imgInfo;
   const { width, height }  = calcMsg(w, h);
   let extendQuery = (imgInfo.url || '').indexOf('?') === -1 ? '?' : '&';
   extendQuery += 'imageView&thumbnail=1500x15000';
 
   function handleClick () {
-    this.props.onClick(props.item);
+    props.onClick(props.item);
   };
 
   return item ? (
     <View className={item.fromUser ? 'm-img m-img-right' : 'm-img m-img-left'}>
-      <Avatar fromUser={item.fromUser}/>
+      <Avatar fromUser={item.fromUser} />
       <View className='u-space' />
       <View className='u-content'>
         <Image className='u-img' mode='scaleToFill' style={`width: ${width}px;height: ${height}px`} src={imgInfo.url + extendQuery} lazy-load onClick={handleClick} />

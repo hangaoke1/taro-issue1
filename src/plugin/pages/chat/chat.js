@@ -182,9 +182,9 @@ class Chat extends Component {
     const imgMessageList = this.props.Message.filter(
       msg => msg.type === 'image'
     );
-    const imgList = imgMessageList.map(msg => JSON.parse(msg.content).url);
+    const imgList = imgMessageList.map(msg => msg.content.url);
     Taro.previewImage({
-      current: JSON.parse(item.content).url,
+      current: item.content.url,
       urls: imgList
     });
   };
