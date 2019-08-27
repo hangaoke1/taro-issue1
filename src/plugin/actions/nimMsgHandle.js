@@ -274,10 +274,12 @@ export const onevaluationresult = (content) => {
     let time = new Date().getTime();
 
     let message = {
-        type: 'rich',
+        type: 'action',
         content: content.message,
         time: time,
-        fromUser: 0
+        fromUser: 0,
+        actionText: '修改评价',
+        action: 'updateEvaluation'
     }
 
     let updateActionMsg = {
