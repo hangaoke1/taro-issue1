@@ -1,6 +1,6 @@
 import { get } from '../global_config'
 import { SET_EVALUATION_VISIBLE } from '../constants/chat';
-import { applyKefu } from '../actions/chat';
+import { applyKefu,cancelQueue } from '../actions/chat';
 
 export const anctionHandle = (type, data) => {
   const dispatch = get('store').dispatch;
@@ -14,6 +14,9 @@ export const anctionHandle = (type, data) => {
       break;
     case 'selectEntries':
       applyKefu(data);
+      break;
+    case 'cancelQueue':
+        dispatch(cancelQueue(data));
       break;
   }
 }

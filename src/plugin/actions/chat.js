@@ -19,7 +19,7 @@ export const applyKefu = (extraParms = {
     const account = get('account');
     const token = get('token');
 
-    NIM = new IMSERVICE({
+    NIM = IMSERVICE.getInstance({
         appKey: appKey,
         account: account,
         token: token
@@ -159,6 +159,21 @@ export const sendEvaluation = (data = {}) => dispatch => {
 };
 
 /**
+ * 访客主动取消了排队
+ * @param {*} data
+ */
+export const cancelQueue = (data = {}) => dispatch => {
+  NIM.cancelQueue(data).then(json => {
+   let message = {
+     type: 'systip',
+     content: '您退出了咨询',
+     time: new Date().getTime()
+   }
+   dispatch({ type: PUSH_MESSAGE, message });
+  })
+}
+
+/**
  * 根据序号修改消息内容
  * @param {object} message 新消息内容
  * @param {number} index 消息序号
@@ -166,3 +181,8 @@ export const sendEvaluation = (data = {}) => dispatch => {
 export const changeMessageByIndex = (message, index) => dispatch => {
   dispatch({ type: UPDATE_MESSAGE_BYINDEX, message, index });
 };
+
+export const askQueueStatus = () => {
+  debugger;
+  NIM.askQueueStatus();
+}

@@ -60,7 +60,9 @@ export const assignKefu = (content) => {
               time: time,
               actionText: '取消排队',
               fromUser: 0,
-              action: 'cancelQueue'
+              action: 'cancelQueue',
+              sessionid: content.sessionid,
+              key: `inqueue-${content.sessionid}`
             }
             dispatch({type: PUSH_MESSAGE, message});
           break;
@@ -243,6 +245,11 @@ export const onevaluationresult = (content) => {
     dispatch({type: UPDATE_MESSAGE_BYKEY, message: updateActionMsg});
 }
 
+
+/**
+ * 收到访客分流入口推送
+ * @param {*} content
+ */
 export const receiveShuntEntries = (content) => {
   const dispatch = get('store').dispatch;
 
@@ -262,7 +269,7 @@ export const receiveShuntEntries = (content) => {
 
 /**
  * 接收到机器人提示
- * @param {object} content 
+ * @param {object} content
  */
 export const onRobotTip = (content) => {
     const dispatch = get('store').dispatch;
@@ -314,3 +321,21 @@ export const onBotLongMessage = (() => {
         }
     }
 })()
+
+/**
+ * 收到排队状态更新的推送
+ * @param {*} content
+ */
+export const onQueueStatus = (content) => {
+  const dispatch = get('store').dispatch;
+
+  let updateMessage = {
+    key: `inqueue-${content.sessionid}`,
+    content: `排队中，您排在第${content.before}位，排到将自动接入。`,
+  }
+
+  dispatch({
+    type: UPDATE_MESSAGE_BYKEY,
+    message: updateMessage
+  })
+}

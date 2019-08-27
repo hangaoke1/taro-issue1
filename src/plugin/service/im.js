@@ -9,7 +9,8 @@ import {
   receiveShuntEntries,
   onRobotTip,
   onBotEntry,
-  onBotLongMessage
+  onBotLongMessage,
+  onQueueStatus
 } from '../actions/nimMsgHandle';
 import {
   FROM_TYPE,
@@ -24,7 +25,11 @@ import {
   RECEIVE_SHUNT_ENTRIES_CMD,
   REVEIVE_ROBOT_TIP_CMD,
   RECEIVE_BOT_ENTRY_CMD,
-  RECEIVE_BOT_LONG_MESSAGE_CMD
+  RECEIVE_BOT_LONG_MESSAGE_CMD,
+  CANCEL_QUEUE_CMD,
+  RECEIVE_QUEUE_NUM_CMD,
+  ASK_QUEUE_STATUS_CMD,
+  QUEUE_TIMER
 } from '../constants';
 
 let contenting = false;
@@ -34,6 +39,13 @@ export default class IMSERVICE {
     this.appKey = initer.appKey;
     this.account = initer.account;
     this.token = initer.token;
+  }
+
+  static getInstance(initer) {
+    if (!this.instance) {
+      this.instance = new IMSERVICE(initer);
+    }
+    return this.instance;
   }
 
   getNim() {
@@ -55,7 +67,7 @@ export default class IMSERVICE {
         ondisconnect: this.onDisconnect,
         onerror: this.onError,
         onmsg: this.onMsg,
-        oncustomsysmsg: this.onCustomsysmsg
+        oncustomsysmsg: this.onCustomsysmsg.bind(this)
       }));
 
       if (contenting) {
@@ -152,7 +164,7 @@ export default class IMSERVICE {
    * @param {number} stafftype 0:申请客服，不管是机器人还是人工客服；1：只申请人工客服；
    */
   applyKefu(
-    extraParms = {
+    extraParams = {
       stafftype: 0
     }
   ) {
@@ -167,7 +179,7 @@ export default class IMSERVICE {
         cmd: APPLY_KEFU_CMD,
         deviceid: get('deviceid'),
         fromType: FROM_TYPE,
-        ...extraParms
+        ...extraParams
       };
 
       this.sendCustomSysMsg(content)
@@ -182,14 +194,14 @@ export default class IMSERVICE {
 
   /**
    * 访客发送评价
-   * @param {*} data
+   * @param {*} extraParams
    */
-  sendEvaluation(data) {
+  sendEvaluation(extraParams) {
     return new Promise((resolve, reject) => {
       let content = {
         cmd: SEND_EVALUATION_CMD,
         fromType: FROM_TYPE,
-        ...data
+        ...extraParams
       };
 
       this.sendCustomSysMsg(content)
@@ -200,6 +212,29 @@ export default class IMSERVICE {
           reject(error);
         });
     });
+  }
+
+
+  /**
+   * 访客主动取消排队
+   * @param {*} extraParams
+   */
+  cancelQueue(extraParams) {
+    return new Promise((resolve, reject) => {
+      let content = {
+        cmd: CANCEL_QUEUE_CMD,
+        ...extraParams
+      };
+
+      this.sendCustomSysMsg(content)
+        .then(msg => {
+          resolve(msg);
+        })
+        .catch(error => {
+          reject(error);
+        });
+
+    })
   }
 
   /**
@@ -228,9 +263,13 @@ export default class IMSERVICE {
           // 申请客服成功后的导航栏控制
           Taro.hideNavigationBarLoading();
           Taro.setNavigationBarTitle({
-              title: NAVIGATIONBAR_TITLE
+            title: NAVIGATIONBAR_TITLE
           })
           assignKefu(content);
+          if (content.code == 203) {
+            console.log('queuqe', this);
+            this.askQueueStatus();
+          }
           break;
         case FINISH_SESSION_CMD:
           onfinish(content);
@@ -260,12 +299,18 @@ export default class IMSERVICE {
         case RECEIVE_BOT_LONG_MESSAGE_CMD:
           // bot超长信息处理
           onBotLongMessage(content, msg)
+        case RECEIVE_QUEUE_NUM_CMD:
+          if (content.code == 200) {
+            onQueueStatus(content);
+          } else {
+            this.clearQueueTimer();
+          }
           break;
         default:
           console.log('onCustomsysmsg 未知指令' + JSON.stringify(msg));
           break;
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   /**
@@ -292,6 +337,36 @@ export default class IMSERVICE {
 
     setTimeout(this.sendHeartbeat.bind(this), get('heartbeatCycle'));
   };
+
+  /**
+   * 轮询的方式询问排队的状态
+   */
+  askQueueStatus = (extraParams = {
+    deviceid: get('deviceid')
+  }) => {
+    this.queueTimer = setInterval(() => {
+      return new Promise((resolve, reject) => {
+        let content = {
+          cmd: ASK_QUEUE_STATUS_CMD,
+          ...extraParams
+        };
+
+        this.sendCustomSysMsg(content)
+          .then(msg => {
+            resolve(msg);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      })
+    }, QUEUE_TIMER);
+  };
+
+  clearQueueTimer = () => {
+    if (!this.queueTimer)
+      return;
+    clearInterval(this.queueTimer);
+  }
 
   onConnect(data) {
     console.log('----onConnect----，data:' + data);

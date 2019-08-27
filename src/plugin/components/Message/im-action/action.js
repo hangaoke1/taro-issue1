@@ -8,8 +8,8 @@ import './action.less';
 export default function ActionView(props) {
   const item = props.item;
 
-  const actionFun = (entryid) => {
-    anctionHandle(item.action, { entryid });
+  const actionFun = (data) => {
+    anctionHandle(item.action, data);
   }
 
   const richProps = {
@@ -23,7 +23,7 @@ export default function ActionView(props) {
         item.type == 'action' ?
           (<View className='m-action'>
             <View className={item.disabled ? 'u-action-btn u-action-btn-disabled' : 'u-action-btn'}
-              onClick={(ev) => { actionFun(ev) }}>{item.actionText}
+              onClick={(ev) => { actionFun({sessionid: item.sessionid}) }}>{item.actionText}
             </View>
           </View>) : null
       }
@@ -36,7 +36,7 @@ export default function ActionView(props) {
                 return (
                   <View className="u-entry">
                     <View className="u-dot"></View>
-                    <View className="u-label" onClick={(ev) => { actionFun(it.entryid) }}>{it.label}</View>
+                    <View className="u-label" onClick={(ev) => { actionFun({entryid: it.entryid}) }}>{it.label}</View>
                   </View>
                 )
               })
