@@ -11,6 +11,7 @@ import Portrait from '../../components/Portrait';
 import FloatLayout from '../../components/FloatLayout';
 import Evaluation from '../../components/Evaluation';
 import BotList from '../../components/BotList';
+import FloatButton from '../../components/FloatButton';
 
 import { NAVIGATIONBAR_TITLE } from '../../constants';
 
@@ -295,6 +296,7 @@ class Chat extends Component {
           <Evaluation />
         </FloatLayout>
         <BotList></BotList>
+        <FloatButton></FloatButton>
       </Index>
     );
   }

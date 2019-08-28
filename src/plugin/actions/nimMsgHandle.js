@@ -37,7 +37,6 @@ export const assignKefu = (content) => {
     dispatch({type: PUSH_MESSAGE, message: timeTip});
     switch(code){
         case 200:
-            debugger;
             message = {
                 type: 'systip',
                 content: `${content.message}` || `${staffname}为您服务`,
