@@ -2,6 +2,7 @@ import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
 import { INIT_EVALUATION_SETTING,INIT_CURRENT_EVALUATION,INIT_LAST_EVALUATION } from '../constants/evaluation';
+import { SET_EVALUATION_VISIBLE } from '../constants/chat';
 import { SET_BOT_LIST } from '../constants/bot';
 import { timestamp2date, fmtRobot } from '../utils';
 import Base64 from '../lib/base64';
@@ -213,9 +214,9 @@ export const receiveMsg = (msg) => {
  */
 export const onfinish = (content) => {
     const dispatch = get('store').dispatch;
-    // let session = get('store').getState().Session.Session;
+    let session = get('store').getState().Session;
 
-    let {close_reason, richmessage, message} = content;
+    let {close_reason, richmessage, message, evaluate, messageInvite, sessionid, evaluation_auto_popup} = content;
     let time = new Date().getTime();
 
     let tip;
@@ -225,9 +226,9 @@ export const onfinish = (content) => {
         tip = richmessage || message || REASON_MAP[close_reason];
     }
 
-    // if(session && session.kefu.isRobot && data.close_reason == 1) {
-    //     tip = '本次会话已超时结束';
-    // }
+    if(session && session.isRobot && content.close_reason == 1) {
+        tip = '本次会话已超时结束';
+    }
 
     let msg = {
         type: 'action',
@@ -239,6 +240,28 @@ export const onfinish = (content) => {
     }
 
     dispatch({type: PUSH_MESSAGE, message: msg});
+
+    // 会话结束时需要评价
+    if(evaluate){
+      let evaluationMsg = {
+        type: 'action',
+        content: messageInvite,
+        fromUser: 0,
+        time,
+        actionText: '评价',
+        action: 'evaluation',
+        key: `evaluation-${sessionid}`
+      }
+
+      dispatch({type: PUSH_MESSAGE, message: evaluationMsg});
+
+      if(evaluation_auto_popup){
+        dispatch({
+          type: SET_EVALUATION_VISIBLE,
+          value: true
+        })
+      }
+    }
 }
 
 /**
@@ -259,6 +282,13 @@ export const onevaluation = (content) => {
         actionText: content.evaluationTimes ? '再次评价' : '评价',
         action: 'evaluation',
         key: `evaluation-${content.sessionid}`
+    }
+
+    if(content.evaluation_auto_popup){
+      dispatch({
+        type: SET_EVALUATION_VISIBLE,
+        value: true
+      })
     }
 
     if(content.evaluationTimes){
