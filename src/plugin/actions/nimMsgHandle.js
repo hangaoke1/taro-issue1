@@ -1,7 +1,7 @@
 import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
-import { INIT_EVALUATION_SETTING } from '../constants/evaluation';
+import { INIT_EVALUATION_SETTING,INIT_CURRENT_EVALUATION,INIT_LAST_EVALUATION } from '../constants/evaluation';
 import { SET_BOT_LIST } from '../constants/bot';
 import { timestamp2date, fmtRobot } from '../utils';
 import Base64 from '../lib/base64';
@@ -247,6 +247,7 @@ export const onfinish = (content) => {
  */
 export const onevaluation = (content) => {
     const dispatch = get('store').dispatch;
+    const session = get('store').getState().Session;
 
     let time = new Date().getTime();
 
@@ -260,6 +261,22 @@ export const onevaluation = (content) => {
         key: `evaluation-${content.sessionid}`
     }
 
+    if(content.evaluationTimes){
+      // init evaluation
+      dispatch({type: INIT_EVALUATION_SETTING, value: {
+        evaluation: JSON.parse(session.evaluation),
+        sessionid: session.sessionid
+      }});
+      dispatch({
+        type: INIT_CURRENT_EVALUATION,
+        value: {
+          remarks: '',
+          evaluation_resolved: null,
+          selectTagList: []
+        }
+      })
+    }
+
     dispatch({type: PUSH_MESSAGE, message: msg});
 
 }
@@ -270,6 +287,13 @@ export const onevaluation = (content) => {
  */
 export const onevaluationresult = (content) => {
     const dispatch = get('store').dispatch;
+    const evaluation = get('store').getState().Evaluation;
+
+    // 存储上次评价内容
+    dispatch({
+      type: INIT_LAST_EVALUATION,
+      value: evaluation.currentEvaluation
+    })
 
     let time = new Date().getTime();
 
@@ -281,6 +305,14 @@ export const onevaluationresult = (content) => {
         actionText: '修改评价',
         action: 'updateEvaluation'
     }
+
+    let updateUpdateEvaluationMsg = {
+      actionText: '已评价',
+      disabled: 1,
+      action: 'updateEvaluation'
+    }
+
+    dispatch({type: UPDATE_MESSAGE_BYACTION, message: updateUpdateEvaluationMsg});
 
     let updateActionMsg = {
         key: `evaluation-${content.sessionid}`,

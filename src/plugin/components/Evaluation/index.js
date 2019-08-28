@@ -1,4 +1,3 @@
-import Taro, { useState, useEffect } from '@tarojs/taro';
 import { useSelector, useDispatch } from '@tarojs/redux';
 import { View, Button } from '@tarojs/components';
 import Render2Level from './render2Level';
@@ -16,7 +15,7 @@ export default function Evaluation(props) {
 
   const Evaluation = useSelector(state => state.Evaluation);
 
-  const { currentEvaluation, evaluationSetting } = Evaluation;
+  const { currentEvaluation, lastEvaluation, evaluationSetting } = Evaluation;
   const { tagList, name, value, remarks, evaluation_resolved, selectTagList } = currentEvaluation;
 
   const dispatch = useDispatch()
