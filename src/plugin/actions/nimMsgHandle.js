@@ -37,10 +37,10 @@ export const assignKefu = (content) => {
     dispatch({type: PUSH_MESSAGE, message: timeTip});
     switch(code){
         case 200:
+            debugger;
             message = {
-                content: `${content.message}` || `${staffname}为您服务`,
                 type: 'systip',
-                content: `${staffname}为您服务`,
+                content: `${content.message}` || `${staffname}为您服务`,
                 time: time
             }
             dispatch({type: PUSH_MESSAGE, message});
@@ -460,8 +460,8 @@ export const receiveTransfer = (content) => {
 
   let time = new Date().getTime();
   let message = {
-    content: `${content.message}` || `已经为您转接${content.staffname}`,
     type: 'systip',
+    content: `${content.message}` || `已经为您转接${content.staffname}`,
     time
   }
 
