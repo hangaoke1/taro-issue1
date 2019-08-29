@@ -14,14 +14,20 @@ export default class FloatButton extends Component {
     }
   }
 
+
   handleClick = (visible) => {
     this.setState({
       visible: !visible
     })
   }
 
+  hanSelect = (key) => {
+    const { onSelect } = this.props;
+    onSelect && onSelect(key);
+  }
+
   render() {
-    const { icon, contentWidth, children, entryConfig } = this.props;
+    const { icon, contentWidth, entryConfig } = this.props;
     const { visible } = this.state;
 
     return (
@@ -36,7 +42,7 @@ export default class FloatButton extends Component {
             {
               entryConfig.map(item => {
                 return (
-                  <View className="m-FloatButton_action_item">
+                  <View className="m-FloatButton_action_item" onClick={this.hanSelect.bind(this,item.key)}>
                     <View className='m-FloatButton_action_icon'>
                       <Iconfont type={item.icon} color='#666' size='12'></Iconfont>
                     </View>
@@ -57,9 +63,14 @@ FloatButton.defaultProps = {
   contentWidth: 80,
   entryConfig: [{
     icon: 'icon-star-linex',
-    text: '评价'
+    text: '评价',
+    key: 'evaluation'
   }, {
     icon: 'icon-dropoutx',
-    text: '退出'
-  }]
+    text: '退出',
+    key: 'exit'
+  }],
+  onSelect: () => {
+
+  }
 }

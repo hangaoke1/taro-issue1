@@ -1,7 +1,7 @@
 import { get } from '../global_config'
 import { SET_EVALUATION_VISIBLE } from '../constants/chat';
-import { applyKefu,cancelQueue } from '../actions/chat';
-import{INIT_CURRENT_EVALUATION} from '../constants/evaluation';
+import { applyKefu, cancelQueue } from '../actions/chat';
+import { INIT_CURRENT_EVALUATION } from '../constants/evaluation';
 
 export const anctionHandle = (type, data) => {
   const dispatch = get('store').dispatch;
@@ -18,14 +18,14 @@ export const anctionHandle = (type, data) => {
       applyKefu(data);
       break;
     case 'cancelQueue':
-        dispatch(cancelQueue(data));
+      dispatch(cancelQueue(data));
       break;
     case 'updateEvaluation':
-        dispatch({
-          type: INIT_CURRENT_EVALUATION,
-          value: evaluation.lastEvaluation
-        })
-        dispatch(setEvaluationVisible(true));
+      dispatch({
+        type: INIT_CURRENT_EVALUATION,
+        value: evaluation.lastEvaluation
+      })
+      dispatch(setEvaluationVisible(true));
       break;
   }
 }
@@ -39,4 +39,8 @@ const setEvaluationVisible = value => {
 
 export const closeEvaluationModal = () => dispatch => {
   dispatch(setEvaluationVisible(false));
+}
+
+export const openEvaluationModal = () => dispatch => {
+  dispatch(setEvaluationVisible(true));
 }

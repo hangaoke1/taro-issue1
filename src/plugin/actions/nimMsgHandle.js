@@ -2,7 +2,7 @@ import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
 import { INIT_EVALUATION_SETTING,INIT_CURRENT_EVALUATION,INIT_LAST_EVALUATION } from '../constants/evaluation';
-import { SET_EVALUATION_VISIBLE } from '../constants/chat';
+import { SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG } from '../constants/chat';
 import { SET_BOT_LIST } from '../constants/bot';
 import { timestamp2date, fmtRobot } from '../utils';
 import Base64 from '../lib/base64';
@@ -18,10 +18,40 @@ export const assignKefu = (content) => {
     // init session
     dispatch({type: INIT_SESSION, session: content});
     // init evaluation
-    dispatch({type: INIT_EVALUATION_SETTING, value: {
-      evaluation: JSON.parse(content.evaluation),
-      sessionid: content.sessionid
-    }});
+    if(content.evaluation){
+      dispatch({type: INIT_EVALUATION_SETTING, value: {
+        evaluation: JSON.parse(content.evaluation),
+        sessionid: content.sessionid
+      }});
+    }
+
+    // 显示人工入口
+    if(content.operator_enable){
+      dispatch({
+        type: SET_ENTRY_CONFIG,
+        value: [
+          {
+            icon: 'icon-customerservicex',
+            text: '人工客服',
+            key: 'applyStaff'
+          }
+        ]
+      })
+    }
+
+    // 显示评价入口
+    if(content.shop.setting.show_evaluation_button){
+      dispatch({
+        type: SET_ENTRY_CONFIG,
+        value: [
+          {
+            icon: 'icon-star-linex',
+            text: '评价',
+            key: 'evaluation'
+          }
+        ]
+      })
+    }
 
     let isRobot = content.stafftype === 1 || content.robotInQueue ===  1;
     set('isRobot', isRobot);

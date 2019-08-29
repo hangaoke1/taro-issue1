@@ -22,7 +22,7 @@ import {
   toggleShowPortrait,
   hideAction
 } from '../../actions/options';
-import { closeEvaluationModal } from '../../actions/actionHandle';
+import { closeEvaluationModal,openEvaluationModal } from '../../actions/actionHandle';
 import eventbus from '../../lib/eventbus';
 
 import functionList from './function.config';
@@ -56,6 +56,9 @@ import './chat.less';
     },
     closeEvaluationModal() {
       dispatch(closeEvaluationModal());
+    },
+    openEvaluationModal() {
+      dispatch(openEvaluationModal());
     }
   })
 )
@@ -229,6 +232,18 @@ class Chat extends Component {
     closeEvaluationModal();
   };
 
+  /**
+   * 点击入口按钮
+   */
+  handleSelectEntry = (key) => {
+    switch(key){
+      case 'evaluation':
+        const { openEvaluationModal } = this.props;
+        openEvaluationModal();
+      break;
+    }
+  }
+
   render() {
     const { Message, Options, CorpStatus, Bot } = this.props;
     const { lastId, height, videoUrl, scrollWithAnimation } = this.state;
@@ -298,7 +313,12 @@ class Chat extends Component {
         </FloatLayout>
         <BotList></BotList>
         <BotCard></BotCard>
-        <FloatButton></FloatButton>
+        {
+          CorpStatus.entryConfig.length ?
+          <FloatButton entryConfig={CorpStatus.entryConfig}
+            onSelect={this.handleSelectEntry} />
+          : null
+        }
       </Index>
     );
   }
