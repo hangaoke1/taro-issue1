@@ -1,8 +1,11 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, ScrollView, Swiper, SwiperItem, } from '@tarojs/components';
+import { View, ScrollView, Swiper, SwiperItem } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
+import _get from 'lodash/get';
 import FloatLayout from '../FloatLayout/index';
-import UCard from './u-card';
+import MCard from './m-card';
+import MGroup from './m-group';
+import MList from './m-list';
 import eventbus from '../../lib/eventbus';
 
 import './index.less';
@@ -14,57 +17,99 @@ import './index.less';
   dispatch => ({})
 )
 export default class BotList extends Component {
-  static propTypes = {}
+  static propTypes = {};
 
-  static defaultProps = {}
+  static defaultProps = {};
 
   state = {
     uuid: '',
-    visible: false
-  }
+    visible: false,
+    tabIndex: 0
+  };
 
   componentWillMount() {}
 
   componentDidMount() {
-    eventbus.on('show_card_list', uuid => {
+    eventbus.on('bot_show_card_list', uuid => {
       this.setState({ uuid, visible: true });
     });
-  }
-
-  handleLoadMore = (params) => {
-    console.log('加载更多', params)
   }
 
   handleClose = () => {
     this.setState({
       visible: false
-    })
-  }
+    });
+  };
+
+  handleClick = (item, tab) => {
+    eventbus.trigger('bot_show_card', item);
+  };
+
+  handleSwiperChange = event => {
+    this.setState({
+      tabIndex: event.detail.current
+    });
+  };
 
   render() {
-    const { visible } = this.state;
+    const { Message } = this.props;
+    const { visible, uuid, tabIndex } = this.state;
+    const message = Message.filter(item => item.uuid === uuid)[0];
+    const tpl = _get(message, 'content.template', {});
+    const tabList = _get(message, 'content.template.tabList', []);
 
-    return (
-      <FloatLayout visible={visible} maskClosable title='请选择咨询的商品' bodyPadding={0} onClose={this.handleClose}>
-        <View className='m-bot-list'>
-          <ScrollView scrollX className='u-tab'>
-            <View className='u-tab-item z-active'>热门商品</View>
-            <View className='u-tab-item'>我的订单</View>
+    return message ? (
+      <FloatLayout
+        visible={visible}
+        maskClosable
+        title={tpl.title}
+        bodyPadding={0}
+        onClose={this.handleClose}
+      >
+        <View className="m-bot-list">
+          <ScrollView scrollX className="u-tab">
+            {tabList.map((tab, index) => (
+              <View
+                className={`u-tab-item ${tabIndex === index ? 'z-active' : ''}`}
+              >
+                {tab.tab_name}
+              </View>
+            ))}
           </ScrollView>
-          <Swiper className='u-swiper'>
-            <SwiperItem>
-              <ScrollView scrollY className='u-list' onScrollToLower={this.handleLoadMore.bind(this, 'aaa')}>
-                {(new Array(10)).map((item, index) => <UCard key={index}></UCard>)}
-              </ScrollView>
-            </SwiperItem>
-            <SwiperItem>
-              <ScrollView scrollY className='u-list' onScrollToLower={this.handleLoadMore.bind(this, 'aaa')}>
-                {(new Array(10)).map((item, index) => <UCard key={index}></UCard>)}
-              </ScrollView>
-            </SwiperItem>
+          <Swiper className="u-swiper" onChange={this.handleSwiperChange}>
+            {tabList.map(tab => (
+              <SwiperItem key={tab.tab_id}>
+                <MList
+                  className="u-list"
+                  tab={tab}
+                  tpl={tpl}
+                >
+                  {tab.list.length ? (
+                    tab.list.map(item => {
+                      return String(item.p_item_type) === '0' ? (
+                        <MCard
+                          key={item.params}
+                          item={item}
+                          onClick={this.handleClick.bind(this, item, tab)}
+                        ></MCard>
+                      ) : (
+                        <MGroup
+                          key={item.params}
+                          item={item}
+                        ></MGroup>
+                      );
+                    })
+                  ) : (
+                    <Text className="u-empty-tip">
+                      {_get(tpl, 'empty_list_hint')}
+                    </Text>
+                  )}
+                </MList>
+              </SwiperItem>
+            ))}
           </Swiper>
         </View>
       </FloatLayout>
-    );
+    ) : null;
   }
 }

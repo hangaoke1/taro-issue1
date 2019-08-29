@@ -12,21 +12,23 @@ let NIM = null;
  * @param {number} stafftype 申请客服类型
  */
 
-export const applyKefu = (extraParms = {
-  stafftype: 0
-}) => {
-    const appKey = get('appKey');
-    const account = get('account');
-    const token = get('token');
+export const applyKefu = (
+  extraParms = {
+    stafftype: 0
+  }
+) => {
+  const appKey = get('appKey');
+  const account = get('account');
+  const token = get('token');
 
-    NIM = IMSERVICE.getInstance({
-        appKey: appKey,
-        account: account,
-        token: token
-    });
+  NIM = IMSERVICE.getInstance({
+    appKey: appKey,
+    account: account,
+    token: token
+  });
 
-    NIM.applyKefu(extraParms);
-}
+  NIM.applyKefu(extraParms);
+};
 
 /**
  *
@@ -68,7 +70,7 @@ export const sendText = text => dispatch => {
 
   dispatch({ type: PUSH_MESSAGE, message });
   NIM.sendTextMsg(text).then(msg => {
-    console.log('文本发送完成', msg)
+    console.log('文本发送完成', msg);
   });
 };
 
@@ -167,25 +169,43 @@ export const sendEvaluation = (data = {}) => dispatch => {
  */
 export const cancelQueue = (data = {}) => dispatch => {
   NIM.cancelQueue(data).then(json => {
-   let message = {
-     type: 'systip',
-     content: '您退出了咨询',
-     time: new Date().getTime()
-   }
-   dispatch({ type: PUSH_MESSAGE, message });
-  })
-}
+    let message = {
+      type: 'systip',
+      content: '您退出了咨询',
+      time: new Date().getTime()
+    };
+    dispatch({ type: PUSH_MESSAGE, message });
+  });
+};
 
 /**
  * 根据序号修改消息内容
  * @param {object} message 新消息内容
  * @param {number} uuid 消息序号
  */
-export const changeMessageByUUID = (message) => dispatch => {
+export const changeMessageByUUID = message => dispatch => {
   dispatch({ type: UPDATE_MESSAGE_BYUUID, message });
 };
 
 export const askQueueStatus = () => {
   debugger;
   NIM.askQueueStatus();
-}
+};
+
+/* ----bot相关开始---- */
+
+/**
+ * BOT平台动态查询，客户端通知服务器加载更多列表
+ * @param {object} data 请求参数
+ * @return {promise}
+ */
+export const getMoreBotList = (data) => {
+  return NIM.sendCustomSysMsg({
+    cmd: 204,
+    templateId: data.id,
+    target: data.target,
+    params: data.params
+  });
+};
+
+/* ----bot相关结束---- */

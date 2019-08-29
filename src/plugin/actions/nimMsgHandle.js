@@ -186,9 +186,12 @@ export const receiveMsg = (msg) => {
                 }
                 // 显示抽屉
                 if (fmtContent.template.id === 'drawer_list') {
-                    eventbus.trigger('show_card_list', message.uuid);
+                    eventbus.trigger('bot_show_card_list', message.uuid);
                 }
                 break
+            case 205:
+                eventbus.trigger('bot_loadmore_list', fmtContent);
+                break;
             case 95:
               // 转接的先放这吧
               receiveTransfer(fmtContent);

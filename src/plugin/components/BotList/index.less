@@ -1,3 +1,10 @@
+// 单行省略
+.fn_ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .m-bot-list {
   .u-header {
     display: flex;
@@ -10,6 +17,7 @@
     white-space: nowrap;
     border-bottom: 1px solid #e6e6e6;
     &-item {
+      max-width: 120px;
       position: relative;
       display: inline-block;
       padding: 10px 0;
@@ -17,6 +25,7 @@
       font-size: 14px;
       color: #333;
       text-align: center;
+      .fn_ellipsis();
     }
     .z-active {
       color: #337EFF;
