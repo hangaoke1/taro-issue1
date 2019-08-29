@@ -16,7 +16,7 @@ import FloatButton from '../../components/FloatButton';
 
 import { NAVIGATIONBAR_TITLE } from '../../constants';
 
-import { createAccount, sendText, sendImage } from '../../actions/chat';
+import { createAccount, sendText, sendImage,applyHumanStaff } from '../../actions/chat';
 import {
   toggleShowFun,
   toggleShowPortrait,
@@ -240,6 +240,9 @@ class Chat extends Component {
       case 'evaluation':
         const { openEvaluationModal } = this.props;
         openEvaluationModal();
+      break;
+      case 'applyHumanStaff':
+        applyHumanStaff();
       break;
     }
   }

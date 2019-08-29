@@ -187,11 +187,6 @@ export const changeMessageByUUID = message => dispatch => {
   dispatch({ type: UPDATE_MESSAGE_BYUUID, message });
 };
 
-export const askQueueStatus = () => {
-  debugger;
-  NIM.askQueueStatus();
-};
-
 /* ----bot相关开始---- */
 
 /**
@@ -209,3 +204,9 @@ export const getMoreBotList = (data) => {
 };
 
 /* ----bot相关结束---- */
+
+export const applyHumanStaff = () => {
+  NIM.applyKefu({
+    stafftype: 1
+  })
+}
