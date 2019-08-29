@@ -1,6 +1,8 @@
 import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
+import { INIT_EVALUATION_SETTING,INIT_CURRENT_EVALUATION,INIT_LAST_EVALUATION } from '../constants/evaluation';
+import { SET_EVALUATION_VISIBLE } from '../constants/chat';
 import { SET_BOT_LIST } from '../constants/bot';
 import { timestamp2date, fmtRobot } from '../utils';
 import Base64 from '../lib/base64';
@@ -15,6 +17,11 @@ export const assignKefu = (content) => {
 
     // init session
     dispatch({type: INIT_SESSION, session: content});
+    // init evaluation
+    dispatch({type: INIT_EVALUATION_SETTING, value: {
+      evaluation: JSON.parse(content.evaluation),
+      sessionid: content.sessionid
+    }});
 
     let isRobot = content.stafftype === 1 || content.robotInQueue ===  1;
     set('isRobot', isRobot);
@@ -31,9 +38,8 @@ export const assignKefu = (content) => {
     switch(code){
         case 200:
             message = {
-                content: `${content.message}` || `${staffname}为您服务`,
                 type: 'systip',
-                content: `${staffname}为您服务`,
+                content: `${content.message}` || `${staffname}为您服务`,
                 time: time
             }
             dispatch({type: PUSH_MESSAGE, message});
@@ -210,9 +216,9 @@ export const receiveMsg = (msg) => {
  */
 export const onfinish = (content) => {
     const dispatch = get('store').dispatch;
-    // let session = get('store').getState().Session.Session;
+    let session = get('store').getState().Session;
 
-    let {close_reason, richmessage, message} = content;
+    let {close_reason, richmessage, message, evaluate, messageInvite, sessionid, evaluation_auto_popup} = content;
     let time = new Date().getTime();
 
     let tip;
@@ -222,9 +228,9 @@ export const onfinish = (content) => {
         tip = richmessage || message || REASON_MAP[close_reason];
     }
 
-    // if(session && session.kefu.isRobot && data.close_reason == 1) {
-    //     tip = '本次会话已超时结束';
-    // }
+    if(session && session.isRobot && content.close_reason == 1) {
+        tip = '本次会话已超时结束';
+    }
 
     let msg = {
         type: 'action',
@@ -236,6 +242,28 @@ export const onfinish = (content) => {
     }
 
     dispatch({type: PUSH_MESSAGE, message: msg});
+
+    // 会话结束时需要评价
+    if(evaluate){
+      let evaluationMsg = {
+        type: 'action',
+        content: messageInvite,
+        fromUser: 0,
+        time,
+        actionText: '评价',
+        action: 'evaluation',
+        key: `evaluation-${sessionid}`
+      }
+
+      dispatch({type: PUSH_MESSAGE, message: evaluationMsg});
+
+      if(evaluation_auto_popup){
+        dispatch({
+          type: SET_EVALUATION_VISIBLE,
+          value: true
+        })
+      }
+    }
 }
 
 /**
@@ -244,6 +272,7 @@ export const onfinish = (content) => {
  */
 export const onevaluation = (content) => {
     const dispatch = get('store').dispatch;
+    const session = get('store').getState().Session;
 
     let time = new Date().getTime();
 
@@ -252,9 +281,32 @@ export const onevaluation = (content) => {
         content: content.message,
         fromUser: 0,
         time: time,
-        actionText: '评价',
+        actionText: content.evaluationTimes ? '再次评价' : '评价',
         action: 'evaluation',
         key: `evaluation-${content.sessionid}`
+    }
+
+    if(content.evaluation_auto_popup){
+      dispatch({
+        type: SET_EVALUATION_VISIBLE,
+        value: true
+      })
+    }
+
+    if(content.evaluationTimes){
+      // init evaluation
+      dispatch({type: INIT_EVALUATION_SETTING, value: {
+        evaluation: JSON.parse(session.evaluation),
+        sessionid: session.sessionid
+      }});
+      dispatch({
+        type: INIT_CURRENT_EVALUATION,
+        value: {
+          remarks: '',
+          evaluation_resolved: null,
+          selectTagList: []
+        }
+      })
     }
 
     dispatch({type: PUSH_MESSAGE, message: msg});
@@ -267,15 +319,32 @@ export const onevaluation = (content) => {
  */
 export const onevaluationresult = (content) => {
     const dispatch = get('store').dispatch;
+    const evaluation = get('store').getState().Evaluation;
+
+    // 存储上次评价内容
+    dispatch({
+      type: INIT_LAST_EVALUATION,
+      value: evaluation.currentEvaluation
+    })
 
     let time = new Date().getTime();
 
     let message = {
-        type: 'rich',
+        type: 'action',
         content: content.message,
         time: time,
-        fromUser: 0
+        fromUser: 0,
+        actionText: '修改评价',
+        action: 'updateEvaluation'
     }
+
+    let updateUpdateEvaluationMsg = {
+      actionText: '已评价',
+      disabled: 1,
+      action: 'updateEvaluation'
+    }
+
+    dispatch({type: UPDATE_MESSAGE_BYACTION, message: updateUpdateEvaluationMsg});
 
     let updateActionMsg = {
         key: `evaluation-${content.sessionid}`,
@@ -393,8 +462,8 @@ export const receiveTransfer = (content) => {
 
   let time = new Date().getTime();
   let message = {
-    content: `${content.message}` || `已经为您转接${content.staffname}`,
     type: 'systip',
+    content: `${content.message}` || `已经为您转接${content.staffname}`,
     time
   }
 

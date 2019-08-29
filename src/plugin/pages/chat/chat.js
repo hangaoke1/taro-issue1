@@ -12,6 +12,7 @@ import FloatLayout from '../../components/FloatLayout';
 import Evaluation from '../../components/Evaluation';
 import BotList from '../../components/BotList';
 import BotCard from '../../components/BotCard';
+import FloatButton from '../../components/FloatButton';
 
 import { NAVIGATIONBAR_TITLE } from '../../constants';
 
@@ -28,11 +29,10 @@ import functionList from './function.config';
 import './chat.less';
 
 @connect(
-  ({ Message, Options, CorpStatus, Session, Bot }) => ({
+  ({ Message, Options, CorpStatus, Bot }) => ({
     Message,
     Options,
     CorpStatus,
-    Session,
     Bot
   }),
   dispatch => ({
@@ -230,7 +230,7 @@ class Chat extends Component {
   };
 
   render() {
-    const { Message, Options, CorpStatus, Session, Bot } = this.props;
+    const { Message, Options, CorpStatus, Bot } = this.props;
     const { lastId, height, videoUrl, scrollWithAnimation } = this.state;
 
     return (
@@ -294,10 +294,11 @@ class Chat extends Component {
           title='请对本次服务进行评价'
           onClose={this.closeEvaluationModal}
         >
-          {Session.evaluation ? <Evaluation /> : null}
+          <Evaluation />
         </FloatLayout>
         <BotList></BotList>
         <BotCard></BotCard>
+        <FloatButton></FloatButton>
       </Index>
     );
   }
