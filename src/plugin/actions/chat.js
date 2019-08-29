@@ -180,8 +180,7 @@ export const cancelQueue = (data = {}) => dispatch => {
 
 /**
  * 根据序号修改消息内容
- * @param {object} message 新消息内容
- * @param {number} uuid 消息序号
+ * @param {object} message 新消息内容[带uuid]
  */
 export const changeMessageByUUID = message => dispatch => {
   dispatch({ type: UPDATE_MESSAGE_BYUUID, message });

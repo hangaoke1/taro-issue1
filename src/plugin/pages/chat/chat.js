@@ -10,7 +10,9 @@ import FuncBox from '../../components/FuncBox';
 import Portrait from '../../components/Portrait';
 import FloatLayout from '../../components/FloatLayout';
 import Evaluation from '../../components/Evaluation';
-import BotList from '../../components/BotList';
+
+import BotDrawList from '../../components/BotDrawList';
+import BotBubbleList from '../../components/BotBubbleList';
 import BotCard from '../../components/BotCard';
 import FloatButton from '../../components/FloatButton';
 
@@ -314,7 +316,8 @@ class Chat extends Component {
         >
           <Evaluation />
         </FloatLayout>
-        <BotList></BotList>
+        <BotDrawList></BotDrawList>
+        <BotBubbleList></BotBubbleList>
         <BotCard></BotCard>
         {
           CorpStatus.entryConfig.length ?

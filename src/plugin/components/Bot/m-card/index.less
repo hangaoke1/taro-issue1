@@ -1,0 +1,86 @@
+// 多行省略 ellipsis
+.fn_line_clamp(@line: 2) {
+  overflow: hidden;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: @line;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+// 单行省略
+.fn_ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.m-card {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 112px;
+  padding: 16px;
+  border-bottom: 1px solid #e6e6e6;
+  .u-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .u-img {
+    width: 80px;
+    height: 80px;
+  }
+  .u-right {
+    flex: 1;
+    display: flex;
+    height: 100%;
+    margin-left: 10px;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .u-right-top {
+    display: flex;
+  }
+  .u-title {
+    flex: 1;
+    width: 0;
+    font-size: 12px;
+    .fn_line_clamp(2);
+  }
+  .u-info {
+    max-width: 50px;
+    margin-left: 15px;
+  }
+  .u-attr1 {
+    font-size: 12px;
+    color: #333;
+    text-align: right;
+    .fn_ellipsis();
+  }
+  .u-attr2 {
+    font-size: 12px;
+    color: #999;
+    text-align: right;
+    .fn_ellipsis();
+  }
+  .u-right-bottom {
+    display: flex;
+  }
+  .u-subTitle {
+    flex: 1;
+    width: 0;
+    font-size: 12px;
+    color: #999;
+    .fn_ellipsis();
+  }
+  .u-attr3 {
+    max-width: 70px;
+    margin-left: 15px;
+    font-size: 12px;
+    color: #fe6112;
+    .fn_ellipsis();
+  }
+}

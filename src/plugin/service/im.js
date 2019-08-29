@@ -27,6 +27,7 @@ import {
   REVEIVE_ROBOT_TIP_CMD,
   RECEIVE_BOT_ENTRY_CMD,
   RECEIVE_BOT_LONG_MESSAGE_CMD,
+  RECEIVE_BOT_LIST__CMD,
   CANCEL_QUEUE_CMD,
   RECEIVE_QUEUE_NUM_CMD,
   ASK_QUEUE_STATUS_CMD,
@@ -297,7 +298,11 @@ export default class IMSERVICE {
           break;
         case RECEIVE_BOT_LONG_MESSAGE_CMD:
           // bot超长信息处理
-          onBotLongMessage(content, msg)
+          onBotLongMessage(content, msg);
+          break;
+        case RECEIVE_BOT_LIST__CMD:
+          receiveMsg(msg);
+          break;
         case RECEIVE_QUEUE_NUM_CMD:
           if (content.code == 200) {
             onQueueStatus(content);

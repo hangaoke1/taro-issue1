@@ -1,3 +1,4 @@
+const path = require('path');
 const config = {
   projectName: 'taro-plu',
   date: '2019-6-20',
@@ -10,6 +11,12 @@ const config = {
   },
   sourceRoot: 'src',
   outputRoot: 'miniprogram',
+  alias: {
+    '@/plugin': path.resolve(__dirname, '..', 'src/plugin'),
+    '@/components': path.resolve(__dirname, '..', 'src/plugin/components'),
+    '@/lib': path.resolve(__dirname, '..', 'src/plugin/lib'),
+    '@/action': path.resolve(__dirname, '..', 'src/plugin/action')
+  },
   plugins: {
     babel: {
       sourceMap: true,

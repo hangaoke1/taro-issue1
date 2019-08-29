@@ -1,0 +1,42 @@
+import Taro from '@tarojs/taro';
+import { View, Image } from '@tarojs/components';
+import PropTypes from 'prop-types';
+import _get from 'lodash/get';
+import eventbus from '@/lib/eventbus';
+
+import './index.less';
+
+export default function MCard(props) {
+
+  function handleClick () {
+    if (!props.disabled) {
+      eventbus.trigger('bot_show_card', item);
+    }
+  }
+
+  const item = _get(props, 'item');
+
+  return item ? (
+    <View className="m-card" onClick={handleClick}>
+      <View className="u-left">
+        <Image
+          className="u-img"
+          src={item.p_img}
+        ></Image>
+      </View>
+      <View className="u-right">
+        <View className="u-right-top">
+          <View className="u-title">阿斯顿发送到发大师傅阿斯顿发{item.p_title}</View>
+          <View className="u-info">
+            <View className="u-attr1">{item.p_attr_1}</View>
+            <View className="u-attr2">{item.p_attr_2}</View>
+          </View>
+        </View>
+        <View className="u-right-bottom">
+          <View className="u-subTitle">{item.p_sub_title}</View>
+          <View className="u-attr3">{item.p_attr_3}</View>
+        </View>
+      </View>
+    </View>
+  ) : null;
+}

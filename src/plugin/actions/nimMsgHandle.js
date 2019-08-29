@@ -53,9 +53,6 @@ export const assignKefu = (content) => {
       })
     }
 
-    let isRobot = content.stafftype === 1 || content.robotInQueue ===  1;
-    set('isRobot', isRobot);
-
     let { code, staffname } = content;
     let time = new Date().getTime();
     let timeTip = {
@@ -222,8 +219,9 @@ export const receiveMsg = (msg) => {
                 }
                 // 显示抽屉
                 if (fmtContent.template.id === 'drawer_list') {
-                    eventbus.trigger('bot_show_card_list', message.uuid);
+                    eventbus.trigger('bot_show_drawer_list', message.uuid);
                 }
+                // TODO: 表单
                 break
             case 205:
                 eventbus.trigger('bot_loadmore_list', fmtContent);

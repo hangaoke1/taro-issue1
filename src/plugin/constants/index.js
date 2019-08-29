@@ -50,6 +50,9 @@ export const RECEIVE_BOT_ENTRY_CMD = 211
 // BOT超长消息通过自定义系统通知拆分发送
 export const RECEIVE_BOT_LONG_MESSAGE_CMD = 405
 
+// BOT列表加载更多
+export const RECEIVE_BOT_LIST__CMD = 205
+
 // 收到排队时最新状态的更新
 export const RECEIVE_QUEUE_NUM_CMD = 15;
 
