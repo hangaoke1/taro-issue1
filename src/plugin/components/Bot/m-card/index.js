@@ -10,11 +10,11 @@ export default function MCard(props) {
 
   function handleClick () {
     if (!props.disabled) {
-      eventbus.trigger('bot_show_card', item);
+      eventbus.trigger('bot_card_show', item, props.message);
     }
   }
 
-  const item = _get(props, 'item');
+  const item = _get(props, 'item', {});
 
   return item ? (
     <View className="m-card" onClick={handleClick}>
@@ -26,7 +26,7 @@ export default function MCard(props) {
       </View>
       <View className="u-right">
         <View className="u-right-top">
-          <View className="u-title">阿斯顿发送到发大师傅阿斯顿发{item.p_title}</View>
+          <View className="u-title">{item.p_title}</View>
           <View className="u-info">
             <View className="u-attr1">{item.p_attr_1}</View>
             <View className="u-attr2">{item.p_attr_2}</View>

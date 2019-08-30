@@ -1,3 +1,4 @@
+import _get from 'lodash/get';
 import { PUSH_MESSAGE, UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYINDEX, UPDATE_MESSAGE_BYACTION, UPDATE_MESSAGE_BYUUID } from '../constants/message';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '../lib/uuid';
@@ -8,8 +9,11 @@ const Message = (state = initMessages, action) => {
     switch(action.type){
         case PUSH_MESSAGE:
             eventbus.trigger('push_message');
-            if (!action.message.uuid) {
+            if (!_get(action, 'message.uuid')) {
                 action.message.uuid = genUUID16();
+            }
+            if (_get(action, 'message.msg.idClient')) {
+                action.message.idClient = _get(action, 'message.msg.idClient')
             }
             return [...state, action.message];
         case UPDATE_MESSAGE_BYKEY:

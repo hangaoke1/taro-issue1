@@ -1,23 +1,28 @@
 import Taro, { Component } from '@tarojs/taro'
+import { connect } from '@tarojs/redux';
+import _get from 'lodash/get'
 import eventbus from '@/lib/eventbus'
 import WeModal from '@/components/Modal'
 import MCard from '@/components/Bot/m-card'
+import { sendBotCard } from '@/actions/chat'
 
 import './index.less'
 
 export default class BotCard extends Component {
   state = {
     isOpened: false,
-    item: null
+    item: null,
+    message: null
   }
 
   componentWillMount () { }
 
   componentDidMount () {
-    eventbus.on('bot_show_card', (item) => {
+    eventbus.on('bot_card_show', (item, message) => {
       this.setState({
         isOpened: true,
-        item
+        item,
+        message
       })
     })
   }
@@ -29,6 +34,9 @@ export default class BotCard extends Component {
   }
 
   handleConfirm = () => {
+    sendBotCard(this.state.item, this.state.message)
+    eventbus.trigger('bot_close_drawer_list')
+    eventbus.trigger('bot_close_bubble_list')
     this.handleClose()
   }
 

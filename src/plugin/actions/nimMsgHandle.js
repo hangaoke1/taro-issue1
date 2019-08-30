@@ -185,7 +185,7 @@ export const receiveMsg = (msg) => {
     if (msg.type === 'custom') {
         const fmtContent = JSON.parse(msg.content);
         const { cmd, content } = fmtContent;
-        console.log('fmt', fmtContent);
+        console.log('格式化: ', fmtContent);
 
         switch(cmd) {
             case 60:
@@ -207,7 +207,6 @@ export const receiveMsg = (msg) => {
                 }
                 break;
             case 203:
-                // TODO: bot消息解析
                 message = {
                     type: 'bot',
                     content: fmtContent,

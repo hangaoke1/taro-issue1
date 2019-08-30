@@ -1,4 +1,5 @@
 import Taro from '@tarojs/taro';
+import _get from 'lodash/get';
 import { queryAccont } from '../service';
 import { get, set } from '../global_config';
 import IMSERVICE from '../service/im';
@@ -86,9 +87,9 @@ export const sendImage = res => dispatch => {
     tempFilePaths.map(tempFilePath => {
       NIM.sendImageMsg(tempFilePath).then(msg => {
         let message = {
+          type: 'image',
           idClient: msg.idClient,
           content: msg.file,
-          type: 'image',
           time: msg.time,
           status: msg.status,
           fromUser: 1
@@ -201,6 +202,46 @@ export const getMoreBotList = (data) => {
     params: data.params
   });
 };
+
+/**
+ * BOT平台发送标准信息条目
+ * @param {object} item 发送单元信息
+ * @param {object} msg  发送原消息体
+ * @return {promise}
+ */
+export const sendBotCard = (item, msg) => {
+  const dispatch = get('store').dispatch;
+  // 生成本地消息
+  const message = {
+    type: 'bot',
+    content: {
+      relatedTplId: _get(msg, 'content.template.id'),
+      relatedUUID: msg.uuid,
+      relatedMsgId: msg.idClient,
+      template: {
+        id: 'qiyu_template_item',
+        p_img: item.p_img,
+        p_title: item.p_title,
+        p_sub_title: item.p_sub_title,
+        p_attr_1: item.p_attr_1,
+        p_attr_2: item.p_attr_2,
+        p_attr_3: item.p_attr_3
+      }
+    },
+    time: new Date().getTime(),
+    status: 1,
+    fromUser: 1
+  }
+  
+  dispatch({ type: PUSH_MESSAGE, message })
+
+  return NIM.sendCustomSysMsg({
+    cmd: 202,
+    target: item.target,
+    params: item.params,
+    template: message.content.template
+  })
+}
 
 /* ----bot相关结束---- */
 

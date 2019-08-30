@@ -33,6 +33,9 @@ export default class BotList extends Component {
         // this.setState({ uuid });
       });
     });
+    eventbus.on('bot_close_bubble_list', () => {
+      this.handleClose()
+    });
   }
 
   handleClose = () => {
@@ -61,7 +64,7 @@ export default class BotList extends Component {
             <MList scrollTop={scrollTop} tpl={tpl} message={message}>
               {list.map(item => {
                 return String(item.p_item_type) === '0' ? (
-                  <MCard key={item.params} item={item}></MCard>
+                  <MCard key={item.params} item={item} message={message}></MCard>
                 ) : (
                   <MGroup key={item.params} item={item}></MGroup>
                 );
