@@ -11,7 +11,7 @@ import Portrait from '../../components/Portrait';
 import FloatLayout from '../../components/FloatLayout';
 import Evaluation from '../../components/Evaluation';
 
-import BotDrawList from '../../components/BotDrawList';
+import BotDrawerList from '../../components/BotDrawerList';
 import BotBubbleList from '../../components/BotBubbleList';
 import BotCard from '../../components/BotCard';
 import FloatButton from '../../components/FloatButton';
@@ -316,7 +316,7 @@ class Chat extends Component {
         >
           <Evaluation />
         </FloatLayout>
-        <BotDrawList></BotDrawList>
+        <BotDrawerList></BotDrawerList>
         <BotBubbleList></BotBubbleList>
         <BotCard></BotCard>
         {

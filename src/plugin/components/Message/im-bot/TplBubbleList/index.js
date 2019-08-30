@@ -9,28 +9,30 @@ import MGroup from '@/components/Bot/m-group';
 import './index.less';
 
 export default function TplBubbleList(props) {
-
   function handleSearchMore() {
-    eventbus.trigger('bot_show_bubble_list', props.item.uuid)
+    eventbus.trigger('bot_show_bubble_list', props.item.uuid);
   }
 
   const item = _get(props, 'item');
   const tpl = _get(props, 'tpl');
 
   return item ? (
-    <View className="u-bubble-list">
-      {tpl.list.slice(0, 4).map(p => {
-        return String(p.p_item_type) === '0' ? (
-          <MCard key={p.params} item={p} message={item}></MCard>
-        ) : (
-          <MGroup key={p.params} item={p}></MGroup>
-        );
-      })}
-      {tpl.list.length > 4 ? (
-        <View className="u-bubble-more" onClick={handleSearchMore}>
-          查看更多
-        </View>
-      ) : null}
+    <View>
+      <View className="u-label">{tpl.label}</View>
+      <View className="u-bubble-list">
+        {tpl.list.slice(0, 4).map(p => {
+          return String(p.p_item_type) === '0' ? (
+            <MCard key={p.params} item={p} message={item}></MCard>
+          ) : (
+            <MGroup key={p.params} item={p}></MGroup>
+          );
+        })}
+        {tpl.list.length > 4 ? (
+          <View className="u-bubble-more" onClick={handleSearchMore}>
+            查看更多
+          </View>
+        ) : null}
+      </View>
     </View>
   ) : null;
 }

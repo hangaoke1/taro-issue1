@@ -4,7 +4,9 @@ import PropTypes, { func } from 'prop-types';
 import _get from 'lodash/get';
 
 import Avatar from '../u-avatar';
+import TplDrawerList from './TplDrawerList';
 import TplBubbleList from './TplBubbleList';
+import TplBubbleNodeList from './TplBubbleNodeList';
 import TplItem from './TplItem';
 import TplErrorMsg from './TplErrorMsg';
 
@@ -33,9 +35,16 @@ export default class Bot extends Component {
     const isShowLabel = ['bubble_list', 'drawer_list'].includes(tpl.id);
     const layout = null;
     switch (tpl.id) {
+      case 'drawer_list': {
+        layout = <TplDrawerList item={item} tpl={tpl}></TplDrawerList>;
+        break;
+      }
       case 'bubble_list': {
         layout = <TplBubbleList item={item} tpl={tpl}></TplBubbleList>;
         break;
+      }
+      case 'bubble_node_list': {
+        layout = <TplBubbleNodeList item={item} tpl={tpl}></TplBubbleNodeList>;
       }
       case 'qiyu_template_item': {
         layout = <TplItem item={item} tpl={tpl}></TplItem>;
@@ -56,7 +65,6 @@ export default class Bot extends Component {
         <Avatar fromUser={item.fromUser} staff={item.staff} />
         <View className="u-text-arrow" />
         <View className="u-text">
-          {isShowLabel ? <View className="u-label">{tpl.label}</View> : null}
           {layout}
         </View>
       </View>
