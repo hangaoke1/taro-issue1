@@ -1,4 +1,4 @@
-import Taro from '@tarojs/taro';
+import Taro, { Component } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
@@ -10,7 +10,7 @@ import './index.less';
 
 export default function TplItem(props) {
   const item = _get(props, 'item');
-  const card = _get(props, 'item.content.template');
+  const tpl = _get(props, 'tpl');
 
   // 重新选择
   function handleReselect () {
@@ -19,7 +19,7 @@ export default function TplItem(props) {
 
   return (
     <View className="m-item">
-      <MCard item={card} message={item} disabled></MCard>
+      <MCard item={tpl} message={item} disabled></MCard>
       <View className="u-reselect" onClick={handleReselect}>重新选择</View>
     </View>
   );

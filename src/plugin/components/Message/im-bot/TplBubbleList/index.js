@@ -1,4 +1,4 @@
-import Taro from '@tarojs/taro';
+import Taro, { Component } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
@@ -15,7 +15,7 @@ export default function TplBubbleList(props) {
   }
 
   const item = _get(props, 'item');
-  const tpl = _get(item, 'content.template', {});
+  const tpl = _get(props, 'tpl');
 
   return item ? (
     <View className="u-bubble-list">
