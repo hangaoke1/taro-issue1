@@ -17,7 +17,7 @@ export default function MessageView(props) {
     function handleImgClick (item) {
         props.onImgClick(item)
     }
-
+    
     return (
         <View className='message-view'>
             {
