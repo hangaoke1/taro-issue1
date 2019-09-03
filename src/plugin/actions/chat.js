@@ -243,7 +243,80 @@ export const sendBotCard = (item, msg) => {
   })
 }
 
+/**
+ * 发送bot表单信息
+ * @param {array} forms 表单数组 
+ * @param {object} msg 消息体
+ */
+export const sendBotForm = (forms, msg) => {
+  const dispatch = get('store').dispatch;
+  let params = _get(msg, 'content.template.params');
+
+  forms.forEach(item => {
+    let value = item.type == 'image' ? JSON.stringify(item.value) : item.value;
+    let param = item.id+'='+value;
+    params += '&' + param;
+  })
+
+  params += '&msgIdClient=' + msg.idClient;
+
+  // 生成本地消息
+  const message = {
+    type: 'bot',
+    content: {
+      params: params,
+      template: {
+        id: 'qiyu_template_botForm',
+        forms
+      }
+    },
+    time: new Date().getTime(),
+    status: 1,
+    fromUser: 1
+  }
+  dispatch({ type: PUSH_MESSAGE, message })
+
+  return NIM.sendCustomSysMsg({
+    cmd: 202,
+    params: params,
+    template: {
+      id: 'qiyu_template_botForm',
+      forms
+    }
+  })
+}
+
 /* ----bot相关结束---- */
+
+/**
+ * 文件上传
+ * @param {string} wxFilePath 微信本地文件路径
+ * @param {string} type 上传文件类型
+ */
+export const previewFile = (wxFilePath, type = 'image') => {
+  return new Promise((resolve, reject) => {
+    NIM.getNim().then(nim => {
+      nim.previewFile({
+        type,
+        wxFilePath,
+        // uploadprogress: function(obj) {
+        //     console.log('文件总大小: ' + obj.total + 'bytes');
+        //     console.log('已经上传的大小: ' + obj.loaded + 'bytes');
+        //     console.log('上传进度: ' + obj.percentage);
+        //     console.log('上传进度文本: ' + obj.percentageText);
+        // },
+        done: function(error, file) {
+            console.log('上传image' + (!error?'成功':'失败'));
+            if (!error) {
+              resolve(file)
+            } else {
+              reject(error)
+            }
+        }
+      });
+    })
+  })
+}
 
 export const applyHumanStaff = () => {
   NIM.applyKefu({

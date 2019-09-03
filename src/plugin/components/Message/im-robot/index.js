@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro';
-import { useDispatch } from '@tarojs/redux';
+import { useDispatch, useSelector } from '@tarojs/redux';
 import PropTypes from 'prop-types';
 import { View, Text, Textarea } from '@tarojs/components';
 import Avatar from '../u-avatar';
@@ -32,6 +32,7 @@ export default function RobotView(props) {
   } = item;
   const msgidClient = msg.idClient;
   const dispatch = useDispatch();
+  const Session = useSelector(state => state.Session)
 
   // 根据index修改消息内容
   function changeMessage(message) {
@@ -46,6 +47,14 @@ export default function RobotView(props) {
 
   // 评价机器人答案
   function handleAction(val) {
+    // 会话有效期判断
+    if (item.sessionid !== Session.sessionid) {
+      return Taro.showToast({
+        title: '该会话已结束，暂不支持评价',
+        icon: 'none'
+      })
+    }
+
     let userEvaluation = val;
     if (evaluation === val) {
       userEvaluation = 1;
