@@ -7,3 +7,4 @@ export * from './query2object';
 export * from './fmt-robot';
 export * from './xss';
 export * from './uuid';
+export * from './text2em';

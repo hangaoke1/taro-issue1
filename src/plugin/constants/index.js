@@ -57,7 +57,10 @@ export const RECEIVE_BOT_LIST__CMD = 205
 export const RECEIVE_QUEUE_NUM_CMD = 15;
 
 // 访客端收到被转接指令
-export const RECRIVE_TRANSFER_CMD = 95;
+export const RECEIVE_TRANSFER_CMD = 95;
+
+// 输入联想
+export const RECEIVE_ASSOCIATE_CMD = 25
 
 /**
 * 收到的自定义指令 ------end--------

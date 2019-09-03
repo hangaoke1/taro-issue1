@@ -7,6 +7,7 @@ const Session = (state = initSession, action) => {
         case INIT_SESSION:
             let isRobot = action.session.stafftype === 1 || action.session.robotInQueue ===  1;
             set('isRobot', isRobot);
+            set('sessionid', action.session.sessionid);
             return {...state, ...action.session};
         default:
             return state;

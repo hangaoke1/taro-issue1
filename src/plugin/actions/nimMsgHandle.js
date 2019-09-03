@@ -4,6 +4,7 @@ import { INIT_SESSION,REASON_MAP } from '../constants/session';
 import { INIT_EVALUATION_SETTING,INIT_CURRENT_EVALUATION,INIT_LAST_EVALUATION } from '../constants/evaluation';
 import { SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG } from '../constants/chat';
 import { SET_BOT_LIST } from '../constants/bot';
+import { SET_ASSOCIATE_RES } from '../constants/associate';
 import { timestamp2date, fmtRobot } from '../utils';
 import Base64 from '../lib/base64';
 import eventbus from '../lib/eventbus';
@@ -495,4 +496,13 @@ export const receiveTransfer = (content) => {
   }
 
   dispatch({type: PUSH_MESSAGE, message});
+}
+
+/**
+ * 监听联想文本
+ * @param {object} content 格式化消息体
+ */
+export const onReceiveAssociate = (content) => {
+  const dispatch = get('store').dispatch;
+  dispatch({ type: SET_ASSOCIATE_RES, value: content});
 }

@@ -1,11 +1,17 @@
 import { useSelector, useDispatch } from '@tarojs/redux';
 import Taro, { useState, useEffect } from '@tarojs/taro';
 import { Input, View } from '@tarojs/components';
+// import _debounce from 'lodash/debounce';
+import _debounce from '@/lib/debounce'; // loadsh debounce在小程序下引用存在问题
+import eventbus from '@/lib/eventbus';
+import { hideAction } from '@/actions/options'
+import { associate } from '@/actions/chat';
+
 import Iconfont from '../Iconfont';
-import eventbus from '../../lib/eventbus';
-import { hideAction } from '../../actions/options'
 
 import './index.less';
+
+const dAssociate = _debounce(associate, 300, false);
 
 export default function ChatBox(props) {
   const [value, setValue] = useState('');
@@ -22,6 +28,9 @@ export default function ChatBox(props) {
   // 处理用户输入
   const handleInput = event => {
     setValue(event.detail.value);
+
+    // 触发搜索联想
+    dAssociate(event.detail.value)
   };
 
   // 点击表情
@@ -58,10 +67,16 @@ export default function ChatBox(props) {
   useEffect(() => {
     // 处理点击表情
     eventbus.on('emoji_click', item => {
-        setValue(v => v + item.tag);
+      setValue(v => v + item.tag);
     });
+    // 监听input重置
+    eventbus.on('reset_input', () => {
+      setValue('')
+      setFocus(false)
+    })
     return () => {
       eventbus.off('emoji_click');
+      eventbus.off('reset_input');
     };
   }, []);
 

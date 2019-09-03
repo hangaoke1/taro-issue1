@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, ScrollView, Video } from '@tarojs/components';
+import { View, ScrollView, Video, RichText } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 
 import Index from '../../app';
@@ -19,7 +19,7 @@ import FloatButton from '../../components/FloatButton';
 
 import { NAVIGATIONBAR_TITLE } from '../../constants';
 
-import { createAccount, sendText, sendImage,applyHumanStaff } from '../../actions/chat';
+import { createAccount, sendText, sendImage, applyHumanStaff, emptyAssociate } from '../../actions/chat';
 import {
   toggleShowFun,
   toggleShowPortrait,
@@ -27,16 +27,18 @@ import {
 } from '../../actions/options';
 import { closeEvaluationModal,openEvaluationModal } from '../../actions/actionHandle';
 import eventbus from '../../lib/eventbus';
+import { text2em } from '../../utils';
 
 import functionList from './function.config';
 import './chat.less';
 
 @connect(
-  ({ Message, Options, CorpStatus, Bot }) => ({
+  ({ Message, Options, CorpStatus, Bot, Associate }) => ({
     Message,
     Options,
     CorpStatus,
-    Bot
+    Bot,
+    Associate
   }),
   dispatch => ({
     hideAction() {
@@ -250,8 +252,19 @@ class Chat extends Component {
     }
   }
 
+  // 点击联想文本
+  handleAssociateClick = (text) => {
+    if (!text.trim()) {
+      return;
+    }
+    const { sendText } = this.props;
+    sendText(text);
+    eventbus.trigger('reset_input');
+    emptyAssociate();
+  }
+
   render() {
-    const { Message, Options, CorpStatus, Bot } = this.props;
+    const { Message, Options, CorpStatus, Bot, Associate } = this.props;
     const { lastId, height, videoUrl, scrollWithAnimation } = this.state;
 
     return (
@@ -287,6 +300,17 @@ class Chat extends Component {
               ></MessageView>
               <View id='m-bottom'></View>
             </ScrollView>
+          </View>
+          <View className="m-associate">
+            <View className="m-associate-list">
+              { Associate.questionContents.map(item => {
+                return (
+                <View className="m-associate-item" onClick={this.handleAssociateClick.bind(this, item.value)}>
+                  <RichText nodes={text2em(item.value, Associate.content)}></RichText>
+                </View>
+                )
+              })}
+            </View>
           </View>
           {Bot.botList.length ? (
             <ScrollView scrollX className='m-bot'>

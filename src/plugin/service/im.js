@@ -11,7 +11,8 @@ import {
   onBotEntry,
   onBotLongMessage,
   onQueueStatus,
-  receiveTransfer
+  receiveTransfer,
+  onReceiveAssociate
 } from '../actions/nimMsgHandle';
 import {
   FROM_TYPE,
@@ -33,7 +34,8 @@ import {
   ASK_QUEUE_STATUS_CMD,
   QUEUE_TIMER,
   HEART_BEAT_CMD,
-  RECRIVE_TRANSFER_CMD
+  RECEIVE_TRANSFER_CMD,
+  RECEIVE_ASSOCIATE_CMD
 } from '../constants';
 
 let contenting = false;
@@ -301,7 +303,11 @@ export default class IMSERVICE {
           onBotLongMessage(content, msg);
           break;
         case RECEIVE_BOT_LIST__CMD:
+          // BOT列表加载更多
           receiveMsg(msg);
+          break;
+        case RECEIVE_ASSOCIATE_CMD:
+          onReceiveAssociate(content, msg);
           break;
         case RECEIVE_QUEUE_NUM_CMD:
           if (content.code == 200) {

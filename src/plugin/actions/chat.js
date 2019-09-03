@@ -5,6 +5,7 @@ import { get, set } from '../global_config';
 import IMSERVICE from '../service/im';
 import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID } from '../constants/message';
 import { SET_EVALUATION_VISIBLE } from '../constants/chat';
+import { SET_ASSOCIATE_RES } from '../constants/associate';
 
 let NIM = null;
 
@@ -316,6 +317,27 @@ export const previewFile = (wxFilePath, type = 'image') => {
       });
     })
   })
+}
+
+/**
+ * 输入联想
+ * @param {text} 查询关键词
+ */
+export const associate = (text) => {
+  const sessionid = get('sessionid');
+  return NIM.sendCustomSysMsg({
+    cmd: 24,
+    sessionid,
+    msgType: 'text',
+    content: text
+  })
+}
+/**
+ * 清空联想
+ */
+export const emptyAssociate = () => {
+  const dispatch = get('store').dispatch;
+  dispatch({ type: SET_ASSOCIATE_RES, value: {} })
 }
 
 export const applyHumanStaff = () => {
