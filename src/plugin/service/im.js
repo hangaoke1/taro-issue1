@@ -182,12 +182,14 @@ export default class IMSERVICE {
       let content = {
         cmd: APPLY_KEFU_CMD,
         deviceid: get('deviceid'),
+        foreignid: '',
         fromType: FROM_TYPE,
+        version: 8,
         ...extraParams
       };
 
       this.sendCustomSysMsg(content)
-        .then(msg => {
+        .then( msg => {
           resolve(msg);
         })
         .catch(error => {

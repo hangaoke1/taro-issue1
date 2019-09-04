@@ -65,12 +65,20 @@ export const assignKefu = (content) => {
     dispatch({type: PUSH_MESSAGE, message: timeTip});
     switch(code){
         case 200:
-            message = {
-                type: 'systip',
-                content: `${content.message}` || `${staffname}为您服务`,
-                time: time
+            // related_session_type == 1 // 机器人转人工接入 session_transfer_robot_switch=0开关关闭
+            if(content.shop.setting && !content.shop.setting.session_transfer_robot_switch && content.related_session_type == 1){
+              return;
             }
-            dispatch({type: PUSH_MESSAGE, message});
+
+            // 如果有message接入语，才显示接入语
+            if(content.message){
+              message = {
+                type: 'systip',
+                content: `${content.message}`,
+                time: time
+              }
+              dispatch({type: PUSH_MESSAGE, message});
+            }
 
             // 会话成功后，重新连接的按钮禁用
             let updateActionMsg = {
