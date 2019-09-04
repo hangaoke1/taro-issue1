@@ -39,6 +39,8 @@ export default class MList extends Component {
   }
 
   handleLoadMoreList = data => {
+    if (!this.state.loading) { return }
+
     const { tpl } = this.props;
     const appendTpl = _get(data, 'template', {});
     const id = appendTpl.id;

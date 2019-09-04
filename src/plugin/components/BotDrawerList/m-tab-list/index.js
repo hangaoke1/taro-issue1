@@ -41,6 +41,8 @@ export default class TabList extends Component {
   }
 
   handleLoadMoreList = data => {
+    if (!this.state.loading) { return }
+
     const { tpl, tab, message } = this.props;
     const id = _get(data, 'template.id');
     const tab_id = _get(data, 'template.tab_id');
