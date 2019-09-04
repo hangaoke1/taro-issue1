@@ -3,6 +3,7 @@ import { View, Image } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import eventbus from '@/lib/eventbus';
+import { setClipboardData } from '@/utils/extendTaro';
 
 import { sendBotGood } from '@/actions/chat';
 import './index.less';
@@ -18,7 +19,7 @@ export default function MGood(props) {
     }
 
     if (url) {
-      Taro.setClipboardData({ data: url });
+      setClipboardData({ data: url });
     } else {
       sendBotGood(item);
     }

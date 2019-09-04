@@ -14,6 +14,9 @@ import TplBotForm from './TplBotForm';
 import TplBotFormItem from './TplBotFormItem';
 import TplOrderList from './TplOrderList';
 import TplGoods from './TplGoods';
+import TplOrderDetail from './TplOrderDetail';
+import TplOrderStatus from './TplOrderStatus';
+import TplText from './TplText';
 
 import './index.less';
 import eventbus from '@/lib/eventbus';
@@ -56,6 +59,18 @@ export default class Bot extends Component {
     const layout = null;
     let showFormAction = false
     switch (tpl.id) {
+      case 'qiyu_template_text': {
+        layout = <TplText item={item} tpl={tpl}></TplText>
+        break;
+      }
+      case 'order_status': {
+        layout = <TplOrderStatus item={item} tpl={tpl}></TplOrderStatus>
+        break;
+      }
+      case 'order_detail': {
+        layout = <TplOrderDetail item={item} tpl={tpl}></TplOrderDetail>
+        break;
+      }
       case 'qiyu_template_goods': {
         layout = <TplGoods item={item} tpl={tpl}></TplGoods>
         break;

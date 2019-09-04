@@ -324,6 +324,33 @@ export const sendBotGood = (item) => {
   })
 }
 
+export const sendTemplateText = (item) => {
+  const dispatch = get('store').dispatch;
+
+  const message = {
+    type: 'bot',
+    content: {
+      target: item.target,
+      params: item.params,
+      template: {
+          id: 'qiyu_template_text',
+          label: item.valid_operation
+      }
+    },
+    time: new Date().getTime(),
+    status: 1,
+    fromUser: 1
+  }
+  dispatch({ type: PUSH_MESSAGE, message })
+
+  return NIM.sendCustomSysMsg({
+    cmd: 202,
+    target: item.target,
+    params: item.params,
+    template: message.content.template
+  })
+}
+
 /* ----bot相关结束---- */
 
 /**
