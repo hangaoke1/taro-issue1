@@ -32,8 +32,6 @@ export default class TabList extends Component {
     finished: false
   };
 
-  componentWillMount() {}
-
   componentDidMount() {
     eventbus.on('bot_loadmore_list', this.handleLoadMoreList);
   }
@@ -46,12 +44,14 @@ export default class TabList extends Component {
     const { tpl, tab, message } = this.props;
     const id = _get(data, 'template.id');
     const tab_id = _get(data, 'template.tab_id');
+    // 判断模版类型是否一致
     if (tpl.id != id) {
       return;
     }
     const appendTab = _get(data, 'template.tabList', []).filter(
       tab => tab.tab_id == tab_id
     )[0];
+    // 判断是否是当前tab
     if (tab.tab_id == tab_id) {
       const newMessage = _cloneDeep(message);
       const newTab = _get(newMessage, 'content.template.tabList', []).filter(
@@ -77,7 +77,7 @@ export default class TabList extends Component {
       id: this.props.tpl.id,
       target: this.props.tab.action.target,
       params: this.props.tab.action.params
-    }).then(res => {
+    }).then(() => {
       console.log('---加载更多请求发送成功---');
     });
   };

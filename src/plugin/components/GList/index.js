@@ -6,7 +6,6 @@ import _isFunction from 'lodash/isFunction';
 import './index.less';
 
 export default class GList extends Component {
-
   static propTypes = {
     loading: PropTypes.bool,
     finished: PropTypes.bool,
@@ -22,11 +21,11 @@ export default class GList extends Component {
   };
 
   componentDidMount() {
-    this.needLoadMore()
+    this.needLoadMore();
   }
 
   componentDidUpdate() {
-    this.needLoadMore()
+    this.needLoadMore();
   }
 
   // 检测是否超过一屏
@@ -36,14 +35,17 @@ export default class GList extends Component {
       return;
     }
 
-    const query = Taro.createSelectorQuery().in(this.$scope)
-    const node = query.select('.u-content')
-    node.fields({ size: true }, res => {
-      if (res.height <= height) {
-        this.props.onLoadMore();
-      } else {}
-    }).exec()
-  }
+    const query = Taro.createSelectorQuery().in(this.$scope);
+    const node = query.select('.u-content');
+    node
+      .fields({ size: true }, res => {
+        if (res.height <= height) {
+          this.props.onLoadMore();
+        } else {
+        }
+      })
+      .exec();
+  };
 
   loadMore = () => {
     const { loading, finished } = this.props;
@@ -64,7 +66,7 @@ export default class GList extends Component {
         scrollY
         onScrollToLower={this.loadMore}
         scrollTop={scrollTop}
-        style={{height: `${height}px`}}
+        style={{ height: `${height}px` }}
       >
         <View className="u-content">
           {this.props.children}

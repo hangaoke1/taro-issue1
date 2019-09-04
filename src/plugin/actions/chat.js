@@ -207,7 +207,7 @@ export const getMoreBotList = (data) => {
 /**
  * BOT平台发送标准信息条目
  * @param {object} item 发送单元信息
- * @param {object} msg  发送原消息体
+ * @param {object} msg  消息体
  * @return {promise}
  */
 export const sendBotCard = (item, msg) => {
@@ -247,7 +247,7 @@ export const sendBotCard = (item, msg) => {
 /**
  * 发送bot表单信息
  * @param {array} forms 表单数组 
- * @param {object} msg 消息体
+ * @param {object} msg  消息体
  */
 export const sendBotForm = (forms, msg) => {
   const dispatch = get('store').dispatch;
@@ -284,6 +284,43 @@ export const sendBotForm = (forms, msg) => {
       id: 'qiyu_template_botForm',
       forms
     }
+  })
+}
+
+/**
+ * 
+ * @param {object} item 商品信息
+ */
+export const sendBotGood = (item) => {
+  const dispatch = get('store').dispatch;
+  // 生成本地消息
+  const message = {
+    type: 'bot',
+    content: {
+      target: item.target,
+      params: item.params,
+      template: {
+          id: 'qiyu_template_goods',
+          p_status: item.p_status,
+          p_img: item.p_img,
+          p_name: item.p_name,
+          p_stock: item.p_stock,
+          p_price: item.p_price,
+          p_count: item.p_count
+      }
+    },
+    time: new Date().getTime(),
+    status: 1,
+    fromUser: 1
+  }
+
+  dispatch({ type: PUSH_MESSAGE, message })
+
+  return NIM.sendCustomSysMsg({
+    cmd: 202,
+    target: item.target,
+    params: item.params,
+    template: message.content.template
   })
 }
 
@@ -332,6 +369,7 @@ export const associate = (text) => {
     content: text
   })
 }
+
 /**
  * 清空联想
  */
