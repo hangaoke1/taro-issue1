@@ -12,7 +12,7 @@ import {
   onBotLongMessage,
   onQueueStatus,
   receiveTransfer,
-  onReceiveAssociate
+  onReceiveAssociate,
 } from '../actions/nimMsgHandle';
 import {
   FROM_TYPE,
@@ -72,8 +72,10 @@ export default class IMSERVICE {
         onconnect: onConnect,
         ondisconnect: this.onDisconnect,
         onerror: this.onError,
-        onmsg: this.onMsg,
-        oncustomsysmsg: this.onCustomsysmsg.bind(this)
+        onmsg: this.onMsg.bind(this),
+        oncustomsysmsg: this.onCustomSysMsg.bind(this),
+        onofflinemsgs: this.onOfflineMsgs.bind(this),
+        onofflinecustomsysmsgs: this.onOfflineCustomSysMsgs.bind(this)
       }));
 
       if (contenting) {
@@ -244,12 +246,40 @@ export default class IMSERVICE {
   }
 
   /**
+   * 客户端告知服务器消息状态变更
+   * @param {number} status 推送消息状态 1: 收到消息 2: 已读
+   * @param {array} ids     消息会话Id列表
+   */
+  sendPushMsgStatus(status, ids) {
+    ids = Array.isArray(ids) ? ids : [ids];
+    for(let i = 0; i < ids.length; i++) {
+      this.sendCustomSysMsg({
+        cmd: 135,
+        status,
+        msgidClient
+      });
+    }
+  }
+
+  // 清除未读消息
+  clearUnreadMsg() {
+    const sessionid = get('sessionid');
+    this.sendCustomSysMsg({
+      cmd: 500,
+      sessionid
+    });
+  }
+
+  /**
    *
    * @param {*} msg
    * 收到普通文本消息
    */
   onMsg(msg) {
     receiveMsg(msg);
+    
+    // 当接收到普通消息时，标记已读状态
+    this.clearUnreadMsg();
   }
 
   /**
@@ -257,7 +287,7 @@ export default class IMSERVICE {
    * @param {*} msg
    * 收到系统自定义消息
    */
-  onCustomsysmsg(msg) {
+  onCustomSysMsg(msg) {
     try {
       let content = JSON.parse(msg.content);
       console.log('fmt: ', content);
@@ -319,10 +349,18 @@ export default class IMSERVICE {
           }
           break;
         default:
-          console.log('onCustomsysmsg 未知指令' + JSON.stringify(msg));
+          console.log('oncustomsysmsg 未知指令' + JSON.stringify(msg));
           break;
       }
     } catch (e) { }
+  }
+
+  onOfflineMsgs(msg) {
+    console.log('-------接收离线消息 onofflinemsgs-------')
+  }
+  
+  onOfflineCustomSysMsgs(msg) {
+    console.log('-------接收离线消息 onofflinecustomsysmsgs-------')
   }
 
   /**
