@@ -7,7 +7,7 @@ import ParserRichText from '../../ParserRichText/parserRichText';
 import Iconfont from '../../Iconfont';
 
 import {
-  sendText,
+  sendRelateText,
   evalRobotAnswer,
   evaluationContent,
   parseUrlAction,
@@ -28,9 +28,9 @@ export default function RobotView(props) {
     evaluation_reason,
     evaluation_content,
     type,
+    idClient,
     msg = {}
   } = item;
-  const msgidClient = msg.idClient;
   const dispatch = useDispatch();
   const Session = useSelector(state => state.Session)
 
@@ -66,13 +66,13 @@ export default function RobotView(props) {
       index
     );
 
-    evalRobotAnswer(msgidClient, userEvaluation).then(() => {
+    evalRobotAnswer(idClient, userEvaluation).then(() => {
       console.log('-----🙏success 评价完成🙏----');
     });
 
     // 用户差评且无需评价原因
     if (userEvaluation === 3 && evaluation_reason === 0) {
-      evaluationContent(msgidClient, '').then(() => {
+      evaluationContent(idClient, '').then(() => {
         console.log('-----🙏success 差评原因提交完成🙏----');
       });
     }
@@ -87,15 +87,20 @@ export default function RobotView(props) {
       index
     );
 
-    evaluationContent(msgidClient, usrEvaluationContent).then(() => {
+    evaluationContent(idClient, usrEvaluationContent).then(() => {
       console.log('-----🙏success 差评原因提交完成🙏----');
     });
   }
 
   // 点击关联问题
   function handleQuestionClick(q) {
-    const { question } = q;
-    dispatch(sendText(question));
+    const { question, id } = q;
+
+    dispatch(sendRelateText({
+      text: question,
+      id,
+      idClient
+    }));
   }
 
   return (

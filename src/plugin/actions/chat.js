@@ -77,6 +77,30 @@ export const sendText = text => dispatch => {
 };
 
 /**
+ * 发送相似或者关联文本
+ * @param {object} item 消息对象 { id, text, idClient }
+ */
+export const sendRelateText = item => dispatch => {
+  let message = {
+    content: item.text,
+    type: 'text',
+    time: new Date().getTime(),
+    status: 1,
+    fromUser: 1
+  };
+  dispatch({ type: PUSH_MESSAGE, message });
+
+  const msg = {
+    cmd: 63, //相似问题或者关联问题时，用户将选择的问题发给服务器
+    question: item.text, //问题语句
+    questionid: item.id, //问题id
+    questionMsgidClient: item.idClient, // 与该问题关联的消息id，即用户所选问题对应的消息id
+    msgidClient: item.idClient // 随机生成消息id，用于（72条指令中）服务器广播回来时使用
+  };
+  return NIM.sendCustomSysMsg(msg);
+};
+
+/**
  * 发送图片消息
  * @param {object} res 微信sdk返回对象
  */
@@ -195,7 +219,7 @@ export const changeMessageByUUID = message => dispatch => {
  * @param {object} data 请求参数
  * @return {promise}
  */
-export const getMoreBotList = (data) => {
+export const getMoreBotList = data => {
   return NIM.sendCustomSysMsg({
     cmd: 204,
     templateId: data.id,
@@ -232,21 +256,21 @@ export const sendBotCard = (item, msg) => {
     time: new Date().getTime(),
     status: 1,
     fromUser: 1
-  }
-  
-  dispatch({ type: PUSH_MESSAGE, message })
+  };
+
+  dispatch({ type: PUSH_MESSAGE, message });
 
   return NIM.sendCustomSysMsg({
     cmd: 202,
     target: item.target,
     params: item.params,
     template: message.content.template
-  })
-}
+  });
+};
 
 /**
  * 发送bot表单信息
- * @param {array} forms 表单数组 
+ * @param {array} forms 表单数组
  * @param {object} msg  消息体
  */
 export const sendBotForm = (forms, msg) => {
@@ -255,9 +279,9 @@ export const sendBotForm = (forms, msg) => {
 
   forms.forEach(item => {
     let value = item.type == 'image' ? JSON.stringify(item.value) : item.value;
-    let param = item.id+'='+value;
+    let param = item.id + '=' + value;
     params += '&' + param;
-  })
+  });
 
   params += '&msgIdClient=' + msg.idClient;
 
@@ -274,8 +298,8 @@ export const sendBotForm = (forms, msg) => {
     time: new Date().getTime(),
     status: 1,
     fromUser: 1
-  }
-  dispatch({ type: PUSH_MESSAGE, message })
+  };
+  dispatch({ type: PUSH_MESSAGE, message });
 
   return NIM.sendCustomSysMsg({
     cmd: 202,
@@ -284,14 +308,14 @@ export const sendBotForm = (forms, msg) => {
       id: 'qiyu_template_botForm',
       forms
     }
-  })
-}
+  });
+};
 
 /**
- * 
+ *
  * @param {object} item 商品信息
  */
-export const sendBotGood = (item) => {
+export const sendBotGood = item => {
   const dispatch = get('store').dispatch;
   // 生成本地消息
   const message = {
@@ -300,31 +324,31 @@ export const sendBotGood = (item) => {
       target: item.target,
       params: item.params,
       template: {
-          id: 'qiyu_template_goods',
-          p_status: item.p_status,
-          p_img: item.p_img,
-          p_name: item.p_name,
-          p_stock: item.p_stock,
-          p_price: item.p_price,
-          p_count: item.p_count
+        id: 'qiyu_template_goods',
+        p_status: item.p_status,
+        p_img: item.p_img,
+        p_name: item.p_name,
+        p_stock: item.p_stock,
+        p_price: item.p_price,
+        p_count: item.p_count
       }
     },
     time: new Date().getTime(),
     status: 1,
     fromUser: 1
-  }
+  };
 
-  dispatch({ type: PUSH_MESSAGE, message })
+  dispatch({ type: PUSH_MESSAGE, message });
 
   return NIM.sendCustomSysMsg({
     cmd: 202,
     target: item.target,
     params: item.params,
     template: message.content.template
-  })
-}
+  });
+};
 
-export const sendTemplateText = (item) => {
+export const sendTemplateText = item => {
   const dispatch = get('store').dispatch;
 
   const message = {
@@ -333,23 +357,23 @@ export const sendTemplateText = (item) => {
       target: item.target,
       params: item.params,
       template: {
-          id: 'qiyu_template_text',
-          label: item.valid_operation
+        id: 'qiyu_template_text',
+        label: item.valid_operation
       }
     },
     time: new Date().getTime(),
     status: 1,
     fromUser: 1
-  }
-  dispatch({ type: PUSH_MESSAGE, message })
+  };
+  dispatch({ type: PUSH_MESSAGE, message });
 
   return NIM.sendCustomSysMsg({
     cmd: 202,
     target: item.target,
     params: item.params,
     template: message.content.template
-  })
-}
+  });
+};
 
 /* ----bot相关结束---- */
 
@@ -371,42 +395,42 @@ export const previewFile = (wxFilePath, type = 'image') => {
         //     console.log('上传进度文本: ' + obj.percentageText);
         // },
         done: function(error, file) {
-            console.log('上传image' + (!error?'成功':'失败'));
-            if (!error) {
-              resolve(file)
-            } else {
-              reject(error)
-            }
+          console.log('上传image' + (!error ? '成功' : '失败'));
+          if (!error) {
+            resolve(file);
+          } else {
+            reject(error);
+          }
         }
       });
-    })
-  })
-}
+    });
+  });
+};
 
 /**
  * 输入联想
  * @param {text} 查询关键词
  */
-export const associate = (text) => {
+export const associate = text => {
   const sessionid = get('sessionid');
   return NIM.sendCustomSysMsg({
     cmd: 24,
     sessionid,
     msgType: 'text',
     content: text
-  })
-}
+  });
+};
 
 /**
  * 清空联想
  */
 export const emptyAssociate = () => {
   const dispatch = get('store').dispatch;
-  dispatch({ type: SET_ASSOCIATE_RES, value: {} })
-}
+  dispatch({ type: SET_ASSOCIATE_RES, value: {} });
+};
 
 export const applyHumanStaff = () => {
   NIM.applyKefu({
     stafftype: 1
-  })
-}
+  });
+};
