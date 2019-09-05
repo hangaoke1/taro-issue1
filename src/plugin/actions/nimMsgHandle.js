@@ -80,6 +80,16 @@ export const assignKefu = (content) => {
               dispatch({type: PUSH_MESSAGE, message});
             }
 
+            // 如果是机器人则提示机器人服务问候
+            if (content.stafftype === 1 || content.robotInQueue ===  1) {
+              message = {
+                type: 'systip',
+                content: `${content.staffname}为您服务`,
+                time: time
+              }
+              dispatch({type: PUSH_MESSAGE, message});
+            }
+
             // 会话成功后，重新连接的按钮禁用
             let updateActionMsg = {
                 disabled: 1,

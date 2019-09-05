@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, ScrollView, Swiper, SwiperItem } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import _get from 'lodash/get';
 import FloatLayout from '@/components/FloatLayout';
