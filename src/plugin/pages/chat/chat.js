@@ -305,6 +305,7 @@ class Chat extends Component {
       scrollWithAnimation,
       showAssociate
     } = this.state;
+    const isRobot = Session.stafftype === 1 || Session.robotInQueue ===  1;
 
     return (
       <Index className="m-page-wrapper">
@@ -358,7 +359,7 @@ class Chat extends Component {
               </View>
             </View>
           ) : null}
-          {Bot.botList.length ? (
+          {isRobot && Bot.botList.length ? (
             <ScrollView scrollX className="m-bot">
               {Bot.botList.map(bot => (
                 <View
