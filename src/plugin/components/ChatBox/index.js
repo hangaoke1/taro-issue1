@@ -1,17 +1,13 @@
 import { useSelector, useDispatch } from '@tarojs/redux';
 import Taro, { useState, useEffect } from '@tarojs/taro';
 import { Input, View } from '@tarojs/components';
-// import _debounce from 'lodash/debounce';
-import _debounce from '@/lib/debounce'; // loadsh debounce在小程序下引用存在问题
+import _isFunction from 'lodash/isFunction';
 import eventbus from '@/lib/eventbus';
-import { hideAction } from '@/actions/options'
-import { associate } from '@/actions/chat';
+import { hideAction } from '@/actions/options';
 
 import Iconfont from '../Iconfont';
 
 import './index.less';
-
-const dAssociate = _debounce(associate, 300, false);
 
 export default function ChatBox(props) {
   const [value, setValue] = useState('');
@@ -22,15 +18,18 @@ export default function ChatBox(props) {
   // 发送文本
   const handleConfirm = event => {
     setValue('');
-    props.handleConfirm(event);
+    if (_isFunction(props.onConfirm)) {
+      props.onConfirm(event);
+    }
   };
 
   // 处理用户输入
   const handleInput = event => {
     setValue(event.detail.value);
-
-    // 触发搜索联想
-    dAssociate(event.detail.value)
+    
+    if (_isFunction(props.onInput)) {
+      props.onInput(event.detail.value)
+    }
   };
 
   // 点击表情

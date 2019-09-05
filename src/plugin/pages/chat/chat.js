@@ -1,6 +1,7 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, ScrollView, Video, RichText } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
+import _get from 'lodash/get';
 
 import Index from '../../app';
 
@@ -20,21 +21,35 @@ import FloatButton from '../../components/FloatButton';
 
 import { NAVIGATIONBAR_TITLE } from '../../constants';
 
-import { createAccount, sendText, sendImage, applyHumanStaff, emptyAssociate } from '../../actions/chat';
+import {
+  createAccount,
+  sendText,
+  sendImage,
+  applyHumanStaff,
+  emptyAssociate,
+  associate
+} from '../../actions/chat';
 import {
   toggleShowFun,
   toggleShowPortrait,
   hideAction
 } from '../../actions/options';
-import { closeEvaluationModal,openEvaluationModal } from '../../actions/actionHandle';
+import {
+  closeEvaluationModal,
+  openEvaluationModal
+} from '../../actions/actionHandle';
 import eventbus from '../../lib/eventbus';
 import { text2em } from '../../utils';
+import _debounce from '@/lib/debounce'; // loadsh debounce在小程序下引用存在问题
 
 import functionList from './function.config';
 import './chat.less';
 
+const dAssociate = _debounce(associate, 300, false);
+
 @connect(
-  ({ Message, Options, CorpStatus, Bot, Associate }) => ({
+  ({ Session, Message, Options, CorpStatus, Bot, Associate }) => ({
+    Session,
     Message,
     Options,
     CorpStatus,
@@ -80,7 +95,8 @@ class Chat extends Component {
       lastId: '',
       height: 0,
       videoUrl: '',
-      scrollWithAnimation: true
+      scrollWithAnimation: true,
+      showAssociate: false
     };
   }
 
@@ -124,6 +140,9 @@ class Chat extends Component {
     const { sendText } = this.props;
     let value = event.detail.value;
 
+    // 清空联想文本
+    this.handleEmptyAssociate();
+
     // 禁止发送空文本
     if (!value.trim()) {
       return;
@@ -149,7 +168,6 @@ class Chat extends Component {
 
   // 扩展功能栏点击处理
   handleFuncClick = item => {
-    console.log(item);
     const { sendImage: _sendImage } = this.props;
     switch (item.type) {
       case 'album':
@@ -241,35 +259,55 @@ class Chat extends Component {
   /**
    * 点击入口按钮
    */
-  handleSelectEntry = (key) => {
-    switch(key){
+  handleSelectEntry = key => {
+    switch (key) {
       case 'evaluation':
         const { openEvaluationModal } = this.props;
         openEvaluationModal();
-      break;
+        break;
       case 'applyHumanStaff':
         applyHumanStaff();
-      break;
+        break;
     }
-  }
+  };
+
+  handleAssociate = text => {
+    this.setState({
+      showAssociate: true
+    });
+    dAssociate(text);
+  };
 
   // 点击联想文本
-  handleAssociateClick = (text) => {
+  handleAssociateClick = text => {
     if (!text.trim()) {
       return;
     }
     const { sendText } = this.props;
     sendText(text);
     eventbus.trigger('reset_input');
+    this.handleEmptyAssociate();
+  };
+
+  handleEmptyAssociate = () => {
+    this.setState({
+      showAssociate: false
+    });
     emptyAssociate();
-  }
+  };
 
   render() {
-    const { Message, Options, CorpStatus, Bot, Associate } = this.props;
-    const { lastId, height, videoUrl, scrollWithAnimation } = this.state;
+    const { Message, Options, CorpStatus, Bot, Associate, Session } = this.props;
+    const {
+      lastId,
+      height,
+      videoUrl,
+      scrollWithAnimation,
+      showAssociate
+    } = this.state;
 
     return (
-      <Index className='m-page-wrapper'>
+      <Index className="m-page-wrapper">
         {/* 视频全局对象 */}
         <View
           style={`display: ${
@@ -277,19 +315,19 @@ class Chat extends Component {
           };position:fixed;top:0;bottom:0;right:0;left:0;z-index:999;background-color:#000;`}
         >
           <Video
-            id='j-video'
-            style='width: 100%;height: 100%;'
+            id="j-video"
+            style="width: 100%;height: 100%;"
             src={videoUrl}
             controls
             show-fullscreen-btn={false}
-            play-btn-position='bottom'
+            play-btn-position="bottom"
             onFullscreenchange={this.handleFullscreenchange}
           />
         </View>
-        <View className='m-chat' style={`height: calc(100vh - ${height}px)`}>
-          <View className='m-view'>
+        <View className="m-chat" style={`height: calc(100vh - ${height}px)`}>
+          <View className="m-view">
             <ScrollView
-              className='message-content'
+              className="message-content"
               scrollY
               scrollWithAnimation={scrollWithAnimation}
               scrollIntoView={lastId}
@@ -299,27 +337,43 @@ class Chat extends Component {
                 Message={Message}
                 onImgClick={this.handleImgClick}
               ></MessageView>
-              <View id='m-bottom'></View>
+              <View id="m-bottom"></View>
             </ScrollView>
           </View>
-          <View className="m-associate">
-            <View className="m-associate-list">
-              { Associate.questionContents.map(item => {
-                return (
-                <View className="m-associate-item" onClick={this.handleAssociateClick.bind(this, item.value)}>
-                  <RichText nodes={text2em(item.value, Associate.content)}></RichText>
-                </View>
-                )
-              })}
+          {showAssociate ? (
+            <View className="m-associate">
+              <View className="m-associate-list">
+                {Associate.questionContents.map(item => {
+                  return (
+                    <View
+                      className="m-associate-item"
+                      onClick={this.handleAssociateClick.bind(this, item.value)}
+                    >
+                      <RichText
+                        nodes={text2em(item.value, Associate.content)}
+                      ></RichText>
+                    </View>
+                  );
+                })}
+              </View>
             </View>
-          </View>
+          ) : null}
           {Bot.botList.length ? (
-            <ScrollView scrollX className='m-bot'>
-              { Bot.botList.map(bot => <View className='m-bot-item' key={bot.id} onClick={e => this.handleBotClick(bot, e)}>{bot.label}</View>)}
+            <ScrollView scrollX className="m-bot">
+              {Bot.botList.map(bot => (
+                <View
+                  className="m-bot-item"
+                  key={bot.id}
+                  onClick={e => this.handleBotClick(bot, e)}
+                >
+                  {bot.label}
+                </View>
+              ))}
             </ScrollView>
           ) : null}
           <ChatBox
-            handleConfirm={this.handleConfirm}
+            onInput={this.handleAssociate}
+            onConfirm={this.handleConfirm}
             onPlusClick={this.handlePlusClick}
             onPortraitClick={this.handlePortraitClick}
             onFocus={this.handleFocus}
@@ -337,7 +391,7 @@ class Chat extends Component {
         </View>
         <FloatLayout
           visible={CorpStatus.evaluationVisible}
-          title='请对本次服务进行评价'
+          title="请对本次服务进行评价"
           onClose={this.closeEvaluationModal}
         >
           <Evaluation />
@@ -347,12 +401,12 @@ class Chat extends Component {
         <BotDrawerList></BotDrawerList>
         <BotBubbleList></BotBubbleList>
         <BotCard></BotCard>
-        {
-          CorpStatus.entryConfig.length ?
-          <FloatButton entryConfig={CorpStatus.entryConfig}
-            onSelect={this.handleSelectEntry} />
-          : null
-        }
+        {CorpStatus.entryConfig.length ? (
+          <FloatButton
+            entryConfig={CorpStatus.entryConfig}
+            onSelect={this.handleSelectEntry}
+          />
+        ) : null}
       </Index>
     );
   }
