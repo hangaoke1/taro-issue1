@@ -71,7 +71,7 @@ export const assignKefu = (content) => {
             }
 
             // 如果有message接入语，才显示接入语
-            if(content.message){
+            if(content.stafftype == 0 && content.message){
               message = {
                 type: 'systip',
                 content: `${content.message}`,
