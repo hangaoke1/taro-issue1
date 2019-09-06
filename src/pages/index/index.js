@@ -29,7 +29,7 @@ export default class Index extends Component {
 
     const sring2object = (_string = "", _split) => {
       let _obj = {};
-  
+
       _string.split(_split).forEach(item => {
           let _brr = item.split('=');
           if (!_brr || !_brr.length) return;
@@ -38,11 +38,11 @@ export default class Index extends Component {
           _obj[decodeURIComponent(_key)] =
               decodeURIComponent(_brr.join('='));
       })
-  
+
         return _obj;
     };
-  
-  
+
+
     const query2object = (query) => {
         return sring2object(query, '&')
     }
@@ -53,7 +53,7 @@ export default class Index extends Component {
       let domain = 'https://qytest.netease.com'
 
       // 测试环境
-      if(queryParam.testing === 1){
+      if(queryParam.testing == 1){
         domain = 'https://qytest.netease.com'
       // 预发
       }else if(queryParam.testing == 2){
