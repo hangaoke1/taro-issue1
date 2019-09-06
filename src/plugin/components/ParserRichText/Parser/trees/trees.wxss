@@ -67,3 +67,33 @@
   top: 50%;
   margin: -15px 0 0 -15px;
 }
+
+.u-ul {
+  position: relative;
+}
+.u-ul-li {
+  position: relative;
+  padding: 4px 0 4px 12px;
+}
+
+.u-ol-li {
+  display: flex;
+  padding: 4px 0;
+}
+
+.u-point {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: #1069d6;
+  border-radius: 8px;
+}
+
+.u-index {
+  min-width: 25px;
+  text-align: right;
+  margin-right: 4px;
+}

@@ -121,6 +121,15 @@ export const assignKefu = (content) => {
             }
             dispatch({type: PUSH_MESSAGE, message});
           break;
+        case 205:
+          // 留言未开启
+          message = {
+            type: 'rich',
+            content: content.richmessage || content.message,
+            time: time,
+            fromUser: 0
+        }
+        dispatch({type: PUSH_MESSAGE, message});
     }
  }
 
