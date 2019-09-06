@@ -352,6 +352,8 @@ export default class IMSERVICE {
           console.log('oncustomsysmsg 未知指令' + JSON.stringify(msg));
           break;
       }
+      
+      this.clearUnreadMsg();
     } catch (e) { }
   }
 

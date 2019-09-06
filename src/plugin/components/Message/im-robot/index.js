@@ -144,7 +144,7 @@ export default function RobotView(props) {
                 color={evaluation === 3 ? '#5092e1' : '#ccc'}
                 size='16'
               />
-              <Text className='u-tip'>没用</Text>
+              <Text className='u-tip'>无用</Text>
             </View>
           </View>
         ) : null}
