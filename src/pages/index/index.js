@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Navigator, Button } from '@tarojs/components'
+import { View, Text, Navigator, Button, Input } from '@tarojs/components'
 
 import './index.less'
 
@@ -70,6 +70,15 @@ export default class Index extends Component {
     })
   }
 
+  handleChange = (event) => {
+    myPluginInterface._$setUserInfo({
+      userId: event.target.value
+    });
+    Taro.showToast({
+      title: '用户id更新成功'
+    })
+  }
+
   render () {
     return (
       <View className='index'>
@@ -78,6 +87,9 @@ export default class Index extends Component {
           </Navigator>
           <View>
             <Button onClick={this.handleClick}>扫一扫</Button>
+          </View>
+          <View className="u-input">
+            <Input placeholder="自定义用户id" onChange={this.handleChange}></Input>
           </View>
       </View>
     )

@@ -184,7 +184,7 @@ export default class IMSERVICE {
       let content = {
         cmd: APPLY_KEFU_CMD,
         deviceid: get('deviceid'),
-        foreignid: '',
+        foreignid: get('foreignid'),
         fromType: FROM_TYPE,
         version: 64,
         // version: 8,
