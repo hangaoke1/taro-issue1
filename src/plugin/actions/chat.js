@@ -23,6 +23,8 @@ export const applyKefu = (
   const account = get('account');
   const token = get('token');
 
+  if(!get('applyNewStaff')) return;
+
   NIM = IMSERVICE.getInstance({
     appKey: appKey,
     account: account,

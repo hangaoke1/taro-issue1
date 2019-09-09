@@ -46,7 +46,8 @@ const globalConfig = {
    },
     heartbeatCycle: 8000,
     store: null,
-    NIM: NIM_TEST
+    NIM: NIM_TEST,
+    applyNewStaff: true
 };
 
 export const get = (key) => globalConfig[key];

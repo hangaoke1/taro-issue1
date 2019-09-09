@@ -96,6 +96,8 @@ export const assignKefu = (content) => {
                 action: 'reApplyKefu'
             }
             dispatch({type: UPDATE_MESSAGE_BYACTION, message: updateActionMsg});
+
+            set('applyNewStaff', false);
         break;
         case 201:
             // 没有客服在线
@@ -278,6 +280,8 @@ export const onfinish = (content) => {
 
     let tip;
     tip = REASON_MAP[close_reason] || '会话已断开';
+
+    set('applyNewStaff', true);
 
     if (close_reason == 0 || close_reason == 2) {
         tip = richmessage || message || REASON_MAP[close_reason];
