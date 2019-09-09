@@ -287,16 +287,19 @@ export const onfinish = (content) => {
         tip = '本次会话已超时结束';
     }
 
-    let msg = {
+    // 是否显示关闭文案的开关
+    if (session.shop.setting.session_end_switch){
+      let msg = {
         type: 'action',
         content: tip,
         fromUser: 0,
         time: time,
         actionText: '重新连接',
         action: 'reApplyKefu'
-    }
+      }
 
-    dispatch({type: PUSH_MESSAGE, message: msg});
+      dispatch({type: PUSH_MESSAGE, message: msg});
+    }
 
     // 会话结束时需要评价
     if(evaluate){
