@@ -516,13 +516,15 @@ export const receiveTransfer = (content) => {
   if (!session.shop.setting.session_transfer_switch) return;
 
   let time = new Date().getTime();
-  let message = {
-    type: 'systip',
-    content: `${content.message}` || `已经为您转接${content.staffname}`,
-    time
-  }
+  if(content.message){
+    let message = {
+      type: 'systip',
+      content: `${content.message}`,
+      time
+    }
 
-  dispatch({type: PUSH_MESSAGE, message});
+    dispatch({type: PUSH_MESSAGE, message});
+  }
 }
 
 /**
