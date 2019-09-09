@@ -15,6 +15,7 @@ const Message = (state = initMessages, action) => {
             if (_get(action, 'message.msg.idClient')) {
                 action.message.idClient = _get(action, 'message.msg.idClient')
             }
+            delete action.message.msg;
             return [...state, action.message];
         case UPDATE_MESSAGE_BYKEY:
             return [...updateMessage(state, action, 'key')];
