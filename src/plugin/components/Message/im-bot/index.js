@@ -1,7 +1,7 @@
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
 import { View } from '@tarojs/components';
-import PropTypes, { func } from 'prop-types';
+import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 
 import Avatar from '../u-avatar';
@@ -17,6 +17,8 @@ import TplGoods from './TplGoods';
 import TplOrderDetail from './TplOrderDetail';
 import TplOrderStatus from './TplOrderStatus';
 import TplText from './TplText';
+import TplOrderLogistic from './TplOrderLogistic';
+import TplStaticUnion from './TplStaticUnion';
 
 import './index.less';
 import eventbus from '@/lib/eventbus';
@@ -59,6 +61,14 @@ export default class Bot extends Component {
     const layout = null;
     let showFormAction = false
     switch (tpl.id) {
+      case 'static_union': {
+        layout = <TplStaticUnion item={item} tpl={tpl}></TplStaticUnion>
+        break;
+      }
+      case 'order_logistic': {
+        layout = <TplOrderLogistic item={item} tpl={tpl}></TplOrderLogistic>
+        break;
+      }
       case 'qiyu_template_text': {
         layout = <TplText item={item} tpl={tpl}></TplText>
         break;
