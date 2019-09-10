@@ -8,7 +8,10 @@ const myPluginInterface = Taro.requirePlugin('myPlugin')
 export default class Info extends Component {
 
   config = {
-    navigationBarTitleText: '用户信息'
+    navigationBarTitleText: '用户信息',
+    usingComponents: {
+      'icon-font': 'plugin://myPlugin/Iconfont'
+    }
   }
 
   constructor(props) {
@@ -53,8 +56,23 @@ export default class Info extends Component {
           { "index": 3, "key": "last_login", "label": "上次登录时间", "value": "2015-12-22 15:38:54" },
           { "index": 4, "key": "avatar", "label": "头像", "value": "https://xxxxx.jpg" }
         ]
-      }]
+      }],
+      selected: null,
+      selectedName: null
     }
+  }
+
+  handleSelect = (selected, selectedName) => {
+    this.setState({
+      selected,
+      selectedName
+    })
+
+    Taro.showToast({
+      title: `已切换到${selectedName}`,
+      icon: 'success',
+      duration: 1000
+    })
   }
 
   componentWillMount() { }
@@ -68,14 +86,14 @@ export default class Info extends Component {
   componentDidHide() { }
 
   render() {
-    const { users } = this.state;
+    const { users, selected } = this.state;
     return (
       <View className='m-Info'>
         <View className="m-Info_item">
           <View className="m-Info_item_title">
             <View className="Info_item_title_text">当前用户</View>
           </View>
-          <View>匿名用户</View>
+          <View>{selectedName ? selectedName : '匿名用户'}</View>
         </View>
         <View className="m-Info_item">
           <View className="m-Info_item_title">
@@ -86,7 +104,23 @@ export default class Info extends Component {
           {
             users.map(item => {
               return (
-                <View className="m-Info_btn" key={item.uid}>{item.name}</View>
+                <View key={item.uid} className="m-Info_btn_item"
+                  onClick={this.handleSelect.bind(this, item.uid, item.name)}>
+                  <View className="m-Info_btn">
+                    {item.name}
+                  </View>
+                  {
+                    selected === item.uid ?
+                      <View className="z-sel" >
+                        <icon-font extraProps={{
+                          color: '#337EFF',
+                          size: '12',
+                          type: 'icon-correct'
+                        }} />
+                      </View> :
+                      null
+                  }
+                </View>
               )
             })
           }

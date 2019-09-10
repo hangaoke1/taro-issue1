@@ -30,20 +30,8 @@ const globalConfig = {
     bid: '-1',
     token: '',
     deviceid: initDeviceid(),
-    foreignid: '1442286211167',
-    userInfo: {
-      uid:"1442286211167",
-      data:JSON.stringify([
-        {"key":"real_name", "value":"土豪"},
-        {"key":"mobile_phone", "hidden":true},
-        {"key":"email", "value":"13800000000@163.com"},
-        {"index":0, "key":"account", "label":"账号", "value":"zhangsan" , "href":"http://example.domain/user/zhangsan"},
-        {"index":1, "key":"sex", "label":"性别", "value":"先生"},
-        {"index":2, "key":"reg_date", "label":"注册日期", "value":"2015-11-16"},
-        {"index":3, "key":"last_login", "label":"上次登录时间", "value":"2015-12-22 15:38:54"},
-        {"index": 4, "key":"avatar","label":"头像","value":"https://xxxxx.jpg"}
-      ])
-   },
+    foreignid: '',
+    userInfo: null,
     heartbeatCycle: 8000,
     store: null,
     NIM: NIM_TEST,

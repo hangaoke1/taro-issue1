@@ -2,5 +2,8 @@
   "pages": {
     "chat": "pages/chat/chat"
   },
-    "main": "index.js"
-  }
+  "publicComponents": {
+    "Iconfont": "components/Iconfont/index"
+  },
+  "main": "index.js"
+}
