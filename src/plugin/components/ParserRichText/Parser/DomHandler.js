@@ -142,7 +142,7 @@ if (CanIUse) {
 }
 //添加默认值
 function initStyle(tagStyle) {
-  tagStyle.a = "display:inline;color:#1069d6;word-break:break-all;" + (tagStyle.a || "");
+  tagStyle.a = "display:inline;color:#1069d6;word-break:break-all;text-decoration: underline;" + (tagStyle.a || "");
   tagStyle.address = "font-style:italic;" + (tagStyle.address || "");
   tagStyle.blockquote = tagStyle.blockquote || 'background-color:#f6f6f6;border-left:3px solid #dbdbdb;color:#6c6c6c;padding:5px 0 5px 10px';
   tagStyle.center = 'text-align:center;' + (tagStyle.center || "");
