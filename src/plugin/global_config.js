@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro';
-import NIM from './vendors/nim/NIM_Web_NIM_weixin_v6.6.6'
+import NIM from './vendors/nim/NIM_Web_NIM_weixin_v6.8.0'
 import NIM_TEST from './vendors/nim/NIM_Web_NIM_weixin.test.min';
 
 

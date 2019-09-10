@@ -88,6 +88,11 @@ export default class Index extends Component {
           <View>
             <Button onClick={this.handleClick}>扫一扫</Button>
           </View>
+          <View>
+            <Navigator url='/pages/info/index'>
+              <Button>用户信息</Button>
+            </Navigator>
+          </View>
           <View className="u-input">
             <Input placeholder="自定义用户id" onChange={this.handleChange}></Input>
           </View>

@@ -278,7 +278,7 @@ export default class IMSERVICE {
    */
   onMsg(msg) {
     receiveMsg(msg);
-    
+
     // 当接收到普通消息时，标记已读状态
     this.clearUnreadMsg();
   }
@@ -353,7 +353,7 @@ export default class IMSERVICE {
           console.log('oncustomsysmsg 未知指令' + JSON.stringify(msg));
           break;
       }
-      
+
       this.clearUnreadMsg();
     } catch (e) { }
   }
@@ -361,7 +361,7 @@ export default class IMSERVICE {
   onOfflineMsgs(msg) {
     console.log('-------接收离线消息 onofflinemsgs-------')
   }
-  
+
   onOfflineCustomSysMsgs(msg) {
     console.log('-------接收离线消息 onofflinecustomsysmsgs-------')
   }
