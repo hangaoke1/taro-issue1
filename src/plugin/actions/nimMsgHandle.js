@@ -105,9 +105,12 @@ export const assignKefu = (content) => {
                 type: 'rich',
                 content: content.richmessage || content.message,
                 time: time,
-                fromUser: 0
+                fromUser: 0,
+                staff: {
+                  stafftype: 1
+                }
             }
-            dispatch({type: PUSH_MESSAGE, message});
+            dispatch({type: PUSH_MESSAGE, message });
             break;
         case 203:
             // 进入排队的状态
@@ -129,9 +132,15 @@ export const assignKefu = (content) => {
             type: 'rich',
             content: content.richmessage || content.message,
             time: time,
-            fromUser: 0
-        }
-        dispatch({type: PUSH_MESSAGE, message});
+            fromUser: 0,
+            staff: {
+              stafftype: 1
+            }
+          }
+          dispatch({type: PUSH_MESSAGE, message});
+          break
+        default:
+          console.log(`警告: 暂不支持${code}解析`);
     }
  }
 
@@ -149,7 +158,7 @@ export const assignKefu = (content) => {
  * 'custom' (自定义消息)
  * 'tip' (提醒消息)
  * 'robot' (机器人消息)
- * 'notification' (群通知消息)
+ * 'notification' (群通知消息)1
  */
 export const receiveMsg = (msg) => {
     const dispatch = get('store').dispatch;
@@ -451,7 +460,10 @@ export const onRobotTip = (content) => {
         type: 'rich',
         content: content.message,
         time: content.timestamp,
-        fromUser: 0
+        fromUser: 0,
+        staff: {
+          stafftype: 1
+        }
     }
     dispatch({type: PUSH_MESSAGE, message});
 }
