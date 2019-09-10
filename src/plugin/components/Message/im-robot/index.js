@@ -172,12 +172,10 @@ export default function RobotView(props) {
           </View>
         ) : null}
         {evaluation_reason === 1 && evaluation === 3 ? (
-          <Textarea
-            disabled
+          <View
             className="u-textarea"
-            value={evaluation_content}
             onClick={openModal}
-          />
+          >{evaluation_content}</View>
         ) : null}
         <Modal
           isOpened={isOpened}
@@ -188,7 +186,14 @@ export default function RobotView(props) {
           confirmText="确认"
           closeOnClickOverlay
         >
-          <Textarea className="u-textareaInput" value={reason} onInput={handleChangeReson} placeholder={evaluation_guide}></Textarea>
+          {isOpened ? (
+            <Textarea
+              className="u-textareaInput"
+              value={reason}
+              onInput={handleChangeReson}
+              placeholder={evaluation_guide}
+            ></Textarea>
+          ) : null}
         </Modal>
       </View>
     </View>

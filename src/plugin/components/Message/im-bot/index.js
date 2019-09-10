@@ -19,6 +19,7 @@ import TplOrderStatus from './TplOrderStatus';
 import TplText from './TplText';
 import TplOrderLogistic from './TplOrderLogistic';
 import TplStaticUnion from './TplStaticUnion';
+import TplActionList from './TplActionList';
 
 import './index.less';
 import eventbus from '@/lib/eventbus';
@@ -61,6 +62,10 @@ export default class Bot extends Component {
     const layout = null;
     let showFormAction = false
     switch (tpl.id) {
+      case 'action_list': {
+        layout = <TplActionList item={item} tpl={tpl}></TplActionList>
+        break;
+      }
       case 'static_union': {
         layout = <TplStaticUnion item={item} tpl={tpl}></TplStaticUnion>
         break;
