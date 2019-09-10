@@ -3,7 +3,10 @@ import { View, Block } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import ParserRichText from '@/components/ParserRichText/parserRichText';
-import { parseUrlAction } from '@/actions/chat';
+import { sendTemplateText } from '@/actions/chat';
+import { setClipboardData } from '@/utils/extendTaro';
+
+import './index.less';
 
 class StaticUnion extends Component {
   static propTypes = {
@@ -20,6 +23,27 @@ class StaticUnion extends Component {
     parseUrlAction(detail);
   }
 
+  handleLinkClick = (item) => {
+    const { type, target, params, label } = item;
+    if (type === 'url') {
+      setClipboardData(target);
+    }
+    if (type === 'block') {
+      sendTemplateText({
+        target,
+        params,
+        label
+      })
+    }
+  }
+
+  previewImage = (url) => {
+    Taro.previewImage({
+      current: url,
+      urls: [url]
+    })
+  }
+
   render() {
     // image、text、richText、link
     const { item, tpl } = this.props;
@@ -31,10 +55,10 @@ class StaticUnion extends Component {
             <Block>
               {
                 {
-                  image: <View className="u-img">图片</View>,
-                  text: <View className="u-text">普通文本</View>,
+                  image: <Image className="u-img" src={union.detail.url} onClick={this.previewImage.bind(this, union.detail.url)}></Image>,
+                  text: <View className="u-text">{union.detail.label}</View>,
                   richText: <View className="u-richText"><ParserRichText html={union.detail.label} onLinkpress={this.handleLinkpress}></ParserRichText></View>,
-                  link: <View className="u-link">{union.detail.label}</View>
+                  link: <View className="u-link" onClick={this.handleLinkClick.bind(this, union.detail)}>{union.detail.label}</View>
                 }[
                   union.type
                 ]

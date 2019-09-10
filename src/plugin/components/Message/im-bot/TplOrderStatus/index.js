@@ -12,10 +12,15 @@ export default function Index(props) {
   const list = _get(tpl, 'list', []);
 
   function handleClick (item) {
+    const { target, params, valid_operation } = item;
     if (item.type === 'url') {
-      setClipboardData(item.target)
+      setClipboardData(target)
     } else {
-      sendTemplateText(item)
+      sendTemplateText({
+        target,
+        params,
+        label: valid_operation
+      })
     }
   }
 

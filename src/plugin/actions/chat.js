@@ -360,7 +360,7 @@ export const sendTemplateText = item => {
       params: item.params,
       template: {
         id: 'qiyu_template_text',
-        label: item.valid_operation
+        label: item.label
       }
     },
     time: new Date().getTime(),
