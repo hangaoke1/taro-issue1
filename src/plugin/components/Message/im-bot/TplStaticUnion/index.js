@@ -3,7 +3,7 @@ import { View, Block } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import ParserRichText from '@/components/ParserRichText/parserRichText';
-import { sendTemplateText } from '@/actions/chat';
+import { sendTemplateText, parseUrlAction } from '@/actions/chat';
 import { setClipboardData } from '@/utils/extendTaro';
 
 import './index.less';
