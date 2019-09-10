@@ -6,7 +6,7 @@
     <rich-text wx:if="{{item.name=='img'}}" style="{{cssHandler.getStyle(item.attrs.style,'inline-block')}}" nodes='{{cssHandler.setImgStyle(item,controls.imgMode)}}' data-ignore='{{item.attrs.ignore}}' data-src='{{item.attrs.src}}' bindtap='previewEvent' />
     <!--文本-->
     <block wx:elif="{{item.type=='text'}}">
-      <text wx:if="{{!item.decode}}" decode>{{item.text}}</text>
+      <text wx:if="{{!item.decode}}" decode style="word-break:break-all">{{item.text}}</text>
       <rich-text wx:else style="display:inline-block" nodes="{{[item]}}"></rich-text>
     </block>
     <text wx:elif="{{item.name=='br'}}">\n</text>
@@ -26,18 +26,18 @@
     <view class="u-ul" wx:elif="{{item.name=='ul'}}">
       <view class="u-ul-li" wx:for='{{item.children}}' wx:key wx:for-item="liItem">
         <view class="u-point"></view>
-        <view wx:for='{{liItem.children}}' wx:key wx:for-item="aItem">
+        <block wx:for='{{liItem.children}}' wx:key wx:for-item="aItem">
           <trees nodes="{{[aItem]}}" controls="{{controls}}" />
-        </view>
+        </block>
       </view>
     </view>
     <!--有序列表 扩展-->
     <view class="u-ol" wx:elif="{{item.name=='ol'}}">
       <view class="u-ol-li" wx:for-index="idx" wx:for='{{item.children}}' wx:key wx:for-item="liItem">
         <view class="u-index">{{idx+1}}.</view>
-        <view wx:for='{{liItem.children}}' wx:key wx:for-item="aItem">
+        <block wx:for='{{liItem.children}}' wx:key wx:for-item="aItem">
           <trees nodes="{{[aItem]}}" controls="{{controls}}" />
-        </view>
+        </block>
       </view>
     </view>
     <!--富文本-->

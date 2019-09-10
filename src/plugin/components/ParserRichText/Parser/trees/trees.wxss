@@ -70,15 +70,21 @@
 
 .u-ul {
   position: relative;
+  padding-left: 12px;
 }
+
 .u-ul-li {
   position: relative;
   padding: 4px 0 4px 12px;
 }
 
+.u-ol {
+  position: relative;
+}
+
 .u-ol-li {
-  display: flex;
-  padding: 4px 0;
+  position: relative;
+  padding: 4px 0 4px 24px;
 }
 
 .u-point {
@@ -86,14 +92,16 @@
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
-  background: #1069d6;
-  border-radius: 8px;
+  width: 6px;
+  height: 6px;
+  background: #000;
+  border-radius: 6px;
 }
 
 .u-index {
-  min-width: 25px;
+  position: absolute;
+  left: 0;
+  top: 4px;
+  min-width: 20px;
   text-align: right;
-  margin-right: 4px;
 }

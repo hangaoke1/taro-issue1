@@ -89,6 +89,10 @@ export default class WeModal extends Component {
       this.props.className
     );
 
+    let btnCount = 0;
+    if (cancelText || confirmText) { btnCount = 1 }
+    if (cancelText && confirmText) { btnCount = 2 }
+
     return (
       <View className={rootClass}>
         <View className="we-modal__overlay" onClick={this.handleClickOverlay} />
@@ -103,8 +107,8 @@ export default class WeModal extends Component {
           ) : null}
           <View className="we-modal__content">{this.props.children}</View>
           { showFooter ? <View className="we-modal__footer">
-            {cancelText ? <View className="we-modal__cancel" onClick={this.handleCancel}>{cancelText}</View> : null}
-            {confirmText ? <View className="we-modal__confirm" onClick={this.handleConfirm}>{confirmText}</View> : null}
+            {cancelText ? <View className={`we-modal__cancel ${btnCount === 1 ? 'we-modal__large' : ''}`} onClick={this.handleCancel}>{cancelText}</View> : null}
+            {confirmText ? <View className={`we-modal__confirm ${btnCount === 1 ? 'we-modal__large' : ''}`} onClick={this.handleConfirm}>{confirmText}</View> : null}
           </View>:null }
         </View>
       </View>

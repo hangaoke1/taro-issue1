@@ -30,6 +30,7 @@ export default function RobotView(props) {
     evaluation,
     evaluation_reason,
     evaluation_content,
+    evaluation_guide,
     type,
     idClient
   } = item;
@@ -136,7 +137,7 @@ export default function RobotView(props) {
     >
       <Avatar fromUser={item.fromUser} staff={item.staff} />
       <View className="u-text-arrow" />
-      <View className="u-text">
+      <View className={`u-text ${evaluation !== 0 ? 'u-text-limit' : ''}`}>
         <ParserRichText html={content} onLinkpress={handleLinkpress} />
         {type === 'qa-list' && item.list.length ? (
           <View className="u-qalist">
@@ -183,12 +184,11 @@ export default function RobotView(props) {
           onClose={handleClose}
           onConfirm={handleConfirm}
           onCancel={handleCancel}
-          title="确认要发送吗？"
-          cancelText="取消"
+          title="请告知我们具体原因"
           confirmText="确认"
           closeOnClickOverlay
         >
-          <Textarea className="u-textareaInput" value={reason} onInput={handleChangeReson}></Textarea>
+          <Textarea className="u-textareaInput" value={reason} onInput={handleChangeReson} placeholder={evaluation_guide}></Textarea>
         </Modal>
       </View>
     </View>

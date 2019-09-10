@@ -185,6 +185,7 @@ class Chat extends Component {
           sourceType: ['camera']
         }).then(res => {
           console.log('照相: ', res);
+          _sendImage(res);
         });
         break;
       default:
