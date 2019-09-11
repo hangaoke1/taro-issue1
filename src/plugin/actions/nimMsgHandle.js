@@ -462,15 +462,15 @@ export const receiveShuntEntries = (content) => {
  */
 export const onRobotTip = (content) => {
     const dispatch = get('store').dispatch;
+    const session = get('store').getState().Session;
+    const extralMessage = genExtralMessage(session);
 
     let message = {
         type: 'rich',
         content: content.message,
         time: content.timestamp,
         fromUser: 0,
-        staff: {
-          stafftype: 1
-        }
+        ...extralMessage
     }
     dispatch({type: PUSH_MESSAGE, message});
 }
