@@ -75,6 +75,11 @@ export default class WeModal extends Component {
       this.props.onConfirm()
     }
   }
+  
+  preventTouchMove = (e) => {
+    e.stopPropagation()
+    return
+  }
 
   render() {
     const { _isOpened } = this.state;
@@ -94,7 +99,7 @@ export default class WeModal extends Component {
     if (cancelText && confirmText) { btnCount = 2 }
 
     return (
-      <View className={rootClass}>
+      <View className={rootClass} onTouchMove={this.preventTouchMove}>
         <View className="we-modal__overlay" onClick={this.handleClickOverlay} />
         <View className="we-modal__container">
           {title ? (
