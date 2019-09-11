@@ -9,7 +9,6 @@ import { timestamp2date, fmtRobot } from '../utils';
 import Base64 from '../lib/base64';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '../lib/uuid';
-import Notify from '../components/Notify';
 
 function genExtralMessage (session) {
   if(session.sessionid){
