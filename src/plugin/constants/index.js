@@ -81,3 +81,5 @@ export const NAVIGATIONBAR_TITLE_CONNECTING = '正在连接';
 
 // 询问排队状态的轮询时间间隔
 export const QUEUE_TIMER = 10000;
+
+export const APPLY_KEFU_TIMEOUT = 5000;

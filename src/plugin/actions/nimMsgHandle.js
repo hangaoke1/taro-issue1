@@ -2,13 +2,14 @@ import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
 import { INIT_EVALUATION_SETTING,INIT_CURRENT_EVALUATION,INIT_LAST_EVALUATION } from '../constants/evaluation';
-import { SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG } from '../constants/chat';
+import { SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG,DEL_ENTRY_BYKEY } from '../constants/chat';
 import { SET_BOT_LIST } from '../constants/bot';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import { timestamp2date, fmtRobot } from '../utils';
 import Base64 from '../lib/base64';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '../lib/uuid';
+import Notify from '../components/Notify';
 
 function genExtralMessage (session) {
   if(session.sessionid){
@@ -58,20 +59,36 @@ export const assignKefu = (content) => {
       })
     }
 
-    // 显示评价入口
-    if(content.shop.setting.show_evaluation_button){
+    // 如果分配到人工客服的话，就不显示人工客服的入口了
+    if(content.stafftype == 0){
       dispatch({
-        type: SET_ENTRY_CONFIG,
-        value:
-          {
-            icon: 'icon-star-linex',
-            text: '评价',
-            key: 'evaluation'
-          }
+        type: DEL_ENTRY_BYKEY,
+        value: 'applyHumanStaff'
       })
     }
 
-    let { code } = content;
+    // 显示评价入口
+    if(content.shop.setting.show_evaluation_button){
+      // 人工会话才有评价
+      if(content.stafftype == 1){
+        dispatch({
+          type: SET_ENTRY_CONFIG,
+          value:
+            {
+              icon: 'icon-star-linex',
+              text: '评价',
+              key: 'evaluation'
+            }
+        })
+      }else{
+        dispatch({
+          type: DEL_ENTRY_BYKEY,
+          value: 'evaluation'
+        })
+      }
+    }
+
+    let { code, staffname } = content;
     let time = new Date().getTime();
     let timeTip = {
         type: 'systip',
