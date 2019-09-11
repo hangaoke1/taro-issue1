@@ -13,12 +13,19 @@ const CorpStatus = (state = {
         evaluationVisible: action.value
       }
     case SET_ENTRY_CONFIG:
-      return {
-        ...state,
-        entryConfig: [
-          ...state.entryConfig,
-          ...action.value
-        ]
+      let isExist = (state.entryConfig.filter(item => {
+        return item.key == action.value.key;
+      })).length;
+      if(isExist){
+        return state;
+      }else{
+        return {
+          ...state,
+          entryConfig: [
+            ...state.entryConfig,
+            action.value
+          ]
+        }
       }
     default:
       return state;

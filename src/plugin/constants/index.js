@@ -19,6 +19,9 @@ export const ASK_QUEUE_STATUS_CMD = 16;
 // 访客端发送心跳指令
 export const HEART_BEAT_CMD = -1000;
 
+// 上传crm信息
+export const UPDATE_CRM_CMD = 52;
+
 /**
 * 发送的自定义指令 ------end--------
 */

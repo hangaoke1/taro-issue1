@@ -30,13 +30,12 @@ export const assignKefu = (content) => {
     if(content.operator_enable){
       dispatch({
         type: SET_ENTRY_CONFIG,
-        value: [
+        value:
           {
             icon: 'icon-customerservicex',
             text: '人工客服',
             key: 'applyHumanStaff'
           }
-        ]
       })
     }
 
@@ -44,13 +43,12 @@ export const assignKefu = (content) => {
     if(content.shop.setting.show_evaluation_button){
       dispatch({
         type: SET_ENTRY_CONFIG,
-        value: [
+        value:
           {
             icon: 'icon-star-linex',
             text: '评价',
             key: 'evaluation'
           }
-        ]
       })
     }
 

@@ -18,7 +18,7 @@ export default class Info extends Component {
     super(props);
     this.state = {
       users: [{
-        uid: 'user111111111',
+        userId: 'user111111111',
         name: '用户A',
         data: [
           { "key": "real_name", "value": "用户A" },
@@ -31,7 +31,7 @@ export default class Info extends Component {
           { "index": 4, "key": "avatar", "label": "头像", "value": "https://xxxxx.jpg" }
         ]
       }, {
-        uid: 'user222222222',
+        userId: 'user222222222',
         name: '用户B',
         data: [
           { "key": "real_name", "value": "用户B" },
@@ -44,7 +44,7 @@ export default class Info extends Component {
           { "index": 4, "key": "avatar", "label": "头像", "value": "https://xxxxx.jpg" }
         ]
       }, {
-        uid: 'user3333333',
+        userId: 'user3333333',
         name: '用户C',
         data: [
           { "key": "real_name", "value": "用户C" },
@@ -62,11 +62,13 @@ export default class Info extends Component {
     }
   }
 
-  handleSelect = (selected, selectedName) => {
+  handleSelect = (selected, selectedName, userInfo) => {
     this.setState({
       selected,
       selectedName
     })
+
+    myPluginInterface._$setUserInfo(userInfo);
 
     Taro.showToast({
       title: `已切换到${selectedName}`,
@@ -104,13 +106,13 @@ export default class Info extends Component {
           {
             users.map(item => {
               return (
-                <View key={item.uid} className="m-Info_btn_item"
-                  onClick={this.handleSelect.bind(this, item.uid, item.name)}>
+                <View key={item.userId} className="m-Info_btn_item"
+                  onClick={this.handleSelect.bind(this, item.userId, item.name, item)}>
                   <View className="m-Info_btn">
                     {item.name}
                   </View>
                   {
-                    selected === item.uid ?
+                    selected === item.userId ?
                       <View className="z-sel" >
                         <icon-font extraProps={{
                           color: '#337EFF',

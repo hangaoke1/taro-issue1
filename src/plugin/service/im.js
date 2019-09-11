@@ -35,7 +35,8 @@ import {
   QUEUE_TIMER,
   HEART_BEAT_CMD,
   RECEIVE_TRANSFER_CMD,
-  RECEIVE_ASSOCIATE_CMD
+  RECEIVE_ASSOCIATE_CMD,
+  UPDATE_CRM_CMD
 } from '../constants';
 
 let contenting = false;
@@ -193,12 +194,30 @@ export default class IMSERVICE {
 
       this.sendCustomSysMsg(content)
         .then( msg => {
+          this.updateCrmInfo();
           resolve(msg);
         })
         .catch(error => {
           reject(error);
         });
     });
+  }
+
+  /**
+   * 同步轻量crm
+   * @param {*} extraParams
+   */
+  updateCrmInfo(extraParams ={
+    authToken: ''
+  }){
+    let content = {
+      cmd: UPDATE_CRM_CMD,
+      foreignid: get('foreignid'),
+      userinfo: JSON.stringify(get('userInfo').data),
+      ...extraParams
+    }
+
+    this.sendCustomSysMsg(content);
   }
 
   /**
