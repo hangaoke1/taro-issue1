@@ -20,6 +20,7 @@ import TplText from './TplText';
 import TplOrderLogistic from './TplOrderLogistic';
 import TplStaticUnion from './TplStaticUnion';
 import TplActionList from './TplActionList';
+import TplRefundDetail from './TplRefundDetail';
 
 import './index.less';
 import eventbus from '@/lib/eventbus';
@@ -62,6 +63,10 @@ export default class Bot extends Component {
     const layout = null;
     let showFormAction = false
     switch (tpl.id) {
+      case 'refund_detail': {
+        layout = <TplRefundDetail item={item} tpl={tpl}></TplRefundDetail>
+        break;
+      }
       case 'action_list': {
         layout = <TplActionList item={item} tpl={tpl}></TplActionList>
         break;
