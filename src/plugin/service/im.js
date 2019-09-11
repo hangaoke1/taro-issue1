@@ -210,6 +210,8 @@ export default class IMSERVICE {
   updateCrmInfo(extraParams ={
     authToken: ''
   }){
+    if(!get('userInfo'))
+      return;
     let content = {
       cmd: UPDATE_CRM_CMD,
       foreignid: get('foreignid'),

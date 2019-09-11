@@ -77,6 +77,10 @@ export default class Info extends Component {
     })
   }
 
+  handleLogout = () => {
+    myPluginInterface._$logout();
+  }
+
   componentWillMount() { }
 
   componentDidMount() { }
@@ -91,6 +95,9 @@ export default class Info extends Component {
     const { users, selected } = this.state;
     return (
       <View className='m-Info'>
+        <View className="m-Info_logout">
+          <Button onClick={this.handleLogout}>注销用户</Button>
+        </View>
         <View className="m-Info_item">
           <View className="m-Info_item_title">
             <View className="Info_item_title_text">当前用户</View>
