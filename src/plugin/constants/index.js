@@ -1,6 +1,6 @@
 // 发送消息终端类型
-// export const FROM_TYPE = 'wx_sdk';
-export const FROM_TYPE = 'WEB';
+export const FROM_TYPE = 'wx_sdk';
+// export const FROM_TYPE = 'WEB';
 
 /** 发送的自定义指令 -----start------ */
 
