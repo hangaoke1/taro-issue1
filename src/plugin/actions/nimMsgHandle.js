@@ -10,6 +10,22 @@ import Base64 from '../lib/base64';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '../lib/uuid';
 
+function genExtralMessage (session) {
+  if(session.sessionid){
+    return {
+      sessionid: session.sessionid,
+      staff: {
+        staffname: session.staffname,
+        avatar: session.iconurl,
+        staffid: session.staffid,
+        stafftype: session.stafftype,
+        realStaffid: session.realStaffid
+      }
+    }
+  }
+  return {}
+}
+
 /**
  * 分配客服
  */
@@ -18,6 +34,9 @@ export const assignKefu = (content) => {
 
     // init session
     dispatch({type: INIT_SESSION, session: content});
+
+    const extralMessage = genExtralMessage(content);
+
     // init evaluation
     if(content.evaluation){
       dispatch({type: INIT_EVALUATION_SETTING, value: {
@@ -52,7 +71,7 @@ export const assignKefu = (content) => {
       })
     }
 
-    let { code, staffname } = content;
+    let { code } = content;
     let time = new Date().getTime();
     let timeTip = {
         type: 'systip',
@@ -104,9 +123,7 @@ export const assignKefu = (content) => {
                 content: content.richmessage || content.message,
                 time: time,
                 fromUser: 0,
-                staff: {
-                  stafftype: 1
-                }
+                ...extralMessage
             }
             dispatch({type: PUSH_MESSAGE, message });
             break;
@@ -131,9 +148,7 @@ export const assignKefu = (content) => {
             content: content.richmessage || content.message,
             time: time,
             fromUser: 0,
-            staff: {
-              stafftype: 1
-            }
+            ...extralMessage
           }
           dispatch({type: PUSH_MESSAGE, message});
           break
@@ -164,16 +179,7 @@ export const receiveMsg = (msg) => {
     let message,extralMessage = {};
 
     if(session.sessionid){
-      extralMessage = {
-        sessionid: session.sessionid,
-        staff: {
-          staffname: session.staffname,
-          avatar: session.iconurl,
-          staffid: session.staffid,
-          stafftype: session.stafftype,
-          realStaffid: session.realStaffid
-        }
-      }
+      extralMessage = genExtralMessage(session);
     }
 
     if (msg.type == 'text') {
@@ -281,6 +287,7 @@ export const receiveMsg = (msg) => {
 export const onfinish = (content) => {
     const dispatch = get('store').dispatch;
     let session = get('store').getState().Session;
+    const extralMessage = genExtralMessage(session);
 
     let {close_reason, richmessage, message, evaluate, messageInvite, sessionid, evaluation_auto_popup} = content;
     let time = new Date().getTime();
@@ -306,7 +313,8 @@ export const onfinish = (content) => {
         fromUser: 0,
         time: time,
         actionText: '重新连接',
-        action: 'reApplyKefu'
+        action: 'reApplyKefu',
+        ...extralMessage
       }
 
       dispatch({type: PUSH_MESSAGE, message: msg});
@@ -321,7 +329,8 @@ export const onfinish = (content) => {
         time,
         actionText: '评价',
         action: 'evaluation',
-        key: `evaluation-${sessionid}`
+        key: `evaluation-${sessionid}`,
+        ...extralMessage
       }
 
       dispatch({type: PUSH_MESSAGE, message: evaluationMsg});
