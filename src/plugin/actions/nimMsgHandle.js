@@ -92,7 +92,6 @@ export const assignKefu = (content) => {
       }
     }
 
-    let { code, staffname } = content;
     let message;
     let time = new Date().getTime();
     let { code } = content;
