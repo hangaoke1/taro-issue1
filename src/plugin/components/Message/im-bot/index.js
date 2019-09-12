@@ -21,6 +21,7 @@ import TplOrderLogistic from './TplOrderLogistic';
 import TplStaticUnion from './TplStaticUnion';
 import TplActionList from './TplActionList';
 import TplRefundDetail from './TplRefundDetail';
+import TplCardLayout from './TplCardLayout';
 
 import './index.less';
 import eventbus from '@/lib/eventbus';
@@ -63,6 +64,10 @@ export default class Bot extends Component {
     const layout = null;
     let showFormAction = false
     switch (tpl.id) {
+      case 'card_layout': {
+        layout = <TplCardLayout item={item} tpl={tpl}></TplCardLayout>
+        break;
+      }
       case 'refund_detail': {
         layout = <TplRefundDetail item={item} tpl={tpl}></TplRefundDetail>
         break;
@@ -131,9 +136,13 @@ export default class Bot extends Component {
         layout = <View className="u-tip">暂不支持该bot类型{tpl.id}</View>;
       }
     }
+
+    let className = 'm-bot'
+    className += item.fromUser ? ' m-bot-right': ' m-bot-left'
+    className += tpl.id === 'qiyu_template_text' ? ' z-blue-style': '';
     return (
       <View
-        className={item.fromUser ? 'm-bot m-bot-right' : 'm-bot m-bot-left'}
+        className={className}
       >
         <Avatar fromUser={item.fromUser} staff={item.staff} />
         <View className="u-text-arrow" />
