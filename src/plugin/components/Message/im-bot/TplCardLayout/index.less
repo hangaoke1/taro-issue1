@@ -1,0 +1,63 @@
+// 多行省略 ellipsis
+.fn_line_clamp(@line: 2) {
+  overflow: hidden;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: @line;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+// 单行省略
+.fn_ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.m-card-layout {
+  width: 230px;
+  overflow: hidden;
+}
+
+.u-label {
+  padding: 9px 12px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #EDEDED;
+}
+
+.u-list {
+  padding: 12px;
+  overflow: hidden;
+}
+
+.u-list-item {
+  float: left;
+  box-sizing: border-box;
+  padding: 2px 5px;
+  font-size: 14px;
+  .fn_ellipsis();
+}
+
+.z-bold {
+  font-weight: bold;
+}
+
+.z-italic {
+  font-style: italic;
+}
+
+.z-underline {
+  text-decoration: underline;
+}
+
+.u-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  font-size: 14px;
+  color: #337EFF;
+  border-top: 1px solid #EDEDED;
+}
