@@ -1,3 +1,4 @@
+import _get from 'lodash/get';
 import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION,REASON_MAP } from '../constants/session';
@@ -31,6 +32,10 @@ function genExtralMessage (session) {
  */
 export const assignKefu = (content) => {
     const dispatch = get('store').dispatch;
+
+    const oldSession = get('store').getState().Session;
+
+    const isSameSession = _get(oldSession, 'sessionid') === content.sessionid;
 
     // init session
     dispatch({type: INIT_SESSION, session: content});
@@ -88,14 +93,17 @@ export const assignKefu = (content) => {
     }
 
     let { code, staffname } = content;
+    let message;
     let time = new Date().getTime();
-    let timeTip = {
+    let { code } = content;
+    if (!isSameSession) {
+      let timeTip = {
         type: 'systip',
         content: timestamp2date(time,'HH:mm'),
         time: time
+      }
+      dispatch({type: PUSH_MESSAGE, message: timeTip});
     }
-    let message;
-    dispatch({type: PUSH_MESSAGE, message: timeTip});
     switch(code){
         case 200:
             // related_session_type == 1 // 机器人转人工接入 session_transfer_robot_switch=0开关关闭
@@ -114,7 +122,7 @@ export const assignKefu = (content) => {
             }
 
             // 如果是机器人则提示机器人服务问候
-            if (content.stafftype === 1 || content.robotInQueue ===  1) {
+            if ((content.stafftype === 1 || content.robotInQueue ===  1) && !isSameSession) {
               message = {
                 type: 'systip',
                 content: `${content.staffname}为您服务`,
