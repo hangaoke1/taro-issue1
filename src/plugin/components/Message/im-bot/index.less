@@ -1,77 +1,92 @@
 @prefix: m-bot;
+
 .@{prefix} {
   display: flex;
   padding: 10px 12px;
+
   .portrait_icon {
-      display: inline-block;
-      width: 21px;
-      height: 21px;
-      vertical-align: middle;
+    display: inline-block;
+    width: 21px;
+    height: 21px;
+    vertical-align: middle;
   }
+
   .u-text {
-      max-width: 294px;
-      border-radius: 4px;
-      font-size: 16px;
-      text-align: justify;
-      position: relative;
-      box-sizing: border-box;
+    max-width: 245px;
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: justify;
+    position: relative;
+    box-sizing: border-box;
   }
+
   .u-text-arrow {
-      margin-top: 15px;
+    margin-top: 15px;
   }
+
   .u-tip {
-      padding: 12px;
+    padding: 12px;
+  }
+
+  .z-large {
+    max-width: 294px;
   }
 }
+
 .@{prefix}-left {
   .u-text {
-      background: #FFFFFF;
-      color: #333333;
-      word-break: break-word;
+    background: #FFFFFF;
+    color: #333333;
+    word-break: break-word;
   }
+
   .u-text-arrow {
-      border:  solid 6px;
-      border-right-color: #fff;
-      border-left-color: transparent;
-      border-top-color: transparent;
-      border-bottom-color: transparent;
-      width: 0px;
-      height: 0px;
+    border: solid 6px;
+    border-right-color: #fff;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    width: 0px;
+    height: 0px;
   }
 }
+
 .@{prefix}-right {
   flex-direction: row-reverse;
+
   .u-text {
-      background: #fff;
-      color: #333333;
+    background: #fff;
+    color: #333333;
   }
+
   .u-text-arrow {
-      border:  solid 6px;
-      border-left-color: #fff;
-      border-right-color: transparent;
-      border-top-color: transparent;
-      border-bottom-color: transparent;
-      width: 0px;
-      height: 0px;
+    border: solid 6px;
+    border-left-color: #fff;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    width: 0px;
+    height: 0px;
   }
 }
 
 .z-blue-style {
-    .u-text {
-        background: #337EFF;
-        color: #fff;
-    }
-    .u-text-arrow {
-        border-left-color: #337EFF;
-    }
+  .u-text {
+    background: #337EFF;
+    color: #fff;
+  }
+
+  .u-text-arrow {
+    border-left-color: #337EFF;
+  }
 }
 
 .u-action {
-    display: inline-block;
-    padding: 10px 16px;
-    margin-top: 10px;
-    font-size: 14px;
-    color: #5092e1;
-    background: #fff;
-    border-radius: 4px;
+  display: inline-block;
+  padding: 10px 16px;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #5092e1;
+  background: #fff;
+  border-radius: 4px;
 }
