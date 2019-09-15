@@ -39,13 +39,17 @@ import {
   UPDATE_CRM_CMD
 } from '../constants';
 
-let contenting = false;
+
+export const STATUS = {
+  status: 'init'
+}
 
 export default class IMSERVICE {
   constructor(initer) {
     this.appKey = initer.appKey;
     this.account = initer.account;
     this.token = initer.token;
+    STATUS.status = 'init';
   }
 
   static getInstance(initer) {
@@ -79,7 +83,7 @@ export default class IMSERVICE {
         onofflinecustomsysmsgs: this.onOfflineCustomSysMsgs.bind(this)
       }));
 
-      if (contenting) {
+      if (STATUS.status == 'connecting') {
         resolve(nim);
       }
     });
@@ -433,18 +437,18 @@ export default class IMSERVICE {
 
   onConnect(data) {
     console.log('----onConnect----，data:' + data);
-    contenting = true;
+    STATUS.status = 'connecting';
     // 连接成功后发送访客心跳
     this.sendHeartbeat();
   }
 
   onError(data) {
-    contenting = false;
+    STATUS.status = 'error';
     console.log('----onError----，data:' + data);
   }
 
   onDisconnect(data) {
-    contenting = false;
+    STATUS.status = 'disconnect';
     console.log('----onDisconnect----，data:' + data);
   }
 }

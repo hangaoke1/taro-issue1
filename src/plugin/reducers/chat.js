@@ -1,9 +1,12 @@
-import { SET_ENTRY_CONFIG,DEL_ENTRY_BYKEY,SET_EVALUATION_VISIBLE } from '../constants/chat';
+import { SET_ENTRY_CONFIG, DEL_ENTRY_BYKEY, SET_EVALUATION_VISIBLE,
+  SET_CHAT_INPUT_DISABLED, SET_CHAT_INPUT_PLACEHOLDER, RESET_CHAT_INPUT } from '../constants/chat';
 
 
 const CorpStatus = (state = {
   evaluationVisible: false,
-  entryConfig: []
+  entryConfig: [],
+  chatInputDisabled: false,
+  chatInputPlaceHolder: '请输入您要咨询的问题'
 }, action) => {
   switch (action.type) {
     case SET_EVALUATION_VISIBLE:
@@ -15,9 +18,9 @@ const CorpStatus = (state = {
       let isExist = (state.entryConfig.filter(item => {
         return item.key == action.value.key;
       })).length;
-      if(isExist){
+      if (isExist) {
         return state;
-      }else{
+      } else {
         return {
           ...state,
           entryConfig: [
@@ -30,20 +33,36 @@ const CorpStatus = (state = {
       let entry = [...state.entryConfig];
       let index = -1;
 
-      entry.forEach((item,inx) => {
-        if(item.key == action.value){
+      entry.forEach((item, inx) => {
+        if (item.key == action.value) {
           index = inx;
         }
       })
 
-      if(index == -1){
+      if (index == -1) {
         return state;
-      }else{
-        entry.splice(index,1);
+      } else {
+        entry.splice(index, 1);
         return {
           ...state,
           entryConfig: [...entry]
         }
+      }
+    case SET_CHAT_INPUT_DISABLED:
+      return {
+        ...state,
+        chatInputDisabled: action.value
+      }
+    case SET_CHAT_INPUT_PLACEHOLDER:
+      return {
+        ...state,
+        chatInputPlaceHolder: action.value
+      }
+    case RESET_CHAT_INPUT:
+      return {
+        ...state,
+        chatInputDisabled: false,
+        chatInputPlaceHolder: '请输入您要咨询的问题'
       }
     default:
       return state;

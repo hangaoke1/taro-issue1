@@ -57,8 +57,8 @@ export default class Info extends Component {
           { "index": 4, "key": "avatar", "label": "头像", "value": "https://xxxxx.jpg" }
         ]
       }],
-      selected: null,
-      selectedName: null
+      selected: Taro.getStorageSync('selected') || null,
+      selectedName: Taro.getStorageSync('selectedName') || null
     }
   }
 
@@ -67,6 +67,9 @@ export default class Info extends Component {
       selected,
       selectedName
     })
+
+    Taro.setStorageSync('selected',selected);
+    Taro.setStorageSync('selectedName', selectedName);
 
     myPluginInterface._$setUserInfo(userInfo);
 
@@ -79,6 +82,10 @@ export default class Info extends Component {
 
   handleLogout = () => {
     myPluginInterface._$logout();
+    this.setState({
+      selected: null,
+      selectedName: null
+    })
   }
 
   componentWillMount() { }

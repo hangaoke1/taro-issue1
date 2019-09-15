@@ -3,14 +3,14 @@ import NIM from './vendors/nim/NIM_Web_NIM_weixin_v6.8.0'
 import NIM_TEST from './vendors/nim/NIM_Web_NIM_weixin.test.min';
 
 
-const initDeviceid = () => {
+export const initDeviceid = (isReset) => {
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'; // 随机数种子
     const deviceid = [];
     let ret = null;
 
     ret = Taro.getStorageSync('YSF-DEVICEID');
 
-    if(!ret){
+    if(isReset || !ret){
       for (let i = 0, n; i < 20; ++i) {
         n = Math.floor(Math.random() * chars.length);
         deviceid.push(chars.charAt(n));
@@ -34,8 +34,7 @@ const globalConfig = {
     userInfo: null,
     heartbeatCycle: 8000,
     store: null,
-    NIM: NIM_TEST,
-    applyNewStaff: true
+    NIM: NIM_TEST
 };
 
 export const get = (key) => globalConfig[key];

@@ -1,8 +1,8 @@
-import {set} from './global_config';
+import { set, initDeviceid } from './global_config';
 
 export const _$configAppKey = (key) => {
-  if(!key) return;
-  set('appKey',key);
+  if (!key) return;
+  set('appKey', key);
 }
 
 /**
@@ -10,7 +10,7 @@ export const _$configAppKey = (key) => {
  * @param {*} domain
  */
 export const __configDomain = (domain) => {
-  if(!domain) return;
+  if (!domain) return;
   set('domain', domain)
 }
 
@@ -19,7 +19,7 @@ export const __configDomain = (domain) => {
  * @param {*} userInfo
  */
 export const _$setUserInfo = (userInfo) => {
-  if(userInfo && userInfo.userId){
+  if (userInfo && userInfo.userId) {
     set('foreignid', userInfo.userId);
   }
 
@@ -31,5 +31,6 @@ export const _$setUserInfo = (userInfo) => {
  */
 export const _$logout = () => {
   set('foreignid', '');
+  set('deviceid', initDeviceid(true));
   _$setUserInfo(null);
 }

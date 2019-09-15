@@ -2,6 +2,8 @@ const namespace = 'SESSION';
 
 export const INIT_SESSION = `${namespace}/INIT_SESSION`;
 
+export const SET_SESSION_CODE = `${namespace}/SET_SESSION_CODE`;
+
 
 /*
 * 会话关闭提示语

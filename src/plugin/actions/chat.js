@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro';
 import _get from 'lodash/get';
 import { queryAccont } from '../service';
 import { get, set } from '../global_config';
-import IMSERVICE from '../service/im';
+import IMSERVICE,{ STATUS } from '../service/im';
 import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID } from '../constants/message';
 import { SET_EVALUATION_VISIBLE } from '../constants/chat';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
@@ -23,7 +23,10 @@ export const applyKefu = (
   const account = get('account');
   const token = get('token');
 
-  if(!get('applyNewStaff')) return;
+  const session = get('store').getState().Session;
+  if(session && session.code == 200){
+    return;
+  }
 
   NIM = IMSERVICE.getInstance({
     appKey: appKey,
@@ -436,3 +439,17 @@ export const applyHumanStaff = () => {
     stafftype: 1
   });
 };
+
+// 判断是否能发送消息
+export const canSendMessage = () => {
+  const session = get('store').getState().Session;
+  if(STATUS.status != 'connecting'){
+    return false;
+  }
+
+  if(session.code == 200 || session.code == 201 || session.code == 203){
+    return true;
+  }else{
+    return false;
+  }
+}

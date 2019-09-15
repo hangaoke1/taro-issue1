@@ -4,6 +4,10 @@ import { Input, View } from '@tarojs/components';
 import _isFunction from 'lodash/isFunction';
 import eventbus from '@/lib/eventbus';
 import { hideAction } from '@/actions/options';
+import {
+  canSendMessage,
+  applyKefu
+} from '@/actions/chat';
 
 import Iconfont from '../Iconfont';
 
@@ -15,8 +19,23 @@ export default function ChatBox(props) {
   const options = useSelector(state => state.Options);
   const dispatch = useDispatch();
 
+  const corpStatus = useSelector(state => state.CorpStatus);
+
   // 发送文本
   const handleConfirm = event => {
+
+    // 如果会话或者云信状态不对
+    if(!canSendMessage()){
+      Taro.showToast({
+        title: '请等待连线成功后，再发送消息',
+        icon: 'none',
+        duration: 2000
+      })
+
+      applyKefu();
+      return;
+    }
+
     setValue('');
     if (_isFunction(props.onConfirm)) {
       props.onConfirm(event);
@@ -26,7 +45,7 @@ export default function ChatBox(props) {
   // 处理用户输入
   const handleInput = event => {
     setValue(event.detail.value);
-    
+
     if (_isFunction(props.onInput)) {
       props.onInput(event.detail.value)
     }
@@ -90,7 +109,8 @@ export default function ChatBox(props) {
         focus={focus}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        placeholder='请输入您要咨询的问题'
+        placeholder={corpStatus.chatInputPlaceHolder}
+        disabled={corpStatus.chatInputDisabled}
         className='u-edtior'
         onInput={handleInput}
         onConfirm={handleConfirm}

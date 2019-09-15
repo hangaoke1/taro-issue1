@@ -1,9 +1,10 @@
 import _get from 'lodash/get';
 import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
-import { INIT_SESSION,REASON_MAP } from '../constants/session';
+import { INIT_SESSION,REASON_MAP,SET_SESSION_CODE } from '../constants/session';
 import { INIT_EVALUATION_SETTING,INIT_CURRENT_EVALUATION,INIT_LAST_EVALUATION } from '../constants/evaluation';
-import { SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG,DEL_ENTRY_BYKEY } from '../constants/chat';
+import { SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG,DEL_ENTRY_BYKEY,SET_CHAT_INPUT_DISABLED,
+          SET_CHAT_INPUT_PLACEHOLDER,RESET_CHAT_INPUT } from '../constants/chat';
 import { SET_BOT_LIST } from '../constants/bot';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import { timestamp2date, fmtRobot } from '../utils';
@@ -103,6 +104,15 @@ export const assignKefu = (content) => {
       }
       dispatch({type: PUSH_MESSAGE, message: timeTip});
     }
+    let message;
+    dispatch({type: PUSH_MESSAGE, message: timeTip});
+
+    // 恢复输入框可输入的状态
+    dispatch({
+      type: RESET_CHAT_INPUT,
+      value: null
+    })
+
     switch(code){
         case 200:
             // related_session_type == 1 // 机器人转人工接入 session_transfer_robot_switch=0开关关闭
@@ -136,8 +146,6 @@ export const assignKefu = (content) => {
                 action: 'reApplyKefu'
             }
             dispatch({type: UPDATE_MESSAGE_BYACTION, message: updateActionMsg});
-
-            set('applyNewStaff', false);
         break;
         case 201:
             // 没有客服在线
@@ -165,6 +173,17 @@ export const assignKefu = (content) => {
             dispatch({type: PUSH_MESSAGE, message});
           break;
         case 205:
+          // 留言未开启输入框禁用
+          dispatch({
+            type: SET_CHAT_INPUT_DISABLED,
+            value: true
+          })
+
+          dispatch({
+            type: SET_CHAT_INPUT_PLACEHOLDER,
+            value: '客服不在线，不支持留言'
+          })
+
           // 留言未开启
           message = {
             type: 'rich',
@@ -318,7 +337,11 @@ export const onfinish = (content) => {
     let tip;
     tip = REASON_MAP[close_reason] || '会话已断开';
 
-    set('applyNewStaff', true);
+    // 会话结束的状态
+    dispatch({
+      type: SET_SESSION_CODE,
+      value: 206
+    })
 
     if (close_reason == 0 || close_reason == 2) {
         tip = richmessage || message || REASON_MAP[close_reason];
