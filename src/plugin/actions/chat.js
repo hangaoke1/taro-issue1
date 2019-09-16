@@ -25,6 +25,7 @@ export const applyKefu = (
 
   const session = get('store').getState().Session;
   if(session && session.code == 200){
+    NIM.updateCrmInfo();
     return;
   }
 

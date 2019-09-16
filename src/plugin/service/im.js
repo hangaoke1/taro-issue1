@@ -208,6 +208,28 @@ export default class IMSERVICE {
   }
 
   /**
+   * 访客主动结束会话
+   * @param {*} extraParams
+   */
+  exitSession(extraParams ={
+    sessionid: ''
+  }){
+    return new Promise((resolve, reject) => {
+      let content = {
+        cmd: 26,
+        ...extraParams
+      };
+
+      this.sendCustomSysMsg(content)
+      .then( msg => {
+        resolve(msg);
+      }).catch( error => {
+        reject(error);
+      })
+    })
+  }
+
+  /**
    * 同步轻量crm
    * @param {*} extraParams
    */
