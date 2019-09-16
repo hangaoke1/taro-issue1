@@ -55,7 +55,20 @@ export default class IMSERVICE {
   static getInstance(initer) {
     if (!this.instance) {
       this.instance = new IMSERVICE(initer);
+    }else{
+      if(initer.appKey != this.instance.appKey || initer.account != this.instance.account ||
+        initer.token != this.instance.token){
+          STATUS.status = 'disconnect';
+          this.instance.getNim().then( nim => {
+            nim.destroy({
+              done: () => {
+                console.log('destroy really done!')
+              }
+            })
+          })
+      }
     }
+
     return this.instance;
   }
 
@@ -70,10 +83,10 @@ export default class IMSERVICE {
       };
 
       const nim = (this.nim = NIM.getInstance({
-        appKey: this.appKey,
-        account: this.account,
+        appKey: get('appKey'),
+        account: get('account'),
         promise: true,
-        token: this.token,
+        token: get('token'),
         onconnect: onConnect,
         ondisconnect: this.onDisconnect,
         onerror: this.onError,
@@ -86,6 +99,8 @@ export default class IMSERVICE {
       if (STATUS.status == 'connecting') {
         resolve(nim);
       }
+
+      return nim;
     });
   }
 

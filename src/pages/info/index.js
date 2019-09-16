@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Navigator, Button, Input } from '@tarojs/components'
+import { View, Text, Navigator, Button, Input, Textarea } from '@tarojs/components'
 
 import './index.less'
 
@@ -57,8 +57,10 @@ export default class Info extends Component {
           { "index": 4, "key": "avatar", "label": "头像", "value": "https://xxxxx.jpg" }
         ]
       }],
-      selected: Taro.getStorageSync('selected') || null,
-      selectedName: Taro.getStorageSync('selectedName') || null
+      selected: null,
+      selectedName: null,
+      customId: null,
+      customData: null
     }
   }
 
@@ -68,7 +70,7 @@ export default class Info extends Component {
       selectedName
     })
 
-    Taro.setStorageSync('selected',selected);
+    Taro.setStorageSync('selected', selected);
     Taro.setStorageSync('selectedName', selectedName);
 
     myPluginInterface._$setUserInfo(userInfo);
@@ -85,6 +87,46 @@ export default class Info extends Component {
     this.setState({
       selected: null,
       selectedName: null
+    })
+  }
+
+  handleCustom = () => {
+    if(!this.state.customId){
+      Taro.showToast({
+        title: 'uid为必填值',
+        icon: 'none'
+      })
+      return;
+    }
+
+    let userInfo = {};
+    userInfo.userId = this.state.customId;
+    userInfo.data = this.state.customData;
+
+    myPluginInterface._$setUserInfo(userInfo);
+    Taro.showToast({
+      title: `已切换到自定义用户`,
+      icon: 'success',
+      duration: 1000
+    })
+
+  }
+
+  handleDataConfirm = (event) => {
+    // event.detail.value
+    try{
+      let customData = JSON.parse(event.detail.value);
+      this.setState({
+        customData
+      })
+    }catch(error){}
+  }
+
+  handleIdConfirm = (event) => {
+    // event.detail.value
+    let customId = event.detail.value;
+    this.setState({
+      customId
     })
   }
 
@@ -144,6 +186,29 @@ export default class Info extends Component {
         <View className="m-Info_item">
           <View className="m-Info_item_title">
             <View className="Info_item_title_text">自定义用户信息</View>
+          </View>
+        </View>
+        <View className="m-Info_item_form_con">
+          <View className="m-Info_item_form">
+            <View className="m-Info_item_form_id_label">
+              账号ID（必须）
+            </View>
+            <View className="m-Info_item_form_id_value">
+              <Input placeholder="账号ID（必填）" className="u-ipt"
+                onConfirm={this.handleIdConfirm}></Input>
+            </View>
+          </View>
+          <View className="m-Info_item_form">
+            <View className="m-Info_item_form_id_label">
+              crm data
+            </View>
+            <View className="m-Info_item_form_id_value">
+              <Textarea placeholder="crm data" className="u-textarea"
+                maxlength="-1" cursorSpacing="140" onConfirm={this.handleDataConfirm}></Textarea>
+            </View>
+          </View>
+          <View className="u-btn-con">
+            <Button onClick={this.handleCustom}>切换</Button>
           </View>
         </View>
       </View>

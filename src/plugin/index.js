@@ -19,6 +19,10 @@ export const __configDomain = (domain) => {
  * @param {*} userInfo
  */
 export const _$setUserInfo = (userInfo) => {
+
+  // 有名用户切换有名用户
+  // todo
+
   if (userInfo && userInfo.userId) {
     set('foreignid', userInfo.userId);
   }
