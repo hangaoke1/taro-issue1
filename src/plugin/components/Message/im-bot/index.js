@@ -22,6 +22,7 @@ import TplStaticUnion from './TplStaticUnion';
 import TplActionList from './TplActionList';
 import TplRefundDetail from './TplRefundDetail';
 import TplCardLayout from './TplCardLayout';
+import TplDetailView from './TplDetailView';
 
 import './index.less';
 import eventbus from '@/lib/eventbus';
@@ -67,6 +68,10 @@ export default class Bot extends Component {
     const layout = null;
     let showFormAction = false;
     switch (tpl.id) {
+      case 'detail_view': {
+        layout = <TplDetailView item={item} tpl={tpl}></TplDetailView>;
+        break;
+      }
       case 'card_layout': {
         layout = <TplCardLayout item={item} tpl={tpl}></TplCardLayout>;
         break;

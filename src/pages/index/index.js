@@ -93,9 +93,9 @@ export default class Index extends Component {
               <Button>用户信息</Button>
             </Navigator>
           </View>
-          <View className="u-input">
+          {/* <View className="u-input">
             <Input placeholder="自定义用户id" onChange={this.handleChange}></Input>
-          </View>
+          </View> */}
       </View>
     )
   }

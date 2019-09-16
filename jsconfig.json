@@ -6,7 +6,8 @@
       "@/components/*": ["./src/plugin/components/*"],
       "@/lib/*": ["./src/plugin/lib/*"],
       "@/actions/*": ["./src/plugin/actions/*"],
-      "@/utils/*": ["./src/plugin/utils/*"]
+      "@/utils/*": ["./src/plugin/utils/*"],
+      "@/styles/*": ["./src/plugin/styles/*"]
     }
   }
 }

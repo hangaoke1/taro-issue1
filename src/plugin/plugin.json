@@ -1,6 +1,7 @@
 {
   "pages": {
-    "chat": "pages/chat/chat"
+    "chat": "pages/chat/chat",
+    "detailView": "pages/tpl/detailView"
   },
   "publicComponents": {
     "Iconfont": "components/Iconfont/index"

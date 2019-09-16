@@ -24,3 +24,18 @@ export * from './text2em';
 export const valueAtBit = (num, bit) => {
   return (num >> (bit -1)) & 1;
 }
+
+export const genClassAndStyle = (row, len) => {
+  const width = 100 / (len || 1);
+  const bit1 = valueAtBit(+row.flag, 1); // 粗体
+  const bit2 = valueAtBit(+row.flag, 2); // 斜体
+  const bit3 = valueAtBit(+row.flag, 3); // 下划线
+  const bit4 = valueAtBit(+row.flag, 4); // 文本类型 0: 多行文本 1: 单行超出隐藏
+  const style = `width: ${width}%;text-align: ${row.align};color: ${row.color}`;
+  let customerClass = ''
+  if (bit1) { customerClass += ' z-bold' }
+  if (bit2) { customerClass += ' z-italic' }
+  if (bit3) { customerClass += ' z-underline' }
+  if (bit4) { customerClass += ' z-ellipsis' }
+  return {style, customerClass}
+}
