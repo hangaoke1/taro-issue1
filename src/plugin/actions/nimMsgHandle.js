@@ -104,7 +104,7 @@ export const assignKefu = (content) => {
       }
       dispatch({type: PUSH_MESSAGE, message: timeTip});
     }
-    let message;
+
     dispatch({type: PUSH_MESSAGE, message: timeTip});
 
     // 恢复输入框可输入的状态
