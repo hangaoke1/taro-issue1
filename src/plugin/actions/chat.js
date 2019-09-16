@@ -24,7 +24,8 @@ export const applyKefu = (
   const token = get('token');
 
   const session = get('store').getState().Session;
-  if(session && session.code == 200){
+
+  if(session && (session.code == 200 || session.code == 203)){
     NIM.updateCrmInfo();
     return;
   }

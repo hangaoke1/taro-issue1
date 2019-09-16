@@ -96,6 +96,7 @@ export const assignKefu = (content) => {
     let message;
     let time = new Date().getTime();
     let { code } = content;
+
     if (!isSameSession) {
       let timeTip = {
         type: 'systip',
@@ -104,8 +105,6 @@ export const assignKefu = (content) => {
       }
       dispatch({type: PUSH_MESSAGE, message: timeTip});
     }
-
-    dispatch({type: PUSH_MESSAGE, message: timeTip});
 
     // 恢复输入框可输入的状态
     dispatch({
