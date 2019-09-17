@@ -22,6 +22,9 @@ export const HEART_BEAT_CMD = -1000;
 // 上传crm信息
 export const UPDATE_CRM_CMD = 52;
 
+// 访客主动退出会话
+export const EXIT_SESSION_CMD = 26;
+
 /**
 * 发送的自定义指令 ------end--------
 */

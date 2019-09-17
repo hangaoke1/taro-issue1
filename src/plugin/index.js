@@ -1,4 +1,5 @@
 import { set, initDeviceid } from './global_config';
+import { exitSession } from './actions/chat';
 
 export const _$configAppKey = (key) => {
   if (!key) return;
@@ -37,4 +38,6 @@ export const _$logout = () => {
   set('foreignid', '');
   set('deviceid', initDeviceid(true));
   _$setUserInfo(null);
+  // 注销后yunxin账户都会变化，需要断掉当前会话
+  exitSession();
 }

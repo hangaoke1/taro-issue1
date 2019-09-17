@@ -455,3 +455,15 @@ export const canSendMessage = () => {
     return false;
   }
 }
+
+
+// 访客主动退出会话
+export const exitSession = () => {
+  const session = get('store').getState().Session;
+
+  let extraParms = {
+    sessionid: session.sessionid
+  }
+
+  NIM.exitSession(extraParms)
+}

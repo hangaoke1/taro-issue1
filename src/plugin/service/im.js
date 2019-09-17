@@ -36,7 +36,8 @@ import {
   HEART_BEAT_CMD,
   RECEIVE_TRANSFER_CMD,
   RECEIVE_ASSOCIATE_CMD,
-  UPDATE_CRM_CMD
+  UPDATE_CRM_CMD,
+  EXIT_SESSION_CMD
 } from '../constants';
 
 
@@ -231,7 +232,7 @@ export default class IMSERVICE {
   }){
     return new Promise((resolve, reject) => {
       let content = {
-        cmd: 26,
+        cmd: EXIT_SESSION_CMD,
         ...extraParams
       };
 
