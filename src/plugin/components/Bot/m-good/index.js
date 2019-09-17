@@ -19,7 +19,7 @@ export default function MGood(props) {
     }
 
     if (url) {
-      setClipboardData({ data: url });
+      setClipboardData(url);
     } else {
       sendBotGood(item);
     }
