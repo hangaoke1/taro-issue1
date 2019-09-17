@@ -21,8 +21,10 @@ export const __configDomain = (domain) => {
  */
 export const _$setUserInfo = (userInfo) => {
 
-  // 有名用户切换有名用户
-  // todo
+  // vip
+  if(userInfo.level){
+    _$setVipLevel(userInfo.level);
+  }
 
   if (userInfo && userInfo.userId) {
     set('foreignid', userInfo.userId);
@@ -40,4 +42,12 @@ export const _$logout = () => {
   _$setUserInfo(null);
   // 注销后yunxin账户都会变化，需要断掉当前会话
   exitSession();
+}
+
+/**
+ * 设置用户的vip
+ * @param {} Level
+ */
+export const _$setVipLevel = (level = 0) => {
+  set('level', level);
 }

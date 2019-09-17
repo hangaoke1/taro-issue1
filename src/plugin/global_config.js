@@ -32,6 +32,7 @@ const globalConfig = {
     deviceid: initDeviceid(),
     foreignid: '',
     userInfo: null,
+    level: 0,
     heartbeatCycle: 8000,
     store: null,
     NIM: NIM_TEST

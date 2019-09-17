@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Navigator, Button, Input, Textarea } from '@tarojs/components'
+import { View, Text, Navigator, Button, Input, Textarea,Slider } from '@tarojs/components'
 
 import './index.less'
 
@@ -88,6 +88,11 @@ export default class Info extends Component {
       selected: null,
       selectedName: null
     })
+    Taro.showToast({
+      title: `用户已注销为匿名用户`,
+      icon: 'success',
+      duration: 1000
+    })
   }
 
   handleCustom = () => {
@@ -130,6 +135,18 @@ export default class Info extends Component {
     })
   }
 
+  handleVipChange = (event) => {
+    // event.detail
+    let level = event.detail.value;
+    myPluginInterface._$setVipLevel(level);
+
+    Taro.showToast({
+      title: `已切换到VIP${level}，重新申请会话后生效`,
+      icon: 'none',
+      duration: 1000
+    })
+  }
+
   componentWillMount() { }
 
   componentDidMount() { }
@@ -144,6 +161,16 @@ export default class Info extends Component {
     const { users, selected } = this.state;
     return (
       <View className='m-Info'>
+        <View className="m-Info_item">
+          <View className="m-Info_item_title">
+            <View className="Info_item_title_text">VIP等级</View>
+          </View>
+        </View>
+        <View className="m-Info_vip_con">
+          <Slider step={1} value={0} showValue min={0}
+            max={11} selectedColor='#5092e1' activeColor='#5092e1'
+            onChange={this.handleVipChange}/>
+        </View>
         <View className="m-Info_logout">
           <Button onClick={this.handleLogout}>注销用户</Button>
         </View>

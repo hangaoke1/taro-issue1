@@ -207,8 +207,8 @@ export default class IMSERVICE {
         deviceid: get('deviceid'),
         foreignid: get('foreignid'),
         fromType: FROM_TYPE,
+        level: get('level'),
         version: 64,
-        // version: 8,
         ...extraParams
       };
 

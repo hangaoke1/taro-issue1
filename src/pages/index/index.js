@@ -62,11 +62,16 @@ export default class Index extends Component {
         domain = 'https://qiyukf.com'
       }
 
-      console.log(queryParam);
       if(queryParam.key){
         myPluginInterface._$configAppKey(queryParam.key);
         myPluginInterface.__configDomain(domain);
       }
+
+      Taro.showToast({
+        title: 'appKey绑定成功',
+        icon: 'none',
+        duration: 1000
+      })
     })
   }
 
