@@ -22,7 +22,7 @@ export const __configDomain = (domain) => {
 export const _$setUserInfo = (userInfo) => {
 
   // vip
-  if(userInfo.level){
+  if(userInfo && userInfo.level){
     _$setVipLevel(userInfo.level);
   }
 

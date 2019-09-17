@@ -45,7 +45,7 @@ const config = {
   },
   weapp: {
     compile: {
-      exclude: ['src/plugin/vendors/nim/NIM_Web_NIM_weixin_v6.6.6.js','src/plugin/vendors/nim/NIM_Web_NIM_weixin.test.min.js']
+      exclude: ['src/plugin/vendors/nim/NIM_Web_NIM_weixin_v6.8.0.js','src/plugin/vendors/nim/NIM_Web_NIM_weixin.test.min.js']
     },
     module: {
       postcss: {

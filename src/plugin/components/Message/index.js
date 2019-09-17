@@ -8,6 +8,7 @@ import AudioView from './im-audio/index';
 import VideoView from './im-video/index';
 import RobotView from './im-robot/index';
 import BotView from './im-bot/index';
+import CardView from './im-card';
 
 import './index.less';
 
@@ -17,7 +18,7 @@ export default function MessageView(props) {
     function handleImgClick (item) {
         props.onImgClick(item)
     }
-    
+
     return (
         <View className='message-view'>
             {
@@ -50,6 +51,9 @@ export default function MessageView(props) {
                             }
                             {
                                 it.type === 'bot' ? <BotView item={it}></BotView> : null
+                            }
+                            {
+                              ['product'].includes(it.type) ? <CardView item={it}></CardView> : null
                             }
                         </View>
                     )

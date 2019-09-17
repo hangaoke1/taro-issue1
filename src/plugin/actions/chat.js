@@ -470,7 +470,7 @@ export const exitSession = () => {
     sessionid: session.sessionid
   }
 
-  NIM.exitSession(extraParms)
+  NIM && NIM.exitSession(extraParms)
 }
 
 // 发送商品链接
