@@ -60,7 +60,8 @@ export default class Info extends Component {
       selected: null,
       selectedName: null,
       customId: null,
-      customData: null
+      customData: null,
+      level: myPluginInterface._$getVipLevel()
     }
   }
 
@@ -158,7 +159,7 @@ export default class Info extends Component {
   componentDidHide() { }
 
   render() {
-    const { users, selected } = this.state;
+    const { users, selected, level } = this.state;
     return (
       <View className='m-Info'>
         <View className="m-Info_item">
@@ -167,7 +168,7 @@ export default class Info extends Component {
           </View>
         </View>
         <View className="m-Info_vip_con">
-          <Slider step={1} value={0} showValue min={0}
+          <Slider step={1} value={level} showValue min={0}
             max={11} selectedColor='#5092e1' activeColor='#5092e1'
             onChange={this.handleVipChange}/>
         </View>

@@ -1,4 +1,4 @@
-import { set, initDeviceid } from './global_config';
+import { set, get, initDeviceid } from './global_config';
 import { exitSession } from './actions/chat';
 
 export const _$configAppKey = (key) => {
@@ -50,4 +50,11 @@ export const _$logout = () => {
  */
 export const _$setVipLevel = (level = 0) => {
   set('level', level);
+}
+
+/**
+ * 获取设置的vip
+ */
+export const _$getVipLevel = () => {
+  return get('level');
 }
