@@ -175,7 +175,7 @@ export default function RobotView(props) {
           <View
             className="u-textarea"
             onClick={openModal}
-          >{evaluation_content}</View>
+          >{evaluation_content || evaluation_guide}</View>
         ) : null}
         <Modal
           isOpened={isOpened}
