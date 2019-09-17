@@ -33,6 +33,7 @@ const globalConfig = {
     foreignid: '',
     userInfo: null,
     level: 0,
+    bundleid: Taro.getAccountInfoSync().miniProgram.appId,
     heartbeatCycle: 8000,
     store: null,
     NIM: NIM_TEST
