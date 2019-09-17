@@ -75,7 +75,7 @@ export const assignKefu = (content) => {
     // 显示评价入口
     if(content.shop.setting.show_evaluation_button){
       // 人工会话才有评价
-      if(content.stafftype == 1){
+      if(content.stafftype == 0){
         dispatch({
           type: SET_ENTRY_CONFIG,
           value:
