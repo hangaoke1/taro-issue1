@@ -59,6 +59,11 @@ export default class FloatLayout extends Component {
     onClose && onClose();
   };
 
+  preventTouchMove = e => {
+    e.stopPropagation();
+    return;
+  };
+
   render() {
     const {
       title,
@@ -69,29 +74,35 @@ export default class FloatLayout extends Component {
     const { visible } = this.state;
 
     return (
-      <View className={`m-FloatLayout ${visible ? 'm-FloatLayout--active': ''}`}>
-        <View className='m-FloatLayout-mask' onClick={this.onClickMask}></View>
-        <View className='m-FloatLayout-layout'>
-          <View className='layout-header'>
+      <View
+        className={`m-FloatLayout ${visible ? 'm-FloatLayout--active' : ''}`}
+      >
+        <View
+          className="m-FloatLayout-mask"
+          onClick={this.onClickMask}
+          onTouchMove={this.preventTouchMove}
+        ></View>
+        <View className="m-FloatLayout-layout">
+          <View className="layout-header">
             {title ? (
-              <View className='layout-title'>
+              <View className="layout-title">
                 <Text>{title}</Text>
-                <View className='u-close' onClick={this.onClose}>
-                  <Iconfont type='icon-close' color='#666' size='36'></Iconfont>
+                <View className="u-close" onClick={this.onClose}>
+                  <Iconfont type="icon-close" color="#666" size="36"></Iconfont>
                 </View>
               </View>
             ) : null}
           </View>
-          <View className='layout-body'>
+          <View className="layout-body">
             <ScrollView
-              className='layout-body_content'
+              className="layout-body_content"
               scrollY
               style={{
                 maxHeight: contentHeight + 'px'
               }}
             >
               <View
-                className='layout-body_content_scroll_body'
+                className="layout-body_content_scroll_body"
                 style={{ padding: bodyPadding + 'px' }}
               >
                 {this.props.children}
