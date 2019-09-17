@@ -304,7 +304,12 @@ export const receiveMsg = (msg) => {
                 if (fmtContent.template.id === 'drawer_list') {
                     eventbus.trigger('bot_show_drawer_list', message.uuid);
                 }
-                // TODO: 表单
+                // 显示表单
+                if (fmtContent.template.id === 'bot_form') {
+                  setTimeout(() => {
+                    eventbus.trigger('bot_show_bot_form', message.uuid);
+                  }, 100)
+                }
                 break
             case 205:
                 eventbus.trigger('bot_loadmore_list', fmtContent);
