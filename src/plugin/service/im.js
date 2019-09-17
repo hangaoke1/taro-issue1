@@ -37,7 +37,8 @@ import {
   RECEIVE_TRANSFER_CMD,
   RECEIVE_ASSOCIATE_CMD,
   UPDATE_CRM_CMD,
-  EXIT_SESSION_CMD
+  EXIT_SESSION_CMD,
+  SEND_PRODUCT_CARD_CMD
 } from '../constants';
 
 
@@ -266,6 +267,24 @@ export default class IMSERVICE {
   }
 
   /**
+   * 发送商品卡片信息
+   * @param {*} extraParams
+   */
+  sendProductCard(extraParams = {
+    tags: [],
+    title: ''
+  }){
+    if(!get('product'))
+      return;
+    let content = {
+      cmd: SEND_PRODUCT_CARD_CMD,
+      ...extraParams
+    }
+
+    this.sendCustomSysMsg(content);
+  }
+
+  /**
    * 访客发送评价
    * @param {*} extraParams
    */
@@ -366,7 +385,6 @@ export default class IMSERVICE {
           })
           assignKefu(content);
           if (content.code == 203) {
-            console.log('queuqe', this);
             this.askQueueStatus();
           }
           break;

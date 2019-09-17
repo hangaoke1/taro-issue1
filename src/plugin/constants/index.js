@@ -25,6 +25,9 @@ export const UPDATE_CRM_CMD = 52;
 // 访客主动退出会话
 export const EXIT_SESSION_CMD = 26;
 
+// 发送商品卡片信息
+export const SEND_PRODUCT_CARD_CMD = 121;
+
 /**
 * 发送的自定义指令 ------end--------
 */

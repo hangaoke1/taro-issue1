@@ -4,52 +4,53 @@ import NIM_TEST from './vendors/nim/NIM_Web_NIM_weixin.test.min';
 
 
 export const initDeviceid = (isReset) => {
-    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'; // 随机数种子
-    const deviceid = [];
-    let ret = null;
+  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'; // 随机数种子
+  const deviceid = [];
+  let ret = null;
 
-    ret = Taro.getStorageSync('YSF-DEVICEID');
+  ret = Taro.getStorageSync('YSF-DEVICEID');
 
-    if(isReset || !ret){
-      for (let i = 0, n; i < 20; ++i) {
-        n = Math.floor(Math.random() * chars.length);
-        deviceid.push(chars.charAt(n));
-      }
-      ret = deviceid.join('').toLowerCase();
-      Taro.setStorageSync(
-         'YSF-DEVICEID',ret
-      )
+  if (isReset || !ret) {
+    for (let i = 0, n; i < 20; ++i) {
+      n = Math.floor(Math.random() * chars.length);
+      deviceid.push(chars.charAt(n));
     }
-    return ret;
+    ret = deviceid.join('').toLowerCase();
+    Taro.setStorageSync(
+      'YSF-DEVICEID', ret
+    )
+  }
+  return ret;
 }
 
 const globalConfig = {
-    appKey: '',
-    domain: 'https://qytest.netease.com',
-    account: '',
-    bid: '-1',
-    token: '',
-    deviceid: initDeviceid(),
-    foreignid: '',
-    userInfo: null,
-    level: 0,
-    bundleid: Taro.getAccountInfoSync().miniProgram.appId,
-    heartbeatCycle: 8000,
-    store: null,
-    NIM: NIM_TEST
+  appKey: '',
+  domain: 'https://qytest.netease.com',
+  account: '',
+  bid: '-1',
+  token: '',
+  deviceid: initDeviceid(),
+  foreignid: '',
+  userInfo: null,
+  product: null,
+  level: 0,
+  bundleid: Taro.getAccountInfoSync().miniProgram.appId,
+  heartbeatCycle: 8000,
+  store: null,
+  NIM: NIM_TEST
 };
 
 export const get = (key) => globalConfig[key];
 
 export const set = (key, value) => {
-    if(key == 'domain'){
-        if(value == 'https://qytest.netease.com'){
-            globalConfig['NIM'] = NIM_TEST;
-            console.log(NIM_TEST);
-        }else{
-            globalConfig['NIM'] = NIM;
-            console.log(NIM);
-        }
+  if (key == 'domain') {
+    if (value == 'https://qytest.netease.com') {
+      globalConfig['NIM'] = NIM_TEST;
+      console.log(NIM_TEST);
+    } else {
+      globalConfig['NIM'] = NIM;
+      console.log(NIM);
     }
-    globalConfig[key] = value;
+  }
+  globalConfig[key] = value;
 }

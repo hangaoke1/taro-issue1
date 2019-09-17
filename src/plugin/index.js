@@ -58,3 +58,12 @@ export const _$setVipLevel = (level = 0) => {
 export const _$getVipLevel = () => {
   return get('level');
 }
+
+/**
+ * 配置商品信息
+ * @param {*} product
+ */
+export const _$configProduct = (product) => {
+  if(!product) return;
+  set('product', product);
+}

@@ -223,7 +223,8 @@ export default class Info extends Component {
             </View>
             <View className="m-Info_item_form_id_value">
               <Input placeholder="账号ID（必填）" className="u-ipt"
-                onConfirm={this.handleIdConfirm}></Input>
+                onConfirm={this.handleIdConfirm}
+                onBlur={this.handleIdConfirm}></Input>
             </View>
           </View>
           <View className="m-Info_item_form">

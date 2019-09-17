@@ -106,6 +106,11 @@ export const assignKefu = (content) => {
       dispatch({type: PUSH_MESSAGE, message: timeTip});
     }
 
+    // 如果分配的是人工客服，然后配置了自动发送商品链接
+    if(content.stafftype == 0 && get('product') && !get('product').sendByUser){
+      eventbus.trigger('do_send_product_card', get('product'));
+    }
+
     // 恢复输入框可输入的状态
     dispatch({
       type: RESET_CHAT_INPUT,

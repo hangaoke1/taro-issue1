@@ -98,6 +98,11 @@ export default class Index extends Component {
               <Button>用户信息</Button>
             </Navigator>
           </View>
+          <View>
+            <Navigator url='/pages/product/index'>
+              <Button>商品卡片</Button>
+            </Navigator>
+          </View>
           {/* <View className="u-input">
             <Input placeholder="自定义用户id" onChange={this.handleChange}></Input>
           </View> */}

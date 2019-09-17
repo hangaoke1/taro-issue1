@@ -6,6 +6,11 @@ import IMSERVICE,{ STATUS } from '../service/im';
 import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID } from '../constants/message';
 import { SET_EVALUATION_VISIBLE } from '../constants/chat';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
+import eventbus from '../lib/eventbus';
+
+eventbus.on('do_send_product_card', function(extraParms){
+  sendProductCard(extraParms);
+});
 
 let NIM = null;
 
@@ -466,4 +471,9 @@ export const exitSession = () => {
   }
 
   NIM.exitSession(extraParms)
+}
+
+// 发送商品链接
+export const sendProductCard = (extraParms) => {
+  NIM.sendProductCard(extraParms);
 }
