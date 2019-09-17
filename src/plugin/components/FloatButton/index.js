@@ -42,7 +42,7 @@ export default class FloatButton extends Component {
             {
               entryConfig.map(item => {
                 return (
-                  <View className="m-FloatButton_action_item" onClick={this.hanSelect.bind(this,item.key)}>
+                  <View className="m-FloatButton_action_item" onClick={this.hanSelect.bind(this,item.key)} key={item.key}>
                     <View className='m-FloatButton_action_icon'>
                       <Iconfont type={item.icon} color='#666' size='12'></Iconfont>
                     </View>

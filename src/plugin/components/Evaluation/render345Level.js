@@ -16,7 +16,7 @@ export default function Render345Level(props) {
       {
         list.map(item => {
           return (
-            <View className="m-evaluation_icon_content">
+            <View className="m-evaluation_icon_content" key={item.value}>
               <View className="u-evaluation-icon" onClick={handleClick.bind(undefined, item.tagList, item.value, item.name)}>
                 <Iconfont type="icon-star-offx"
                   color={item.value <= selectValue ? "#FFAF0F" : "#666"} size='26' />

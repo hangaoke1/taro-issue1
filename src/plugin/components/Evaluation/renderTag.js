@@ -21,7 +21,7 @@ export default function RenderTag(props) {
         tagList.map(item => {
           return (
             <View className={selectTags.indexOf(item) == -1 ? "m-evaluation_tags_item" : "m-evaluation_tags_item z-sel"}
-              onClick={handleClick.bind(undefined, item)}>
+              onClick={handleClick.bind(undefined, item)} key={item}>
               {item}
             </View>
           )
