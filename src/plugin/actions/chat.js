@@ -475,5 +475,43 @@ export const exitSession = () => {
 
 // 发送商品链接
 export const sendProductCard = (extraParms) => {
+  const dispatch = get('store').dispatch;
+
+  let message = {
+    type: 'product',
+    content: {
+      ...extraParms
+    },
+    time: new Date().getTime(),
+    status: 1,
+    fromUser: 1
+  }
+
+  dispatch({ type: PUSH_MESSAGE, message });
+  if(!extraParms.sendByUser){
+    NIM.sendProductCard(extraParms);
+  }
+}
+
+// 客服手动发送商品链接
+export const sendProductCardByUser = () => {
+  const dispatch = get('store').dispatch;
+
+  let extraParms = {
+    ...get('product')
+  };
+
+  let message = {
+    type: 'product',
+    content: {
+      ...extraParms,
+      sendByUser: 0
+    },
+    time: new Date().getTime(),
+    status: 1,
+    fromUser: 1
+  }
+
+  dispatch({ type: PUSH_MESSAGE, message });
   NIM.sendProductCard(extraParms);
 }

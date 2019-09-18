@@ -25,10 +25,16 @@ export default class Info extends Component {
       note: '$2330',
       picture: 'https://img10.360buyimg.com/n5/s75x75_jfs/t4030/290/29851193/293745/d5e2b731/58ac3506Nbb57b5f6.jpg',
       url: 'https://www.taobao.com/',
-      show: 1
+      show: 1,
+      sendByUser: 1
     };
 
     myPluginInterface._$configProduct(product);
+    Taro.showToast({
+      title: `已保存商品信息，重新申请会话生效`,
+      icon: 'none',
+      duration: 1000
+    })
   }
 
   componentWillMount() { }

@@ -107,7 +107,7 @@ export const assignKefu = (content) => {
     }
 
     // 如果分配的是人工客服，然后配置了自动发送商品链接
-    if(content.stafftype == 0 && get('product') && !get('product').sendByUser){
+    if(content.stafftype == 0 && get('product')){
       eventbus.trigger('do_send_product_card', get('product'));
     }
 
