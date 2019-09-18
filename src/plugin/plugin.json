@@ -1,7 +1,8 @@
 {
   "pages": {
     "chat": "pages/chat/chat",
-    "detailView": "pages/tpl/detailView"
+    "detailView": "pages/tpl/detailView",
+    "cardLayoutView": "pages/tpl/cardLayoutView"
   },
   "publicComponents": {
     "Iconfont": "components/Iconfont/index"

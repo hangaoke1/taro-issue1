@@ -25,7 +25,7 @@ class CardLayoutList extends Component {
       <View className="u-list">
         {list.map(subItem => {
           return (
-            <View key={JSON.stringify(subItem.action)} onClick={this.handleClick.bind(this, subItem.action)}>
+            <View className="u-sub-list" key={JSON.stringify(subItem.action)} onClick={this.handleClick.bind(this, subItem.action)}>
               {subItem.list.map(rows => {
                 return (
                   <View className="u-list-item-wrap" key={JSON.stringify(rows)}>

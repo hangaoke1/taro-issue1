@@ -72,6 +72,7 @@ export default class GList extends Component {
           {this.props.children}
           {loading ? <View className="u-loading">加载中</View> : null}
           {finished ? <View className="u-finished">没有更多了</View> : null}
+          { !loading && !finished ? <View className="u-tip" onTouchStart={this.loadMore}>点击加载更多</View> :null}
         </View>
       </ScrollView>
     );

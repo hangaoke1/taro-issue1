@@ -7,7 +7,8 @@ import { setClipboardData } from '@/utils/extendTaro';
 import { sendTemplateText } from '@/actions/chat';
 
 import FloatLayout from '@/components/FloatLayout';
-import CardLayoutList from '@/components/Bot/m-card-layout-list'
+import CardLayoutList from '@/components/Bot/m-card-layout-list';
+import CardLayoutListLoad from '@/components/Bot/m-card-layout-list-load';
 
 import './index.less';
 
@@ -42,11 +43,12 @@ class CardLayout extends Component {
       });
     }
     if (action.type === 'float') {
-      // TODO: 不需要请求数据
       this.setState({ visible: true });
     }
     if (action.type === 'popup') {
-      // TODO: 需要请求数据
+      // Taro.navigateTo({
+      //   url: `plugin://myPlugin/cardLayoutView?uuid=${this.props.item.uuid}`
+      // });
     }
   };
 
@@ -60,7 +62,7 @@ class CardLayout extends Component {
         target: action.target,
         params: action.params
       });
-      this.setState({ visible: false })
+      this.setState({ visible: false });
     }
     if (action.type === 'float') {
       // TODO: 不需要请求数据
@@ -79,15 +81,25 @@ class CardLayout extends Component {
         <FloatLayout
           visible={visible}
           maskClosable
-          title={tpl.label}
+          title='查看更多'
           onClose={this.handleClose}
           bodyPadding={12}
-          contentHeight={200}
+          contentHeight={600}
         >
-          <CardLayoutList list={tpl.list} onItemClick={this.handleCardClick.bind(this)}></CardLayoutList>
+          {visible ? (
+            <CardLayoutListLoad
+              height={300}
+              item={item}
+              tpl={tpl}
+              onItemClick={this.handleCardClick.bind(this)}
+            ></CardLayoutListLoad>
+          ) : null}
         </FloatLayout>
         <View className="u-label">{tpl.label}</View>
-        <CardLayoutList list={tpl.list} onItemClick={this.handleCardClick.bind(this)}></CardLayoutList>
+        <CardLayoutList
+          list={tpl.list}
+          onItemClick={this.handleCardClick.bind(this)}
+        ></CardLayoutList>
         <View className="u-action" onClick={this.handleActionClick}>
           {tpl.action.label}
         </View>
