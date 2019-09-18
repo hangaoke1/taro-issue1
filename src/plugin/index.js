@@ -67,3 +67,10 @@ export const _$configProduct = (product) => {
   if(!product) return;
   set('product', product);
 }
+
+/**
+ * 获取配置的商品信息
+ */
+export const _$getProduct = () => {
+  return get('product');
+}
