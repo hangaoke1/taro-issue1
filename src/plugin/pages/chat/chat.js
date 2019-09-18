@@ -298,15 +298,25 @@ class Chat extends Component {
   };
 
   render() {
-    const { Message, Options, CorpStatus, Bot, Associate, Session } = this.props;
+    const {
+      Message,
+      Options,
+      CorpStatus,
+      Bot,
+      Associate,
+      Session
+    } = this.props;
     const {
       lastId,
       height,
       videoUrl,
       scrollWithAnimation,
-      showAssociate
+      showAssociate,
+      markOffset
     } = this.state;
-    const isRobot = Session.stafftype === 1 || Session.robotInQueue ===  1;
+    const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
+
+    const isOpen = Options.showFunc || Options.showPortrait;
 
     return (
       <Index className="m-page-wrapper">
@@ -326,7 +336,12 @@ class Chat extends Component {
             onFullscreenchange={this.handleFullscreenchange}
           />
         </View>
-        <View className="m-chat" style={`height: calc(100vh - ${height}px)`}>
+        <View
+          className="m-chat"
+          style={`height: calc(100vh - ${
+            isOpen ? Taro.pxTransform(540) : '0px'
+          } - ${Taro.pxTransform(130)} - ${height}px)`}
+        >
           <View className="m-view">
             <ScrollView
               className="message-content"
@@ -373,6 +388,13 @@ class Chat extends Component {
               ))}
             </ScrollView>
           ) : null}
+        </View>
+        <View
+          className={`u-chatbox`}
+          style={`transform: translateY(-${
+            height ? height + 'px' : isOpen ? Taro.pxTransform(544) : '0px'
+          });`}
+        >
           <ChatBox
             onInput={this.handleAssociate}
             onConfirm={this.handleConfirm}
@@ -381,15 +403,15 @@ class Chat extends Component {
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
           ></ChatBox>
-          {Options.showFunc && (
-            <FuncBox
-              list={functionList}
-              onFuncClick={this.handleFuncClick}
-            ></FuncBox>
-          )}
-          {Options.showPortrait && (
-            <Portrait onEmojiClick={this.handleEmojiClick}></Portrait>
-          )}
+        </View>
+        <View className={`u-funcbox ${Options.showFunc ? 'open' : ''}`}>
+          <FuncBox
+            list={functionList}
+            onFuncClick={this.handleFuncClick}
+          ></FuncBox>
+        </View>
+        <View className={`u-funcbox ${Options.showPortrait ? 'open' : ''}`}>
+          <Portrait onEmojiClick={this.handleEmojiClick}></Portrait>
         </View>
         <FloatLayout
           visible={CorpStatus.evaluationVisible}
