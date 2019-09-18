@@ -274,14 +274,21 @@ export default class IMSERVICE {
     tags: [],
     title: ''
   }){
-    if(!get('product'))
-      return;
-    let content = {
-      cmd: SEND_PRODUCT_CARD_CMD,
-      ...extraParams
-    }
+    return new Promise((resolve,reject) => {
+      if(!get('product'))
+        return;
+      let content = {
+        cmd: SEND_PRODUCT_CARD_CMD,
+        ...extraParams
+      }
 
-    this.sendCustomSysMsg(content);
+      this.sendCustomSysMsg(content)
+        .then(msg => {
+          resolve(msg);
+        }).catch(error => {
+          reject(error);
+        })
+    })
   }
 
   /**

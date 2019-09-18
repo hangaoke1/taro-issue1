@@ -125,6 +125,16 @@ export default class Info extends Component {
             </View>
             <View className="m-Info_item_form">
               <View className="m-Info_item_form_id_label">
+                发送按钮文案（actionText）
+            </View>
+              <View className="m-Info_item_form_id_value">
+                <Input placeholder="发送按钮文案（actionText）" className="u-ipt"
+                  name="actionText"
+                  value="发送"></Input>
+              </View>
+            </View>
+            <View className="m-Info_item_form">
+              <View className="m-Info_item_form_id_label">
                 是否在访客端展示（isShow）
             </View>
               <View className="m-Info_item_form_id_value">
