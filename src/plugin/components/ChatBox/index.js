@@ -118,12 +118,12 @@ export default function ChatBox(props) {
         confirmHold
         adjustPosition={false}
       />
-      <View className='u-portrait' onClick={handlePortraitClick}>
+      <View className='u-portrait' onTouchStart={handlePortraitClick}>
         <Iconfont type='icon-chat-portraitmobile' color='#666' size='28' />
       </View>
       <View
         className={`u-plus-icon ${options.showFunc ? 'u-show' : ''}`}
-        onClick={handlePlusClick}
+        onTouchStart={handlePlusClick}
       >
         <Iconfont type='icon-chat-more-plusx' color='#fff' size='22' />
       </View>

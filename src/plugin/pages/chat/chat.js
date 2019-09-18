@@ -348,7 +348,7 @@ class Chat extends Component {
               scrollY
               scrollWithAnimation={scrollWithAnimation}
               scrollIntoView={lastId}
-              onClick={this.handleBodyClick}
+              onTouchStart={this.handleBodyClick}
             >
               <MessageView
                 Message={Message}
