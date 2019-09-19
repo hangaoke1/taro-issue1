@@ -96,7 +96,8 @@ class Chat extends Component {
       height: 0,
       videoUrl: '',
       scrollWithAnimation: true,
-      showAssociate: false
+      showAssociate: false,
+      lockBot: [] // 锁定bot入口1s
     };
   }
 
@@ -232,8 +233,29 @@ class Chat extends Component {
 
   // 点击bot快捷入口
   handleBotClick = bot => {
+    const label = bot.label;
+
+    // 如果在锁列表中则中断后续操作
+    if (this.state.lockBot.includes(label)) {
+      return;
+    }
+
     const { sendText } = this.props;
-    sendText(bot.label);
+    sendText(label);
+
+    this.setState((state) => {
+      return {
+        lockBot: [...state.lockBot, label]
+      }
+    })
+    // 1s后释放
+    setTimeout(() => {
+      this.setState((state) => {
+        return {
+          lockBot: state.lockBot.filter(item => item !== label)
+        }
+      })
+    }, 1000)
   };
 
   handleFullscreenchange = e => {
@@ -312,7 +334,7 @@ class Chat extends Component {
       videoUrl,
       scrollWithAnimation,
       showAssociate,
-      markOffset
+      lockBot
     } = this.state;
     const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
 
@@ -379,7 +401,7 @@ class Chat extends Component {
             <ScrollView scrollX className="m-bot">
               {Bot.botList.map(bot => (
                 <View
-                  className="m-bot-item"
+                  className={`m-bot-item ${lockBot.includes(bot.label) ? 'z-bot-disable' : ''}`}
                   key={bot.id}
                   onClick={e => this.handleBotClick(bot, e)}
                 >
