@@ -8,6 +8,8 @@ import { getMoreBotList } from '@/actions/chat';
 import GList from '@/components/GList';
 import CardLayoutList from '../m-card-layout-list';
 
+import './index.less';
+
 class CardLayoutListLoad extends Component {
   static propTypes = {
     item: PropTypes.object,

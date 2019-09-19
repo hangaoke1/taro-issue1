@@ -82,6 +82,7 @@ export default class MList extends Component {
         finished={finished}
         onLoadMore={this.loadMore}
         scrollTop={scrollTop}
+        height={400}
       >
         {this.props.children}
         {finished && tpl.list.length === 0 ? (

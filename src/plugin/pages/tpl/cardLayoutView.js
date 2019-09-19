@@ -3,6 +3,7 @@ import { View } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import _get from 'lodash/get';
 import CardLayoutListLoad from '@/components/Bot/m-card-layout-list-load';
+import { sendTemplateText } from '@/actions/chat';
 
 import './cardLayoutView.less';
 
@@ -23,19 +24,37 @@ class cardLayoutView extends Component {
     const item = this.props.Message.filter(message => message.uuid === uuid)[0];
     this.setState({ item });
     Taro.setNavigationBarTitle({
-      title: _get(item, 'content.template.detail.label')
+      title: '查看更多'
     });
   }
 
   componentDidMount() {}
 
-  handleCardClick = () => {}
+  handleCardClick = action => {
+    if (action.type === 'url') {
+      setClipboardData(action.target);
+    }
+    if (action.type === 'block') {
+      sendTemplateText({
+        label: action.label,
+        target: action.target,
+        params: action.params
+      });
+      Taro.navigateBack();
+    }
+    if (action.type === 'float') {
+      // TODO: 不需要请求数据
+    }
+    if (action.type === 'popup') {
+      // TODO: 需要请求数据
+    }
+  };
 
   render() {
     const { item } = this.state;
     const tpl = _get(item, 'content.template');
     return (
-      <View className="m-card-layout-view">
+      <View className="m-card-layout-view" style="height: 100vh">
         <CardLayoutListLoad
           item={item}
           tpl={tpl}

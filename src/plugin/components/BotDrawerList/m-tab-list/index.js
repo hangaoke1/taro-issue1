@@ -93,6 +93,7 @@ export default class TabList extends Component {
         finished={finished}
         onLoadMore={this.loadMore}
         scrollTop={scrollTop}
+        height={400}
       >
         {this.props.children}
         {finished && tab.list.length === 0 ? (

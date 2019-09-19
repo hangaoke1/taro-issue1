@@ -7,6 +7,7 @@ import { setClipboardData } from '@/utils/extendTaro';
 import { sendTemplateText } from '@/actions/chat';
 
 import FloatLayout from '@/components/FloatLayout';
+import CardLayoutList from '@/components/Bot/m-card-layout-list';
 import MDetailViewList from '@/components/Bot/m-detail-view-list';
 
 import './index.less';
@@ -67,36 +68,7 @@ class DetailView extends Component {
         >
           <MDetailViewList list={tpl.detail.list}></MDetailViewList>
         </FloatLayout>
-        <View className="u-list">
-          {tpl.thumbnail.list.map(rows => {
-            return (
-              <View className="u-list-item-wrap" key={JSON.stringify(rows)}>
-                {rows.map(row => {
-                  const len = rows.length;
-                  const { style, customerClass } = genClassAndStyle(row, len);
-                  return (
-                    <View
-                      className={`u-list-item${customerClass}`}
-                      style={style}
-                      key={row.value}
-                    >
-                      {row.type === 'image' ? (
-                        <Image
-                          className="u-image"
-                          style="width: 16px;"
-                          mode="widthFix"
-                          src={row.value}
-                        ></Image>
-                      ) : (
-                        <Text className="u-text">{row.value}</Text>
-                      )}
-                    </View>
-                  );
-                })}
-              </View>
-            );
-          })}
-        </View>
+        <CardLayoutList list={[tpl.thumbnail]}></CardLayoutList>
         {tpl.thumbnail.action ? (
           <View
             className="u-action"

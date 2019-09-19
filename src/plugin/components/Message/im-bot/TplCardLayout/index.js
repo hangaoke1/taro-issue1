@@ -30,6 +30,7 @@ class CardLayout extends Component {
     this.setState({ visible: false });
   };
 
+  // 外层action点击
   handleActionClick = () => {
     const action = _get(this, 'props.tpl.action', {});
     if (action.type === 'url') {
@@ -46,12 +47,13 @@ class CardLayout extends Component {
       this.setState({ visible: true });
     }
     if (action.type === 'popup') {
-      // Taro.navigateTo({
-      //   url: `plugin://myPlugin/cardLayoutView?uuid=${this.props.item.uuid}`
-      // });
+      Taro.navigateTo({
+        url: `plugin://myPlugin/cardLayoutView?uuid=${this.props.item.uuid}`
+      });
     }
   };
 
+  // 内层action点击
   handleCardClick = action => {
     if (action.type === 'url') {
       setClipboardData(action.target);
@@ -84,11 +86,11 @@ class CardLayout extends Component {
           title='查看更多'
           onClose={this.handleClose}
           bodyPadding={12}
-          contentHeight={600}
+          contentHeight={500}
         >
           {visible ? (
             <CardLayoutListLoad
-              height={300}
+              height={400}
               item={item}
               tpl={tpl}
               onItemClick={this.handleCardClick.bind(this)}

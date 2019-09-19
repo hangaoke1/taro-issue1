@@ -16,21 +16,37 @@ export default class GList extends Component {
   static defaultProps = {
     loading: false,
     finished: false,
-    scrollTop: 0,
-    height: 400
+    scrollTop: 0
   };
 
+  state = {
+    wrapHeight : 0
+  }
+
   componentDidMount() {
-    this.needLoadMore();
+    this.calcWrapHeight();
   }
 
   componentDidUpdate() {
     this.needLoadMore();
   }
 
+  calcWrapHeight = () => {
+    const query = Taro.createSelectorQuery().in(this.$scope);
+    const node = query.select('.root-class');
+    node
+      .fields({ size: true }, res => {
+        // console.log('计算容器高度: ', res.height)
+        this.setState({ wrapHeight: res.height }, () => {
+          this.needLoadMore();
+        })
+      })
+      .exec();
+  }
+
   // 检测是否超过一屏
   needLoadMore = () => {
-    const { loading, finished, height } = this.props;
+    const { loading, finished } = this.props;
     if (loading || finished) {
       return;
     }
@@ -39,7 +55,7 @@ export default class GList extends Component {
     const node = query.select('.u-content');
     node
       .fields({ size: true }, res => {
-        if (res.height <= height) {
+        if (res.height <= this.state.wrapHeight) {
           this.props.onLoadMore();
         } else {
         }
@@ -48,6 +64,7 @@ export default class GList extends Component {
   };
 
   loadMore = () => {
+    console.log('触发loadmore----')
     const { loading, finished } = this.props;
     if (loading || finished) {
       return;
@@ -66,7 +83,7 @@ export default class GList extends Component {
         scrollY
         onScrollToLower={this.loadMore}
         scrollTop={scrollTop}
-        style={{ height: `${height}px` }}
+        style={{ height: `${height ? height + 'px' : '100%'}` }}
       >
         <View className="u-content">
           {this.props.children}
