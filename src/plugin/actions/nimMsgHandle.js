@@ -323,6 +323,10 @@ export const receiveMsg = (msg) => {
               // 转接的先放这吧
               receiveTransfer(fmtContent);
               break;
+            case 121:
+              // 客服商品卡片
+              receiveCustomCard(fmtContent);
+              break;
             default:;
         }
     }
@@ -592,6 +596,10 @@ export const onQueueStatus = (content) => {
 }
 
 
+/**
+ * 收到转接通知
+ * @param {*} content
+ */
 export const receiveTransfer = (content) => {
 
   // 会话id有变化，需要更新新的会话id
@@ -620,4 +628,22 @@ export const receiveTransfer = (content) => {
 export const onReceiveAssociate = (content) => {
   const dispatch = get('store').dispatch;
   dispatch({ type: SET_ASSOCIATE_RES, value: content});
+}
+
+
+/**
+ * 收到客服发送的自定义卡片
+ * @param {*} content
+ */
+export const receiveCustomCard = (content) => {
+  const dispatch = get('store').dispatch;
+
+  let message = {
+    type: 'order-card',
+    content,
+    time: new Date().getTime(),
+    status: 1,
+    fromUser: 0
+  }
+  dispatch({ type: PUSH_MESSAGE, message });
 }

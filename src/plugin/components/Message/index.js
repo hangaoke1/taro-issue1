@@ -53,7 +53,7 @@ export default function MessageView(props) {
                                 it.type === 'bot' ? <BotView item={it}></BotView> : null
                             }
                             {
-                              ['product'].includes(it.type) ? <CardView item={it}></CardView> : null
+                              ['product', 'order-card'].includes(it.type) ? <CardView item={it}></CardView> : null
                             }
                         </View>
                     )
