@@ -23,6 +23,7 @@ import TplActionList from './TplActionList';
 import TplRefundDetail from './TplRefundDetail';
 import TplCardLayout from './TplCardLayout';
 import TplDetailView from './TplDetailView';
+import TplActivePage from './TplActivePage';
 
 import './index.less';
 import eventbus from '@/lib/eventbus';
@@ -68,6 +69,10 @@ export default class Bot extends Component {
     const layout = null;
     let showFormAction = false;
     switch (tpl.id) {
+      case 'active_page': {
+        layout = <TplActivePage item={item} tpl={tpl}></TplActivePage>;
+        break;
+      }
       case 'detail_view': {
         layout = <TplDetailView item={item} tpl={tpl}></TplDetailView>;
         break;
