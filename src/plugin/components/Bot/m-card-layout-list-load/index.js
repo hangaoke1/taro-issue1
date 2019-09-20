@@ -15,7 +15,8 @@ class CardLayoutListLoad extends Component {
     item: PropTypes.object,
     tpl: PropTypes.object,
     onItemClick: PropTypes.func,
-    height: PropTypes.number
+    height: PropTypes.number,
+    init: PropTypes.bool
   };
 
   state = {
@@ -30,7 +31,7 @@ class CardLayoutListLoad extends Component {
 
   componentDidMount() {
     this.setState({
-      list: [...this.props.tpl.list],
+      list: this.props.init ? [] : [...this.props.tpl.list],
       action: {
         id: _get(this, 'props.tpl.id'),
         target: _get(this, 'props.tpl.action.target'),

@@ -37,11 +37,15 @@ class GImg extends Component {
     })
   }
 
+  handleClick (event) {
+    this.props.onClick && this.props.onClick();
+  }
+
   render () {
     const { src, mode } = this.props;
     const { width, height } = this.state;
     return (
-      <Image src={src} mode={mode} onLoad={this.handleLoad} style={`width: ${width}px;height: ${height}px`}>
+      <Image src={src} mode={mode} onLoad={this.handleLoad} style={`width: ${width}px;height: ${height}px`} onClick={this.handleClick}>
       </Image>
     )
   }

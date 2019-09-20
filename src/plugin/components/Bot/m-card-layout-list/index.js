@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import { genClassAndStyle } from '@/utils';
-
+import GImg from '@/components/GImg';
 import './index.less';
 
 class CardLayoutList extends Component {
@@ -42,12 +42,11 @@ class CardLayoutList extends Component {
                           style={style}
                         >
                           {row.type === 'image' ? (
-                            <Image
+                            <GImg
                               className="u-image"
-                              style="width: 16px;"
-                              mode="widthFix"
+                              maxWidth={16}
                               src={row.value}
-                            ></Image>
+                            ></GImg>
                           ) : (
                             <Text className="u-text">{row.value}</Text>
                           )}

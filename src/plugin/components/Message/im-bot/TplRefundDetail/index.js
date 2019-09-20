@@ -28,16 +28,16 @@ class RefundDetail extends Component {
         <View className="u-content">
           <View
             className="u-state"
-            style={type === 'success' ? `color: #23b566` : `color: #ffa521`}
+            style={type === 'success' ? `color: #23b566` : `color: #f0404d`}
           >
             <Iconfont
               type={
                 type === 'success'
                   ? `icon-hints-success-o`
-                  : `icon-hints-warning-o`
+                  : `icon-hints-error-o`
               }
               size="16"
-              color={type === 'success' ? `#23b566` : `#ffa521`}
+              color={type === 'success' ? `#23b566` : `#f0404d`}
             ></Iconfont>
             <Text className="u-state-text">{name}</Text>
           </View>

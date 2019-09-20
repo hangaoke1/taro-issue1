@@ -2,6 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
+import { sendTemplateText } from '@/actions/chat'
 
 import { setClipboardData } from '@/utils/extendTaro';
 
@@ -19,9 +20,19 @@ class OrderLogistic extends Component {
 
   // 查看完整物流
   handleMoreClick = () => {
-    const url = _get(this, 'props.tpl.action.target', '');
-    if (url) {
-      setClipboardData(url);
+    const type =  _get(this, 'props.tpl.action.type', '');
+    const target = _get(this, 'props.tpl.action.target', '');
+    const params = _get(this, 'props.tpl.action.params', '');
+    const label = _get(this, 'props.tpl.action.p_name', '');
+    if (type === 'url') {
+      setClipboardData(target);
+    }
+    if (type === 'block') {
+      sendTemplateText({
+        target,
+        params,
+        label
+      })
     }
   };
 

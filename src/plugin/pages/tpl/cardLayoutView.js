@@ -56,6 +56,7 @@ class cardLayoutView extends Component {
     return (
       <View className="m-card-layout-view" style="height: 100vh">
         <CardLayoutListLoad
+          init={true}
           item={item}
           tpl={tpl}
           onItemClick={this.handleCardClick.bind(this)}

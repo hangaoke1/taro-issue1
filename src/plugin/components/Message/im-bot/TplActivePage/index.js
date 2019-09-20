@@ -2,6 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
+import { sendTemplateText } from '@/actions/chat';
 import { setClipboardData } from '@/utils/extendTaro';
 
 import GImg from '@/components/GImg';
@@ -19,7 +20,20 @@ class ActivePage extends Component {
   componentDidMount() {}
 
   handleActionClick = () => {
-    setClipboardData(_get(this, 'props.tpl.action.url'));
+    const label = _get(this, 'props.tpl.action.label')
+    const type = _get(this, 'props.tpl.action.type')
+    const params = _get(this, 'props.tpl.action.params')
+    const target = _get(this, 'props.tpl.action.target')
+    const url = _get(this, 'props.tpl.action.url')
+    if (type === 'block') {
+      sendTemplateText({
+        label,
+        target,
+        params
+      })
+    } else {
+      setClipboardData(url);
+    }
   };
 
   render() {
