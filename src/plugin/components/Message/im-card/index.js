@@ -64,24 +64,36 @@ export default function CardView(props) {
                   <View className="m-order-card_right_title_left">
                     {content.title}
                   </View>
-                  <View className="m-order-card_right_title_right">
-                    {content.payMoney}
-                  </View>
+                  {
+                    content.payMoney ?
+                      <View className="m-order-card_right_title_right">
+                        {content.payMoney}
+                      </View>
+                      : null
+                  }
                 </View>
                 <View className="m-order-card_right_desc">
                   <View className="m-order-card_right_desc_left">
                     {content.desc}
                   </View>
-                  <View className="m-order-card_right_desc_right">
-                    {content.orderCount}
-                  </View>
+                  {
+                    content.orderCount ?
+                      <View className="m-order-card_right_desc_right">
+                        {content.orderCount}
+                      </View>
+                      : null
+                  }
                 </View>
                 <View className="m-order-card_right_note">
-                  <View className="m-order-card_right_note_left">
-                    {content.orderSku}
-                  </View>
+                  {
+                    content.orderStatus ?
+                      <View className="m-order-card_right_note_left">
+                        {content.orderSku}
+                      </View>
+                      : null
+                  }
                   <View className="m-order-card_right_note_right">
-                    {content.orderStatus}
+                    {content.orderStatus || content.price}
                   </View>
                 </View>
               </View>
@@ -91,23 +103,23 @@ export default function CardView(props) {
                 <View className="m-order-card_time">
                   {
                     content.orderId ?
-                    <View>订单编号：{content.orderId}</View>
-                    : null
+                      <View>订单编号：{content.orderId}</View>
+                      : null
                   }
                   {
                     content.orderTime ?
-                    <View>下单时间：{content.orderTime}</View>
-                    : null
+                      <View>下单时间：{content.orderTime}</View>
+                      : null
                   }
                 </View>
                 : null
             }
             {
               content.activity ?
-              <View className="m-order-card_activity">
-                {content.activity}
-              </View>
-              : null
+                <View className="m-order-card_activity">
+                  {content.activity}
+                </View>
+                : null
             }
             {
               content.tags && content.tags.length ?
