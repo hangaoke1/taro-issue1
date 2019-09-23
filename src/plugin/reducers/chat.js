@@ -1,5 +1,5 @@
 import { SET_ENTRY_CONFIG, DEL_ENTRY_BYKEY, SET_EVALUATION_VISIBLE,
-  SET_CHAT_INPUT_DISABLED, SET_CHAT_INPUT_PLACEHOLDER, RESET_CHAT_INPUT } from '../constants/chat';
+  SET_CHAT_INPUT_DISABLED, SET_CHAT_INPUT_PLACEHOLDER, RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT } from '../constants/chat';
 
 
 const CorpStatus = (state = {
@@ -43,6 +43,21 @@ const CorpStatus = (state = {
         return state;
       } else {
         entry.splice(index, 1);
+        return {
+          ...state,
+          entryConfig: [...entry]
+        }
+      }
+    case UPDATE_ENTRY_BYTEXT:
+      {
+        let entry = [...state.entryConfig];
+
+        entry.forEach((item,index) => {
+          if(item.text == action.value.text){
+            entry[index] = {...action.value};
+          }
+        })
+
         return {
           ...state,
           entryConfig: [...entry]

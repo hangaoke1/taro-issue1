@@ -4,7 +4,7 @@ import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../c
 import { INIT_SESSION,REASON_MAP,SET_SESSION_CODE } from '../constants/session';
 import { INIT_EVALUATION_SETTING,INIT_CURRENT_EVALUATION,INIT_LAST_EVALUATION } from '../constants/evaluation';
 import { SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG,DEL_ENTRY_BYKEY,SET_CHAT_INPUT_DISABLED,
-          SET_CHAT_INPUT_PLACEHOLDER,RESET_CHAT_INPUT } from '../constants/chat';
+          SET_CHAT_INPUT_PLACEHOLDER,RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT } from '../constants/chat';
 import { SET_BOT_LIST } from '../constants/bot';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import { timestamp2date, fmtRobot } from '../utils';
@@ -91,6 +91,11 @@ export const assignKefu = (content) => {
           value: 'evaluation'
         })
       }
+    }else{
+      dispatch({
+        type: DEL_ENTRY_BYKEY,
+        value: 'evaluation'
+      })
     }
 
     let message;
@@ -104,6 +109,15 @@ export const assignKefu = (content) => {
         time: time
       }
       dispatch({type: PUSH_MESSAGE, message: timeTip});
+      // 先这么搞一下
+      dispatch({
+        type: UPDATE_ENTRY_BYTEXT,
+        value: {
+          icon: 'icon-star-linex',
+          text: '评价',
+          key: 'evaluation'
+        }
+      })
     }
 
     // 如果分配的是人工客服，然后配置了自动发送商品链接
@@ -462,6 +476,18 @@ export const onevaluation = (content) => {
 export const onevaluationresult = (content) => {
     const dispatch = get('store').dispatch;
     const evaluation = get('store').getState().Evaluation;
+    const session = get('store').getState().Session;
+
+    // 如果会话已经评价过
+    dispatch({
+      type: UPDATE_ENTRY_BYTEXT,
+      value: {
+        icon: 'icon-star-line-hookx',
+        text: '评价',
+        key: 'evaluation',
+        disabled: true
+      }
+    })
 
     // 存储上次评价内容
     dispatch({
@@ -469,10 +495,13 @@ export const onevaluationresult = (content) => {
       value: evaluation.currentEvaluation
     })
 
+    // 是否支持多次评价的开关
+    let enable_evaluation_muttimes = session.shop.setting && session.shop.setting.enable_evaluation_muttimes;
+    let messageType = enable_evaluation_muttimes ? 'action' : 'rich';
     let time = new Date().getTime();
 
     let message = {
-        type: 'action',
+        type: messageType,
         content: content.message,
         time: time,
         fromUser: 0,

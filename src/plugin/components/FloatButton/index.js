@@ -21,9 +21,9 @@ export default class FloatButton extends Component {
     })
   }
 
-  hanSelect = (key) => {
+  hanSelect = (key, item) => {
     const { onSelect } = this.props;
-    onSelect && onSelect(key);
+    onSelect && !item.disabled && onSelect(key);
   }
 
   render() {
@@ -42,7 +42,7 @@ export default class FloatButton extends Component {
             {
               entryConfig.map(item => {
                 return (
-                  <View className="m-FloatButton_action_item" onClick={this.hanSelect.bind(this,item.key)} key={item.key}>
+                  <View className="m-FloatButton_action_item" onClick={this.hanSelect.bind(this,item.key,item)} key={item.key}>
                     <View className='m-FloatButton_action_icon'>
                       <Iconfont type={item.icon} color='#666' size='12'></Iconfont>
                     </View>
