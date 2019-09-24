@@ -94,8 +94,13 @@ export default class IMSERVICE {
         onerror: this.onError,
         onmsg: this.onMsg.bind(this),
         oncustomsysmsg: this.onCustomSysMsg.bind(this),
-        onofflinemsgs: this.onOfflineMsgs.bind(this),
-        onofflinecustomsysmsgs: this.onOfflineCustomSysMsgs.bind(this)
+        onofflinefiltermsgs: this.onofflinefiltermsgs.bind(this),
+        // onofflinemsgs: this.onOfflineMsgs.bind(this),
+        // onofflinecustomsysmsgs: this.onOfflineCustomSysMsgs.bind(this),
+        // onroamingmsgs: this.onRoamingMsgs.bind(this),
+        // onroamingsysmsgs: this.onRoamingSysMsgs.bind(this),
+        syncFilter: true,
+        syncRoamingMsgs: true
       }));
 
       if (STATUS.status == 'connecting') {
@@ -447,12 +452,11 @@ export default class IMSERVICE {
     } catch (e) { }
   }
 
-  onOfflineMsgs(msg) {
-    console.log('-------接收离线消息 onofflinemsgs-------')
-  }
-
-  onOfflineCustomSysMsgs(msg) {
-    console.log('-------接收离线消息 onofflinecustomsysmsgs-------')
+  // 七鱼定制离线消息处理
+  onofflinefiltermsgs(msgs) {
+    msgs.forEach(msg => {
+      receiveMsg(msg);
+    })
   }
 
   /**
