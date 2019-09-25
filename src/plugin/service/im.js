@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro';
-import { get } from '../global_config';
+import { get,set } from '../global_config';
 import {
   assignKefu,
   receiveMsg,
@@ -289,6 +289,10 @@ export default class IMSERVICE {
 
       this.sendCustomSysMsg(content)
         .then(msg => {
+          // 发送成功后清除商品信息，只发一次
+          if(get('product')){
+            set('product', null);
+          }
           resolve(msg);
         }).catch(error => {
           reject(error);

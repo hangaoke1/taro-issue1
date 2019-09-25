@@ -370,11 +370,6 @@ export const onfinish = (content) => {
       value: 206
     })
 
-    // 会话结束清除配置的商品链接
-    if(get('product')){
-      set('product', null);
-    }
-
     if (close_reason == 0 || close_reason == 2) {
         tip = richmessage || message || REASON_MAP[close_reason];
     }

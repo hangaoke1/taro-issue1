@@ -477,17 +477,20 @@ export const exitSession = () => {
 export const sendProductCard = (extraParms) => {
   const dispatch = get('store').dispatch;
 
-  let message = {
-    type: 'product',
-    content: {
-      ...extraParms
-    },
-    time: new Date().getTime(),
-    status: 1,
-    fromUser: 1
+  if(extraParms.isShow){
+    let message = {
+      type: 'product',
+      content: {
+        ...extraParms
+      },
+      time: new Date().getTime(),
+      status: 1,
+      fromUser: 1
+    }
+
+    dispatch({ type: PUSH_MESSAGE, message });
   }
 
-  dispatch({ type: PUSH_MESSAGE, message });
   if(!extraParms.sendByUser){
     NIM.sendProductCard(extraParms);
   }
