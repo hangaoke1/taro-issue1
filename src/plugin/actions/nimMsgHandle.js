@@ -120,11 +120,6 @@ export const assignKefu = (content) => {
       })
     }
 
-    // 如果分配的是人工客服，然后配置了自动发送商品链接
-    if(content.stafftype == 0 && get('product')){
-      eventbus.trigger('do_send_product_card', get('product'));
-    }
-
     // 恢复输入框可输入的状态
     dispatch({
       type: RESET_CHAT_INPUT,
@@ -136,6 +131,11 @@ export const assignKefu = (content) => {
             // related_session_type == 1 // 机器人转人工接入 session_transfer_robot_switch=0开关关闭
             if(content.shop.setting && !content.shop.setting.session_transfer_robot_switch && content.related_session_type == 1){
               return;
+            }
+
+            // 如果分配的是人工客服，然后配置了自动发送商品链接
+            if(content.stafftype == 0 && get('product')){
+              eventbus.trigger('do_send_product_card', get('product'));
             }
 
             // 如果有message接入语，才显示接入语
@@ -167,14 +167,11 @@ export const assignKefu = (content) => {
         break;
         case 201:
             // 没有客服在线
-            message = {
-                type: 'rich',
-                content: content.richmessage || content.message,
-                time: time,
-                fromUser: 0,
-                ...extralMessage
-            }
-            dispatch({type: PUSH_MESSAGE, message });
+            renderLeave({
+              richmessage: content.richmessage,
+              message: content.message,
+              extralMessage
+            })
             break;
         case 203:
             // 进入排队的状态
@@ -191,30 +188,67 @@ export const assignKefu = (content) => {
             dispatch({type: PUSH_MESSAGE, message});
           break;
         case 205:
-          // 留言未开启输入框禁用
-          dispatch({
-            type: SET_CHAT_INPUT_DISABLED,
-            value: true
-          })
-
-          dispatch({
-            type: SET_CHAT_INPUT_PLACEHOLDER,
-            value: '客服不在线，不支持留言'
-          })
-
-          // 留言未开启
-          message = {
-            type: 'rich',
-            content: content.richmessage || content.message,
-            time: time,
-            fromUser: 0,
-            ...extralMessage
-          }
-          dispatch({type: PUSH_MESSAGE, message});
+          renderLeaveOff({
+            richmessage: content.richmessage,
+            message: content.message,
+            extralMessage
+          });
           break
         default:
           console.log(`警告: 暂不支持${code}解析`);
     }
+ }
+
+
+ /**
+  * 201渲染留言
+  * @param {*} param0
+  */
+ const renderLeave = ({
+  richmessage = "",
+  message = "",
+  extralMessage = {}
+ }) => {
+   // 没有客服在线,且进入留言
+   const dispatch = get('store').dispatch;
+
+   let msg = {
+    type: 'rich',
+    content: richmessage || message,
+    time: new Date().getTime(),
+    fromUser: 0,
+    ...extralMessage
+  }
+  dispatch({type: PUSH_MESSAGE, message: msg });
+ }
+
+ const renderLeaveOff = ({
+  richmessage = "",
+  message = "",
+  extralMessage = {}
+ }) => {
+    // 留言未开启输入框禁用
+    const dispatch = get('store').dispatch;
+
+    dispatch({
+      type: SET_CHAT_INPUT_DISABLED,
+      value: true
+    })
+
+    dispatch({
+      type: SET_CHAT_INPUT_PLACEHOLDER,
+      value: '客服不在线，不支持留言'
+    })
+
+    // 留言未开启
+    let msg = {
+      type: 'rich',
+      content: richmessage || message,
+      time: new Date().getTime(),
+      fromUser: 0,
+      ...extralMessage
+    }
+    dispatch({type: PUSH_MESSAGE, message: msg});
  }
 
 
@@ -670,4 +704,34 @@ export const receiveCustomCard = (content) => {
     fromUser: 0
   }
   dispatch({ type: PUSH_MESSAGE, message });
+}
+
+
+/**
+ * 进入排队失败的状态
+ */
+export const queueFail = (content) => {
+  const dispatch = get('store').dispatch;
+
+  if(content.code == 302){
+    dispatch({
+      type: SET_SESSION_CODE,
+      value: 201
+    })
+    renderLeave({
+      richmessage: content.richmessage,
+      message: content.message
+    })
+  }
+
+  if(content.code == 303){
+    dispatch({
+      type: SET_SESSION_CODE,
+      value: 205
+    })
+    renderLeaveOff({
+      richmessage: content.richmessage,
+      message: content.message
+    })
+  }
 }

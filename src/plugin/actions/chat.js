@@ -508,7 +508,7 @@ export const sendProductCardByUser = () => {
     type: 'product',
     content: {
       ...extraParms,
-      sendByUser: 0
+      sendByUser: 0,
     },
     time: new Date().getTime(),
     status: 1,
@@ -516,5 +516,8 @@ export const sendProductCardByUser = () => {
   }
 
   dispatch({ type: PUSH_MESSAGE, message });
-  NIM.sendProductCard(extraParms);
+  NIM.sendProductCard({
+    ...extraParms,
+    auto: 0
+  });
 }

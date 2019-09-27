@@ -13,6 +13,7 @@ import {
   onQueueStatus,
   receiveTransfer,
   onReceiveAssociate,
+  queueFail
 } from '../actions/nimMsgHandle';
 import {
   FROM_TYPE,
@@ -210,7 +211,7 @@ export default class IMSERVICE {
 
       let content = {
         cmd: APPLY_KEFU_CMD,
-        deviceid: get('deviceid'),
+        deviceid: get('foreignid') ? get('foreignid') : get('deviceid'),
         foreignid: get('foreignid'),
         fromType: FROM_TYPE,
         level: get('level'),
@@ -443,8 +444,11 @@ export default class IMSERVICE {
         case RECEIVE_QUEUE_NUM_CMD:
           if (content.code == 200) {
             onQueueStatus(content);
-          } else {
+          } else if(content.code == 302 || content.code == 303) {
+            queueFail(content);
             this.clearQueueTimer();
+          }else{
+            console.log('queue code 异常');
           }
           break;
         default:
