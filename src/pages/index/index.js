@@ -103,9 +103,11 @@ export default class Index extends Component {
               <Button>商品卡片</Button>
             </Navigator>
           </View>
-          {/* <View className="u-input">
-            <Input placeholder="自定义用户id" onChange={this.handleChange}></Input>
-          </View> */}
+          <View>
+            <Navigator url='/pages/test/index'>
+              <Button>测试</Button>
+            </Navigator>
+          </View>
       </View>
     )
   }

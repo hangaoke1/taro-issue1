@@ -1,5 +1,6 @@
 import { set, get, initDeviceid } from './global_config';
 import { exitSession } from './actions/chat';
+import eventbus from '@/lib/eventbus';
 
 export const _$configAppKey = (key) => {
   if (!key) return;
@@ -73,4 +74,32 @@ export const _$configProduct = (product) => {
  */
 export const _$getProduct = () => {
   return get('product');
+}
+
+/**
+ * 获取消息未读数
+ */
+export const _$getAllUnreadCount = () => {
+  return get('message_unread_count')
+}
+
+/**
+ * 监听消息未读书
+ * @param {funl} cb 监听回掉函数 
+ */
+export const _$onunread = (cb) => {
+  eventbus.on('message_unread', (msg) => {
+    const total = get('message_unread_count')
+    cb({
+      total,
+      msg
+    })
+  })
+}
+
+ /**
+  * 清空消息未读数量
+  */
+export const _clearUnreadCount = () => {
+  
 }

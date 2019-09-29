@@ -93,10 +93,13 @@ class Chat extends Component {
     this.createAction();
     this.state = {
       lastId: '',
+      scrollTop: 0,
       height: 0,
       videoUrl: '',
+      wrapHeight: 0,
       scrollWithAnimation: true,
       showAssociate: false,
+      needOffset: false, // 聊天内容是否需要顶起
       lockBot: [] // 锁定bot入口1s
     };
   }
@@ -109,11 +112,42 @@ class Chat extends Component {
   componentDidMount() {
     eventbus.on('push_message', this.scrollToBottom);
     eventbus.on('video_click', this.handlePlay);
-    this.scrollToBottom(false);
+    this.scrollToBottom(false, 1000);
+    this.calcWrapHeight();
   }
 
   componentWillUnmount() {
     eventbus.off('push_message', this.scrollToBottom);
+  }
+
+  componentDidUpdate() {
+    if (this.state.needOffset) return;
+    this.needOffset();
+  }
+
+  // 计算滚动容器高度
+  calcWrapHeight() {
+    const query = Taro.createSelectorQuery().in(this.$scope);
+    const node = query.select('.u-scroll');
+    node
+      .fields({ size: true }, res => {
+        this.setState({ wrapHeight: res.height }, () => {
+          this.needOffset();
+        });
+      })
+      .exec();
+  }
+
+  needOffset() {
+    const query = Taro.createSelectorQuery().in(this.$scope);
+    const node = query.select('.u-message-list');
+    node
+      .fields({ size: true }, res => {
+        if (res.height >= this.state.wrapHeight) {
+          this.setState({ needOffset: true });
+        }
+      })
+      .exec();
   }
 
   componentDidShow() {}
@@ -121,7 +155,7 @@ class Chat extends Component {
   componentDidHide() {}
 
   // 重置底部区域
-  scrollToBottom = (scrollWithAnimation = true) => {
+  scrollToBottom = (scrollWithAnimation = true, delay = 300) => {
     if (this.timer) {
       return;
     }
@@ -131,10 +165,11 @@ class Chat extends Component {
     });
     this.timer = setTimeout(() => {
       this.setState({
-        lastId: 'm-bottom'
+        lastId: 'm-bottom',
       });
+
       this.timer = null;
-    }, 150);
+    }, delay);
   };
 
   handleConfirm = event => {
@@ -158,12 +193,16 @@ class Chat extends Component {
   // 处理选择表情
   handlePortraitClick = () => {
     this.props.toggleShowPortrait();
+    this.setState({ height: 0 });
+    if (this.state.height) return;
     this.scrollToBottom();
   };
 
   // 处理点击加号
   handlePlusClick = () => {
     this.props.toggleShowFun();
+    this.setState({ height: 0 });
+    if (this.state.height) return;
     this.scrollToBottom();
   };
 
@@ -205,6 +244,9 @@ class Chat extends Component {
   };
 
   handleBlur = () => {
+    const { Options } = this.props;
+    const isOpen = Options.showFunc || Options.showPortrait;
+    if (isOpen) return;
     this.setState({ height: 0 });
   };
 
@@ -243,19 +285,19 @@ class Chat extends Component {
     const { sendText } = this.props;
     sendText(label);
 
-    this.setState((state) => {
+    this.setState(state => {
       return {
         lockBot: [...state.lockBot, label]
-      }
-    })
+      };
+    });
     // 1s后释放
     setTimeout(() => {
-      this.setState((state) => {
+      this.setState(state => {
         return {
           lockBot: state.lockBot.filter(item => item !== label)
-        }
-      })
-    }, 1000)
+        };
+      });
+    }, 1000);
   };
 
   handleFullscreenchange = e => {
@@ -334,14 +376,22 @@ class Chat extends Component {
       videoUrl,
       scrollWithAnimation,
       showAssociate,
-      lockBot
+      lockBot,
+      needOffset
     } = this.state;
     const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
 
     const isOpen = Options.showFunc || Options.showPortrait;
 
+    const offset = `calc(${height}px + ${Taro.pxTransform(130)} + ${
+      isOpen ? Taro.pxTransform(544) : '0px'
+    } + ${isRobot && Bot.botList.length ? Taro.pxTransform(90) : '0px'})`
+
+    const hasBot = isRobot && Bot.botList.length
+
     return (
       <Index className="m-page-wrapper">
+        
         {/* 视频全局对象 */}
         <View
           style={`display: ${
@@ -358,27 +408,37 @@ class Chat extends Component {
             onFullscreenchange={this.handleFullscreenchange}
           />
         </View>
-        <View
-          className="m-chat"
-          style={`height: calc(100vh - ${
-            isOpen ? Taro.pxTransform(540) : '0px'
-          } - ${Taro.pxTransform(130)} - ${height}px)`}
-        >
-          <View className="m-view">
-            <ScrollView
-              className="message-content"
-              scrollY
-              scrollWithAnimation={scrollWithAnimation}
-              scrollIntoView={lastId}
-              onTouchStart={this.handleBodyClick}
-            >
+        <View className="m-chat">
+          <ScrollView
+            className="u-scroll"
+            style={
+              !needOffset
+                ? `padding-top: ${ needOffset && hasBot ? Taro.pxTransform(88) : 0}`
+                : `bottom: ${offset};padding-top: ${ needOffset && hasBot ? Taro.pxTransform(88) : 0}`
+            }
+            scrollY
+            scrollWithAnimation={scrollWithAnimation}
+            scrollIntoView={lastId}
+            onTouchStart={this.handleBodyClick}
+          >
+            <View className="u-message-list">
+              {/* <View style={`height: ${ needOffset && hasBot ? Taro.pxTransform(88) : 0}`}></View> */}
               <MessageView
                 Message={Message}
                 onImgClick={this.handleImgClick}
               ></MessageView>
-              <View id="m-bottom"></View>
-            </ScrollView>
-          </View>
+            </View>
+            <View id="m-bottom"></View>
+          </ScrollView>
+        </View>
+
+        <View
+          className={`u-chatbox`}
+          style={`transform: translateY(-${
+            height ? height + 'px' : isOpen ? Taro.pxTransform(544) : '0'
+          });`}
+          // style={`transform: translateY(-500px);`}
+        >
           {showAssociate ? (
             <View className="m-associate">
               <View className="m-associate-list">
@@ -401,7 +461,9 @@ class Chat extends Component {
             <ScrollView scrollX className="m-bot">
               {Bot.botList.map(bot => (
                 <View
-                  className={`m-bot-item ${lockBot.includes(bot.label) ? 'z-bot-disable' : ''}`}
+                  className={`m-bot-item ${
+                    lockBot.includes(bot.label) ? 'z-bot-disable' : ''
+                  }`}
                   key={bot.id}
                   onClick={e => this.handleBotClick(bot, e)}
                 >
@@ -410,13 +472,6 @@ class Chat extends Component {
               ))}
             </ScrollView>
           ) : null}
-        </View>
-        <View
-          className={`u-chatbox`}
-          style={`transform: translateY(-${
-            height ? height + 'px' : isOpen ? Taro.pxTransform(544) : '0px'
-          });`}
-        >
           <ChatBox
             onInput={this.handleAssociate}
             onConfirm={this.handleConfirm}
@@ -426,6 +481,10 @@ class Chat extends Component {
             onBlur={this.handleBlur}
           ></ChatBox>
         </View>
+        <View
+          className="u-mask"
+          style={`height: ${offset}`}
+        ></View>
         <View className={`u-funcbox ${Options.showFunc ? 'open' : ''}`}>
           <FuncBox
             list={functionList}
