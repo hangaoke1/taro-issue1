@@ -2,9 +2,34 @@ import { set, get, initDeviceid } from './global_config';
 import { exitSession } from './actions/chat';
 import eventbus from '@/lib/eventbus';
 
+
+/**
+ * 配饰企业的appKey
+ * @param {str} key
+ */
+export const _$configAppKeySync = (key) => {
+  if (Object.prototype.toString.call(key) === "[object String]") {
+    set('appKey', key);
+  } else {
+    console.log('appkey数据格式不符合要求');
+  }
+}
+
 export const _$configAppKey = (key) => {
-  if (!key) return;
-  set('appKey', key);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        if (Object.prototype.toString.call(key) === "[object String]") {
+          set('appKey', key);
+          resolve(key);
+        } else {
+          reject('appkey数据格式不符合要求');
+        }
+      } catch (err) {
+        reject(err);
+      }
+    }, 0)
+  })
 }
 
 /**
@@ -20,24 +45,59 @@ export const __configDomain = (domain) => {
  * 轻量crm，对接用户信息
  * @param {*} userInfo
  */
+export const _$setUserInfoSync = (userInfo) => {
+
+  if (Object.prototype.toString.call(userInfo) === "[object Object]") {
+    // vip
+    if (userInfo && userInfo.level) {
+      _$setVipLevel(userInfo.level);
+    }
+
+    if (userInfo && userInfo.userId) {
+      set('foreignid', userInfo.userId);
+    }
+
+    set('userInfo', userInfo);
+  } else {
+    console.log('userInfo数据格式不符合要求');
+  }
+}
+
 export const _$setUserInfo = (userInfo) => {
 
-  // vip
-  if(userInfo && userInfo.level){
-    _$setVipLevel(userInfo.level);
-  }
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        if (Object.prototype.toString.call(userInfo) === "[object Object]") {
+          try {
+            // vip
+            if (userInfo && userInfo.level) {
+              _$setVipLevel(userInfo.level);
+            }
 
-  if (userInfo && userInfo.userId) {
-    set('foreignid', userInfo.userId);
-  }
+            if (userInfo && userInfo.userId) {
+              set('foreignid', userInfo.userId);
+            }
 
-  set('userInfo', userInfo);
+            set('userInfo', userInfo);
+            resolve(userInfo);
+          } catch (err) {
+            reject(err);
+          }
+        } else {
+          reject('userInfo数据格式不符合要求');
+        }
+      } catch (err) {
+        reject(err);
+      }
+    }, 0)
+  })
 }
 
 /**
  * 用户注销
  */
-export const _$logout = () => {
+export const _$logoutSync = () => {
   set('foreignid', '');
   set('deviceid', initDeviceid(true));
   _$setUserInfo(null);
@@ -45,12 +105,51 @@ export const _$logout = () => {
   exitSession();
 }
 
+
+export const _$logout = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try{
+        set('foreignid', '');
+        set('deviceid', initDeviceid(true));
+        _$setUserInfo(null);
+        // 注销后yunxin账户都会变化，需要断掉当前会话
+        exitSession();
+        resolve('logout success');
+      }catch(err){
+        reject(err);
+      }
+    }, 0)
+  })
+}
+
 /**
  * 设置用户的vip
- * @param {} Level
+ * @param {Number} Level
  */
+export const _$setVipLevelSync = (level = 0) => {
+  if (Object.prototype.toString.call(userInfo) === "[object String]" || Object.prototype.toString.call(userInfo) === "[object Number]") {
+    set('level', level);
+  }else{
+    reject('userInfo数据格式不符合要求');
+  }
+}
+
 export const _$setVipLevel = (level = 0) => {
-  set('level', level);
+  return new Promise((resolve, reject) => {
+    if (Object.prototype.toString.call(userInfo) === "[object String]" || Object.prototype.toString.call(userInfo) === "[object Number]") {
+      setTimeout(() => {
+        try{
+          set('level', level);
+          resolve({level});
+        }catch(err){
+          reject(err);
+        }
+      }, 0)
+    }else{
+      reject('level数据格式不符合要求');
+    }
+  })
 }
 
 /**
@@ -64,9 +163,29 @@ export const _$getVipLevel = () => {
  * 配置商品信息
  * @param {*} product
  */
+export const _$configProductSync = (product) => {
+  if (Object.prototype.toString.call(product) === "[object Object]") {
+    set('product', product);
+  }else{
+    console.log('product数据格式不符合要求');
+  }
+}
+
 export const _$configProduct = (product) => {
-  if(!product) return;
-  set('product', product);
+  return new Promise((resolve, reject) => {
+    if (Object.prototype.toString.call(product) === "[object Object]") {
+      setTimeout(() => {
+        try{
+          set('product', product);
+          resolve(product);
+        }catch(err){
+          reject(err);
+        }
+      }, 0)
+    }else{
+      reject('product数据格式不符合要求');
+    }
+  })
 }
 
 /**
