@@ -41,7 +41,7 @@ import {
   EXIT_SESSION_CMD,
   SEND_PRODUCT_CARD_CMD
 } from '../constants';
-
+import { getCurrentUrl } from '@/lib/unread';
 
 export const STATUS = {
   status: 'init'
@@ -364,11 +364,16 @@ export default class IMSERVICE {
 
   // 清除未读消息
   clearUnreadMsg() {
-    const sessionid = get('sessionid');
-    this.sendCustomSysMsg({
-      cmd: 500,
-      sessionid
-    });
+    const url = getCurrentUrl();
+    if (url.indexOf('pages/chat/chat') > -1) {
+      // 如果在聊天页面则同步服务器清空未读数
+      const sessionid = get('sessionid');
+      this.sendCustomSysMsg({
+        cmd: 500,
+        sessionid
+      });
+    } else {
+    }
   }
 
   /**
@@ -456,6 +461,7 @@ export default class IMSERVICE {
           break;
       }
 
+      // 清空未读消息
       this.clearUnreadMsg();
     } catch (e) { }
   }

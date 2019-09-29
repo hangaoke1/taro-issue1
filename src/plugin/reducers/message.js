@@ -2,13 +2,14 @@ import _get from 'lodash/get';
 import { PUSH_MESSAGE, UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYINDEX, UPDATE_MESSAGE_BYACTION, UPDATE_MESSAGE_BYUUID } from '../constants/message';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '../lib/uuid';
+import { addUnread } from '@/lib/unread';
+import { get, set } from '../global_config';
 
 const initMessages = [];
 
 const Message = (state = initMessages, action) => {
     switch(action.type){
         case PUSH_MESSAGE:
-            eventbus.trigger('push_message');
             if (!_get(action, 'message.uuid')) {
                 action.message.uuid = genUUID16();
             }
@@ -16,6 +17,11 @@ const Message = (state = initMessages, action) => {
                 action.message.idClient = _get(action, 'message.msg.idClient')
             }
             delete action.message.msg;
+            eventbus.trigger('push_message'); // 触发事件
+
+            // 未读消息设置
+            addUnread(action.message);
+
             return [...state, action.message];
         case UPDATE_MESSAGE_BYKEY:
             return [...updateMessage(state, action, 'key')];

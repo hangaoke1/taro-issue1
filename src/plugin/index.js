@@ -195,23 +195,31 @@ export const _$getProduct = () => {
   return get('product');
 }
 
+
+/**
+ * ---- 插件消息接口 供调用方使用 ----
+ * message_unread_count 记录未读数
+ * message_unread 监听未读消息事件
+ */
+
 /**
  * 获取消息未读数
  */
 export const _$getAllUnreadCount = () => {
-  return get('message_unread_count')
+  return get('message_unread_count');
 }
 
 /**
- * 监听消息未读书
- * @param {funl} cb 监听回掉函数 
+ * 监听消息未读数
+ * @param {funl} cb 监听回掉函数
+ * @return {object} total: 未读消息总数, message: 消息体
  */
 export const _$onunread = (cb) => {
-  eventbus.on('message_unread', (msg) => {
-    const total = get('message_unread_count')
+  eventbus.on('message_unread', (message) => {
+    const total = get('message_unread_count');
     cb({
       total,
-      msg
+      message
     })
   })
 }
@@ -219,6 +227,10 @@ export const _$onunread = (cb) => {
  /**
   * 清空消息未读数量
   */
-export const _clearUnreadCount = () => {
-  
+export const _$clearUnreadCount = () => {
+  set('message_unread_count', 0);
+  eventbus.trigger('message_unread', {
+    total: 0,
+    message: null
+  })
 }

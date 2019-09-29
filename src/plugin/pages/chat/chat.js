@@ -3,6 +3,7 @@ import { View, ScrollView, Video, RichText } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import _get from 'lodash/get';
 
+import { clearUnreadHome } from '@/lib/unread';
 import Index from '../../app';
 
 import MessageView from '../../components/Message';
@@ -110,6 +111,9 @@ class Chat extends Component {
   }
 
   componentDidMount() {
+    // 清空未读消息
+    clearUnreadHome();
+
     eventbus.on('push_message', this.scrollToBottom);
     eventbus.on('video_click', this.handlePlay);
     this.scrollToBottom(false, 1000);

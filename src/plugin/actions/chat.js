@@ -12,7 +12,15 @@ eventbus.on('do_send_product_card', function(extraParms){
   sendProductCard(extraParms);
 });
 
+
 let NIM = null;
+
+// 清空未读数量
+eventbus.on('clear_unread', function(extraParms){
+  if (canSendMessage()) {
+    NIM.clearUnreadMsg();
+  }
+});
 
 /**
  * 申请分配客服

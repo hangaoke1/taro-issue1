@@ -11,12 +11,24 @@ export default class Index extends Component {
     navigationBarTitleText: '网易七鱼Demo'
   }
 
+  state = {
+    unReadCount: 0
+  }
+
   componentWillMount () {
     // myPluginInterface._$configAppKey('6dff3dbbe41efc598f74eac5d547355c');
     myPluginInterface._$configAppKey('f13509f5e8b8e1fbb388b3ddbee238c2');
   }
 
-  componentDidMount () { }
+  componentDidMount () {
+    myPluginInterface._$onunread((obj) => {
+      const { total, msg } = obj;
+      console.log('监听到未读消息: ', total, msg)
+      this.setState({
+        unReadCount: total
+      })
+    })
+  }
 
   componentWillUnmount () { }
 
@@ -84,6 +96,10 @@ export default class Index extends Component {
     })
   }
 
+  emptyUnread = () => {
+    myPluginInterface._$clearUnreadCount();
+  }
+
   render () {
     return (
       <View className='index'>
@@ -103,11 +119,13 @@ export default class Index extends Component {
               <Button>商品卡片</Button>
             </Navigator>
           </View>
-          <View>
+          {/* <View>
             <Navigator url='/pages/test/index'>
               <Button>测试</Button>
             </Navigator>
-          </View>
+          </View> */}
+          <View style='text-align: center;margin: 10px 0;'>消息未读数: {unReadCount}</View>
+          <View><Button type="warn" onClick={this.emptyUnread}>清空消息未读数</Button></View>
       </View>
     )
   }
