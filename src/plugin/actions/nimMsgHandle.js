@@ -103,12 +103,6 @@ export const assignKefu = (content) => {
     let { code } = content;
 
     if (!isSameSession) {
-      let timeTip = {
-        type: 'systip',
-        content: timestamp2date(time,'HH:mm'),
-        time: time
-      }
-      dispatch({type: PUSH_MESSAGE, message: timeTip});
       // 先这么搞一下
       dispatch({
         type: UPDATE_ENTRY_BYTEXT,

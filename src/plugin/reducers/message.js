@@ -1,9 +1,9 @@
 import _get from 'lodash/get';
-import { PUSH_MESSAGE, UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYINDEX, UPDATE_MESSAGE_BYACTION, UPDATE_MESSAGE_BYUUID } from '../constants/message';
+import { PUSH_MESSAGE, UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYINDEX, UPDATE_MESSAGE_BYACTION, UPDATE_MESSAGE_BYUUID,TIME_TIP_DURATION } from '../constants/message';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '../lib/uuid';
 import { addUnread } from '@/lib/unread';
-import { get, set } from '../global_config';
+import { timestamp2date } from '../utils';
 
 const initMessages = [];
 
@@ -22,7 +22,30 @@ const Message = (state = initMessages, action) => {
             // 未读消息设置
             addUnread(action.message);
 
-            return [...state, action.message];
+
+            // 时间的提示按TIME_TIP_DURATION时间段展示
+            let prevMessage = [...state], currentMessage = {...action.message};
+            currentMessage.time = new Date().getTime();
+
+            if(prevMessage.length){
+              if((currentMessage.time - prevMessage[prevMessage.length - 1].time) > TIME_TIP_DURATION){
+                let timeTip = {
+                  type: 'systip',
+                  content: timestamp2date(currentMessage.time,'HH:mm')
+                }
+
+                return [...state, timeTip, currentMessage];
+              }else{
+                return [...state, currentMessage];
+              }
+            }else{
+              let timeTip = {
+                type: 'systip',
+                content: timestamp2date(new Date().getTime(),'HH:mm')
+              }
+
+              return [...state, timeTip, currentMessage];
+            }
         case UPDATE_MESSAGE_BYKEY:
             return [...updateMessage(state, action, 'key')];
         case UPDATE_MESSAGE_BYACTION:
