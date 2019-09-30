@@ -19,9 +19,9 @@ myPluginInterface._$onunread(res => {
 });
 ```
 
-##### `_$clearUnreadCount()` 清空所有纬度消息
+##### `_$clearUnreadCount()` 清空所有未读消息
 ```js
 const myPluginInterface = Taro.requirePlugin('myPlugin');
-myPluginInterface._$clearUnreadCount(); // 会触发_$onunrea 回调
+myPluginInterface._$clearUnreadCount(); // 会触发_$onunread 回调
 console.log('未读消息清空完成!');
 ```
