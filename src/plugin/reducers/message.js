@@ -1,4 +1,5 @@
 import _get from 'lodash/get';
+import _findIndex from 'lodash/findIndex';
 import { PUSH_MESSAGE, UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYINDEX, UPDATE_MESSAGE_BYACTION, UPDATE_MESSAGE_BYUUID,TIME_TIP_DURATION } from '../constants/message';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '../lib/uuid';
@@ -10,6 +11,16 @@ const initMessages = [];
 const Message = (state = initMessages, action) => {
     switch(action.type){
         case PUSH_MESSAGE:
+
+            if(action.message && action.message.uniqueKey){
+              let index = _findIndex(state, (o) => {
+                return o.uniqueKey && o.uniqueKey == action.message.uniqueKey;
+              })
+
+              if(index != -1)
+              return state;
+            }
+
             if (!_get(action, 'message.uuid')) {
                 action.message.uuid = genUUID16();
             }

@@ -133,11 +133,13 @@ export const assignKefu = (content) => {
             }
 
             // 如果有message接入语，才显示接入语
+            // 消息列表里面的sessionId用来根据sessionId去重用的
             if(content.stafftype == 0 && content.message){
               message = {
                 type: 'systip',
                 content: `${content.message}`,
-                time: time
+                time: time,
+                uniqueKey: `session-start-tip-${content.sessionid}`
               }
               dispatch({type: PUSH_MESSAGE, message});
             }
