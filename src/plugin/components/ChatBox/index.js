@@ -78,7 +78,7 @@ export default function ChatBox(props) {
     setFocus(true)
     props.onFocus(event)
   };
-  
+
 
   // 处理失去焦点
   const handleBlur = (event) => {
@@ -106,7 +106,7 @@ export default function ChatBox(props) {
   return (
     <View className='m-ChatBox'>
       <View className='u-voice-icon'>
-        <Iconfont type='icon-chat-voice-btn' className='u-voice-icon' />
+        {/* <Iconfont type='icon-chat-voice-btn' className='u-voice-icon' /> */}
       </View>
       <Input
         type='text'
