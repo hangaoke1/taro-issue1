@@ -16,7 +16,6 @@ import './index.less';
 export default function ChatBox(props) {
   const [value, setValue] = useState('');
   const [focus, setFocus] = useState(false);
-  const [keyheight, setKeyheight] = useState(0);
   const [lock, setLock] = useState(false); // HACK: 防止键盘弹起动画过程中点击表情从而出现键盘遮挡bug
   const options = useSelector(state => state.Options);
   const dispatch = useDispatch();
@@ -67,29 +66,14 @@ export default function ChatBox(props) {
     props.onPlusClick(event);
   };
 
-  const handleKeyboardheightchange = event => {
-
-    if (keyheight === event.detail.height) return;
-
-    if (event.detail.height) {
-      if (!lock) {
-        setLock(true)
-        setTimeout(() => {
-          setLock(false)
-        }, 500)
-      }
-      dispatch(hideAction());
-      setFocus(true)
-      props.onFocus(event)
-    } else {
-      setFocus(false)
-      props.onBlur(event)
-    }
-    setKeyheight(event.detail.height)
-  }
-
   // 处理聚焦
   const handleFocus = (event) => {
+    if (!lock) {
+      setLock(true)
+      setTimeout(() => {
+        setLock(false)
+      }, 500)
+    }
     dispatch(hideAction());
     setFocus(true)
     props.onFocus(event)
@@ -127,10 +111,9 @@ export default function ChatBox(props) {
       <Input
         type='text'
         value={value}
-        // focus={focus}
-        // onFocus={handleFocus}
-        // onBlur={handleBlur}
-        onKeyboardheightchange={handleKeyboardheightchange}
+        focus={focus}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         placeholder={corpStatus.chatInputPlaceHolder}
         disabled={corpStatus.chatInputDisabled}
         className='u-edtior'
