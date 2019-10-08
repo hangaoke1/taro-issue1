@@ -119,6 +119,9 @@ export default class Index extends Component {
               <Button>商品卡片</Button>
             </Navigator>
           </View>
+          <View>
+            <Button>{Taro.getAccountInfoSync().miniProgram.appId}</Button>
+          </View>
           {/* <View>
             <Navigator url='/pages/test/index'>
               <Button>测试</Button>
