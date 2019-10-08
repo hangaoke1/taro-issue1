@@ -235,9 +235,6 @@ export default class IMSERVICE {
         ...extraParams
       };
 
-      console.log('apply', content);
-      console.log('appID', Taro.getAccountInfoSync().miniProgram.appId);
-
       this.sendCustomSysMsg(content)
         .then(msg => {
           this.updateCrmInfo();
