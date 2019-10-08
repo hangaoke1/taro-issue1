@@ -96,6 +96,20 @@ export default class Index extends Component {
     })
   }
 
+  handleAppId = () => {
+    Taro.setClipboardData(
+      {
+        data: Taro.getAccountInfoSync().miniProgram.appId
+      }
+    ).then(json => {
+      Taro.showToast({
+        title: 'appId已复制',
+        icon: 'none',
+        duration: 1000
+      })
+    })
+  }
+
   emptyUnread = () => {
     myPluginInterface._$clearUnreadCount();
   }
@@ -120,7 +134,7 @@ export default class Index extends Component {
             </Navigator>
           </View>
           <View>
-            <Button>{Taro.getAccountInfoSync().miniProgram.appId}</Button>
+            <Button onClick={this.handleAppId}>{Taro.getAccountInfoSync().miniProgram.appId}</Button>
           </View>
           {/* <View>
             <Navigator url='/pages/test/index'>
