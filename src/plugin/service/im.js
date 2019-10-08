@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro';
-import { get,set } from '../global_config';
+import { get, set } from '../global_config';
 import {
   assignKefu,
   receiveMsg,
@@ -45,7 +45,7 @@ import { getCurrentUrl } from '@/lib/unread';
 
 export const STATUS = {
   status: 'init'
-}
+};
 
 export default class IMSERVICE {
   constructor(initer) {
@@ -58,17 +58,20 @@ export default class IMSERVICE {
   static getInstance(initer) {
     if (!this.instance) {
       this.instance = new IMSERVICE(initer);
-    }else{
-      if(initer.appKey != this.instance.appKey || initer.account != this.instance.account ||
-        initer.token != this.instance.token){
-          STATUS.status = 'disconnect';
-          this.instance.getNim().then( nim => {
-            nim.destroy({
-              done: () => {
-                console.log('destroy really done!')
-              }
-            })
-          })
+    } else {
+      if (
+        initer.appKey != this.instance.appKey ||
+        initer.account != this.instance.account ||
+        initer.token != this.instance.token
+      ) {
+        STATUS.status = 'disconnect';
+        this.instance.getNim().then(nim => {
+          nim.destroy({
+            done: () => {
+              console.log('destroy really done!');
+            }
+          });
+        });
       }
     }
 
@@ -180,6 +183,18 @@ export default class IMSERVICE {
             scene: 'p2p',
             to: to,
             wxFilePath: tempFilePath,
+            beforesend: function(msg) {
+              console.log('正在发送p2p image消息, id=' + msg.idClient);
+            },
+            uploadprogress: function(obj) {
+              console.log('文件总大小: ' + obj.total + 'bytes');
+              console.log('已经上传的大小: ' + obj.loaded + 'bytes');
+              console.log('上传进度: ' + obj.percentage);
+              console.log('上传进度文本: ' + obj.percentageText);
+            },
+            uploaddone: function(error, file) {
+              console.log('上传' + (!error ? '成功' : '失败'), error, file);
+            },
             done: (error, msg) => {
               if (error) {
                 reject(error);
@@ -224,7 +239,7 @@ export default class IMSERVICE {
       console.log('appID', Taro.getAccountInfoSync().miniProgram.appId);
 
       this.sendCustomSysMsg(content)
-        .then( msg => {
+        .then(msg => {
           this.updateCrmInfo();
           resolve(msg);
         })
@@ -238,9 +253,11 @@ export default class IMSERVICE {
    * 访客主动结束会话
    * @param {*} extraParams
    */
-  exitSession(extraParams ={
-    sessionid: ''
-  }){
+  exitSession(
+    extraParams = {
+      sessionid: ''
+    }
+  ) {
     return new Promise((resolve, reject) => {
       let content = {
         cmd: EXIT_SESSION_CMD,
@@ -248,29 +265,31 @@ export default class IMSERVICE {
       };
 
       this.sendCustomSysMsg(content)
-      .then( msg => {
-        resolve(msg);
-      }).catch( error => {
-        reject(error);
-      })
-    })
+        .then(msg => {
+          resolve(msg);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
   }
 
   /**
    * 同步轻量crm
    * @param {*} extraParams
    */
-  updateCrmInfo(extraParams ={
-    authToken: ''
-  }){
-    if(!get('userInfo'))
-      return;
+  updateCrmInfo(
+    extraParams = {
+      authToken: ''
+    }
+  ) {
+    if (!get('userInfo')) return;
     let content = {
       cmd: UPDATE_CRM_CMD,
       foreignid: get('foreignid'),
       userinfo: JSON.stringify(get('userInfo').data),
       ...extraParams
-    }
+    };
 
     this.sendCustomSysMsg(content);
   }
@@ -279,29 +298,31 @@ export default class IMSERVICE {
    * 发送商品卡片信息
    * @param {*} extraParams
    */
-  sendProductCard(extraParams = {
-    tags: [],
-    title: ''
-  }){
-    return new Promise((resolve,reject) => {
-      if(!get('product'))
-        return;
+  sendProductCard(
+    extraParams = {
+      tags: [],
+      title: ''
+    }
+  ) {
+    return new Promise((resolve, reject) => {
+      if (!get('product')) return;
       let content = {
         cmd: SEND_PRODUCT_CARD_CMD,
         ...extraParams
-      }
+      };
 
       this.sendCustomSysMsg(content)
         .then(msg => {
           // 发送成功后清除商品信息，只发一次
-          if(get('product')){
+          if (get('product')) {
             set('product', null);
           }
           resolve(msg);
-        }).catch(error => {
-          reject(error);
         })
-    })
+        .catch(error => {
+          reject(error);
+        });
+    });
   }
 
   /**
@@ -326,7 +347,6 @@ export default class IMSERVICE {
     });
   }
 
-
   /**
    * 访客主动取消排队
    * @param {*} extraParams
@@ -346,8 +366,7 @@ export default class IMSERVICE {
         .catch(error => {
           reject(error);
         });
-
-    })
+    });
   }
 
   /**
@@ -357,7 +376,7 @@ export default class IMSERVICE {
    */
   sendPushMsgStatus(status, ids) {
     ids = Array.isArray(ids) ? ids : [ids];
-    for(let i = 0; i < ids.length; i++) {
+    for (let i = 0; i < ids.length; i++) {
       this.sendCustomSysMsg({
         cmd: 135,
         status,
@@ -408,7 +427,7 @@ export default class IMSERVICE {
           Taro.hideNavigationBarLoading();
           Taro.setNavigationBarTitle({
             title: NAVIGATIONBAR_TITLE
-          })
+          });
           assignKefu(content);
           if (content.code == 203) {
             this.askQueueStatus();
@@ -453,10 +472,10 @@ export default class IMSERVICE {
         case RECEIVE_QUEUE_NUM_CMD:
           if (content.code == 200) {
             onQueueStatus(content);
-          } else if(content.code == 302 || content.code == 303) {
+          } else if (content.code == 302 || content.code == 303) {
             queueFail(content);
             this.clearQueueTimer();
-          }else{
+          } else {
             console.log('queue code 异常');
           }
           break;
@@ -467,25 +486,24 @@ export default class IMSERVICE {
 
       // 清空未读消息
       this.clearUnreadMsg();
-    } catch (e) { }
+    } catch (e) {}
   }
 
   // 七鱼定制离线消息处理
   onofflinefiltermsgs(msgs) {
     msgs.forEach(msg => {
       receiveMsg(msg);
-    })
+    });
   }
 
   /**
    * 发送心跳
    */
   sendHeartbeat = () => {
-
     let content = {
       cmd: HEART_BEAT_CMD,
       deviceid: get('deviceid')
-    }
+    };
     this.sendCustomSysMsg(content);
 
     setTimeout(this.sendHeartbeat.bind(this), get('heartbeatCycle'));
@@ -494,9 +512,11 @@ export default class IMSERVICE {
   /**
    * 轮询的方式询问排队的状态
    */
-  askQueueStatus = (extraParams = {
-    deviceid: get('deviceid')
-  }) => {
+  askQueueStatus = (
+    extraParams = {
+      deviceid: get('deviceid')
+    }
+  ) => {
     this.queueTimer = setInterval(() => {
       return new Promise((resolve, reject) => {
         let content = {
@@ -511,15 +531,14 @@ export default class IMSERVICE {
           .catch(error => {
             reject(error);
           });
-      })
+      });
     }, QUEUE_TIMER);
   };
 
   clearQueueTimer = () => {
-    if (!this.queueTimer)
-      return;
+    if (!this.queueTimer) return;
     clearInterval(this.queueTimer);
-  }
+  };
 
   onConnect(data) {
     console.log('----onConnect----，data:' + data);

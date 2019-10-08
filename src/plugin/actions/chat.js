@@ -7,6 +7,7 @@ import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID } from '../constants/message';
 import { SET_EVALUATION_VISIBLE } from '../constants/chat';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import eventbus from '../lib/eventbus';
+import { genUUID16 } from '@/lib/uuid';
 
 eventbus.on('do_send_product_card', function(extraParms){
   sendProductCard(extraParms);
@@ -130,6 +131,20 @@ export const sendImage = res => dispatch => {
   // TODO: 处理发送失败问题
   Promise.all(
     tempFilePaths.map(tempFilePath => {
+      const uuid = genUUID16()
+      // 1. 生成空消息
+      let defaultMessage = {
+        type: 'image',
+        idClient: '',
+        content: {},
+        time: Date.now(),
+        status: 'success',
+        fromUser: 1,
+        uuid
+      };
+
+      dispatch({ type: PUSH_MESSAGE, message: defaultMessage });
+
       NIM.sendImageMsg(tempFilePath).then(msg => {
         let message = {
           type: 'image',
@@ -137,9 +152,11 @@ export const sendImage = res => dispatch => {
           content: msg.file,
           time: msg.time,
           status: msg.status,
-          fromUser: 1
+          fromUser: 1,
+          uuid
         };
-        dispatch({ type: PUSH_MESSAGE, message });
+        // 2. 更新消息
+        dispatch({ type: UPDATE_MESSAGE_BYUUID, message });
       });
     })
   );
