@@ -400,6 +400,11 @@ export const onfinish = (content) => {
       value: 206
     })
 
+    // 7为用户主动关闭会话，不用提示文案
+    if(close_reason == 7){
+      return;
+    }
+
     if (close_reason == 0 || close_reason == 2) {
         tip = richmessage || message || REASON_MAP[close_reason];
     }
