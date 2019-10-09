@@ -1,3 +1,10 @@
+// 单行省略
+.fn_ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .m-evaluation_icon_2level,.m-evaluation_icon_345level {
     display: flex;
     justify-content: center;
@@ -42,6 +49,7 @@
     padding: 10px 30px;
     flex-wrap: wrap;
     .m-evaluation_tags_item {
+        .fn_ellipsis();
         line-height: 28px;
         width: 120px;
         height: 28px;
