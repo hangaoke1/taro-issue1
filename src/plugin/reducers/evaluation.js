@@ -8,7 +8,7 @@ const init = {
     value: 100,
     name: '非常满意',
     remarks: '',
-    evaluation_resolved: null,
+    evaluation_resolved: 0,
     selectTagList: []
   },
   sessionid: null

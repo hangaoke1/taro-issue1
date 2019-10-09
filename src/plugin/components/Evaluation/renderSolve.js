@@ -16,7 +16,7 @@ export default function RenderSolve(props) {
             </View>
       <View className="m-evaluation_slove_btn">
         <View className={resolved === 1 ? "m-evaluation_slove_btn_stu z-sel" : "m-evaluation_slove_btn_stu"} onClick={handleClick.bind(undefined, 1)}>已解决</View>
-        <View className={resolved === 0 ? "m-evaluation_slove_btn_stu z-sel" : "m-evaluation_slove_btn_stu"} onClick={handleClick.bind(undefined, 0)}>未解决</View>
+        <View className={resolved === 2 ? "m-evaluation_slove_btn_stu z-sel" : "m-evaluation_slove_btn_stu"} onClick={handleClick.bind(undefined, 2)}>未解决</View>
       </View>
     </View>
   )

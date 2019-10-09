@@ -56,7 +56,7 @@ export default function Evaluation(props) {
       extral = {
         selectTagList: [],
         remarks: "",
-        evaluation_resolved: null
+        evaluation_resolved: 0
       }
     }
     setParams({
