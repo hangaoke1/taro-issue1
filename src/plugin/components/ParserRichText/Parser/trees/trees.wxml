@@ -6,7 +6,7 @@
     <rich-text wx:if="{{item.name=='img'}}" style="{{cssHandler.getStyle(item.attrs.style,'inline-block')}}" nodes='{{cssHandler.setImgStyle(item,controls.imgMode)}}' data-ignore='{{item.attrs.ignore}}' data-src='{{item.attrs.src}}' bindtap='previewEvent' />
     <!--文本-->
     <block wx:elif="{{item.type=='text'}}">
-      <text wx:if="{{!item.decode}}" decode style="word-break:break-word">{{item.text}}</text>
+      <text wx:if="{{!item.decode}}" decode style="word-break:break-all">{{item.text}}</text>
       <rich-text wx:else style="display:inline-block" nodes="{{[item]}}"></rich-text>
     </block>
     <text wx:elif="{{item.name=='br'}}">\n</text>
