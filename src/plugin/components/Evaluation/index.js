@@ -1,4 +1,4 @@
-import { useState } from '@tarojs/taro';
+import { useState, useEffect } from '@tarojs/taro';
 import { useSelector, useDispatch } from '@tarojs/redux';
 import { View, Button } from '@tarojs/components';
 import Render2Level from './render2Level';
@@ -7,6 +7,7 @@ import RenderTag from './RenderTag';
 import RenderMark from './renderMark';
 import RenderSolve from './RenderSolve';
 import { INIT_CURRENT_EVALUATION } from '../../constants/evaluation';
+import eventbus from '../../lib/eventbus';
 
 import { sendEvaluation } from '../../actions/chat';
 
@@ -26,6 +27,22 @@ export default function Evaluation(props) {
   const [remarksRequiredTip, setRequiredRemarksTip] = useState(false);
 
 
+  useEffect(() => {
+    eventbus.on('reset_evaluation', () => {
+      setRequiredResolvedTip(false);
+      setRequiredTagTip(false);
+      setRequiredRemarksTip(false);
+      setParams({
+        remarks: '',
+        evaluation_resolved: null,
+        selectTagList: []
+      })
+    })
+    return () => {
+      eventbus.off('reset_evaluation');
+    };
+  }, []);
+
   const setParams = (params) => {
     dispatch({
       type: INIT_CURRENT_EVALUATION,
@@ -35,7 +52,7 @@ export default function Evaluation(props) {
 
   const handleSelect = (tagList, value, name) => {
     let extral = {}
-    if(value != currentEvaluation.value){
+    if (value != currentEvaluation.value) {
       extral = {
         selectTagList: [],
         remarks: "",
@@ -72,7 +89,7 @@ export default function Evaluation(props) {
     const params = { ...currentEvaluation };
     const { sessionid } = Evaluation;
     const { evaluation = value, evaluation_resolved,
-          selectTagList, remarks } = params;
+      selectTagList, remarks } = params;
 
     const { tagRequired, commentRequired } = list.filter(item => {
       return item.value == evaluation;

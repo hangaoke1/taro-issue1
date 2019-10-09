@@ -509,7 +509,7 @@ export const onevaluationresult = (content) => {
       type: UPDATE_ENTRY_BYTEXT,
       value: {
         icon: 'icon-star-line-hookx',
-        text: '评价',
+        text: '已评价',
         key: 'evaluation',
         disabled: true
       }
@@ -520,6 +520,8 @@ export const onevaluationresult = (content) => {
       type: INIT_LAST_EVALUATION,
       value: evaluation.currentEvaluation
     })
+    // 存储到last后将当前的清空
+    eventbus.trigger('reset_evaluation');
 
     // 是否支持多次评价的开关
     let enable_evaluation_muttimes = session.shop.setting && session.shop.setting.enable_evaluation_muttimes;

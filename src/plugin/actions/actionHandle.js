@@ -3,6 +3,8 @@ import { SET_EVALUATION_VISIBLE } from '../constants/chat';
 import { applyKefu, cancelQueue } from '../actions/chat';
 import { INIT_CURRENT_EVALUATION } from '../constants/evaluation';
 
+import eventbus from '../lib/eventbus';
+
 export const anctionHandle = (type, data) => {
   const dispatch = get('store').dispatch;
   const evaluation = get('store').getState().Evaluation;
@@ -38,6 +40,8 @@ const setEvaluationVisible = value => {
 }
 
 export const closeEvaluationModal = () => dispatch => {
+  // 关闭的时候将产生的评价内容清除
+  eventbus.trigger('reset_evaluation');
   dispatch(setEvaluationVisible(false));
 }
 
