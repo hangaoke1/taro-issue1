@@ -1,7 +1,7 @@
 import {
   SET_ENTRY_CONFIG, DEL_ENTRY_BYKEY, SET_EVALUATION_VISIBLE,
   SET_CHAT_INPUT_DISABLED, SET_CHAT_INPUT_PLACEHOLDER, RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT,
-  UPDATE_ENTRY_BYKEY
+  UPDATE_ENTRY_BYKEY,SET_SHUNT_ENTRIES_STATUS
 } from '../constants/chat';
 
 
@@ -9,7 +9,8 @@ const CorpStatus = (state = {
   evaluationVisible: false,
   entryConfig: [],
   chatInputDisabled: false,
-  chatInputPlaceHolder: '请输入您要咨询的问题'
+  chatInputPlaceHolder: '请输入您要咨询的问题',
+  shuntEntriesStatus: false
 }, action) => {
   switch (action.type) {
     case SET_EVALUATION_VISIBLE:
@@ -96,6 +97,11 @@ const CorpStatus = (state = {
         ...state,
         chatInputDisabled: false,
         chatInputPlaceHolder: '请输入您要咨询的问题'
+      }
+    case SET_SHUNT_ENTRIES_STATUS:
+      return {
+        ...state,
+        shuntEntriesStatus: action.value
       }
     default:
       return state;

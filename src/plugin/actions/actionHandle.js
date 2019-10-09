@@ -1,5 +1,5 @@
 import { get } from '../global_config'
-import { SET_EVALUATION_VISIBLE } from '../constants/chat';
+import { SET_EVALUATION_VISIBLE, SET_SHUNT_ENTRIES_STATUS } from '../constants/chat';
 import { applyKefu, cancelQueue } from '../actions/chat';
 import { INIT_CURRENT_EVALUATION } from '../constants/evaluation';
 
@@ -18,6 +18,11 @@ export const anctionHandle = (type, data) => {
       break;
     case 'selectEntries':
       applyKefu(data);
+      // 访客分流已结束，更新状态
+      dispatch({
+        type: SET_SHUNT_ENTRIES_STATUS,
+        value: false
+      })
       break;
     case 'cancelQueue':
       dispatch(cancelQueue(data));

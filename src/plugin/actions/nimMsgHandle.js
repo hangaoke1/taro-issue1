@@ -4,7 +4,7 @@ import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../c
 import { INIT_SESSION,REASON_MAP,SET_SESSION_CODE } from '../constants/session';
 import { INIT_EVALUATION_SETTING,INIT_CURRENT_EVALUATION,INIT_LAST_EVALUATION } from '../constants/evaluation';
 import { SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG,DEL_ENTRY_BYKEY,SET_CHAT_INPUT_DISABLED,
-          SET_CHAT_INPUT_PLACEHOLDER,RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT, UPDATE_ENTRY_BYKEY } from '../constants/chat';
+          SET_CHAT_INPUT_PLACEHOLDER,RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT, UPDATE_ENTRY_BYKEY,SET_SHUNT_ENTRIES_STATUS } from '../constants/chat';
 import { SET_BOT_LIST } from '../constants/bot';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import { timestamp2date, fmtRobot } from '../utils';
@@ -579,8 +579,15 @@ export const receiveShuntEntries = (content) => {
     entries: JSON.parse(content.entries)
   }
 
+  // 维护处于访客分流的状态
+  dispatch({
+    type: SET_SHUNT_ENTRIES_STATUS,
+    value: true
+  })
+
   dispatch({type: PUSH_MESSAGE, message});
 }
+
 
 /**
  * 接收到机器人提示

@@ -515,6 +515,14 @@ export const canSendMessage = () => {
   }
 }
 
+/**
+ * 判断访客是否处于访客分流页面中
+ */
+export const isShuntEntriesStatus = () => {
+  const {shuntEntriesStatus} = get('store').getState().CorpStatus;
+  return shuntEntriesStatus;
+}
+
 
 // 访客主动退出会话
 export const exitSession = () => {

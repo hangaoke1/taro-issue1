@@ -15,3 +15,5 @@ export const SET_CHAT_INPUT_DISABLED = `${namespace}/SET_CHAT_INPUT_DISABLED`;
 export const SET_CHAT_INPUT_PLACEHOLDER = `${namespace}/SET_CHAT_INPUT_PLACEHOLDER`;
 
 export const RESET_CHAT_INPUT = `${namespace}/RESET_CHAT_INPUT`;
+
+export const SET_SHUNT_ENTRIES_STATUS = `${namespace}/SET_SHUNT_ENTRIES_STATUS`;

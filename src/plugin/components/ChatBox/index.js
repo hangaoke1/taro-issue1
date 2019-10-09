@@ -6,7 +6,8 @@ import eventbus from '@/lib/eventbus';
 import { hideAction } from '@/actions/options';
 import {
   canSendMessage,
-  applyKefu
+  applyKefu,
+  isShuntEntriesStatus
 } from '@/actions/chat';
 
 import Iconfont from '../Iconfont';
@@ -24,6 +25,16 @@ export default function ChatBox(props) {
 
   // 发送文本
   const handleConfirm = event => {
+
+    if(isShuntEntriesStatus()){
+      Taro.showToast({
+        title: '为了给您提供更专业的服务，请您选择要咨询的内容类型',
+        icon: 'none',
+        duration: 2000
+      })
+
+      return;
+    }
 
     // 如果会话或者云信状态不对
     if(!canSendMessage()){
