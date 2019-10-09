@@ -734,3 +734,21 @@ export const queueFail = (content) => {
     })
   }
 }
+
+/**
+ * 收到显示评价入口的指令
+ * @param {*} content
+ */
+export const receiveEvaluationShowEntry = (content) => {
+  const dispatch = get('store').dispatch;
+
+  dispatch({
+    type: SET_ENTRY_CONFIG,
+    value:
+      {
+        icon: 'icon-star-linex',
+        text: '评价',
+        key: 'evaluation'
+      }
+  })
+}

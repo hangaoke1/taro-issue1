@@ -72,6 +72,9 @@ export const RECEIVE_TRANSFER_CMD = 95;
 // 输入联想
 export const RECEIVE_ASSOCIATE_CMD = 25
 
+// 回合数大于指定回合数的时候显示评价入口
+export const RECEIVE_SHOW_EVALUATION_ENTRY = 108;
+
 /**
 * 收到的自定义指令 ------end--------
 */

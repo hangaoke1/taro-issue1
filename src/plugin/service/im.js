@@ -13,7 +13,8 @@ import {
   onQueueStatus,
   receiveTransfer,
   onReceiveAssociate,
-  queueFail
+  queueFail,
+  receiveEvaluationShowEntry
 } from '../actions/nimMsgHandle';
 import {
   FROM_TYPE,
@@ -39,7 +40,8 @@ import {
   RECEIVE_ASSOCIATE_CMD,
   UPDATE_CRM_CMD,
   EXIT_SESSION_CMD,
-  SEND_PRODUCT_CARD_CMD
+  SEND_PRODUCT_CARD_CMD,
+  RECEIVE_SHOW_EVALUATION_ENTRY
 } from '../constants';
 import { getCurrentUrl } from '@/lib/unread';
 
@@ -475,6 +477,9 @@ export default class IMSERVICE {
           } else {
             console.log('queue code 异常');
           }
+          break;
+        case RECEIVE_SHOW_EVALUATION_ENTRY:
+            receiveEvaluationShowEntry(content);
           break;
         default:
           console.log('oncustomsysmsg 未知指令' + JSON.stringify(msg));
