@@ -97,9 +97,13 @@ export default function ChatBox(props) {
       setValue('')
       setFocus(false)
     })
+    eventbus.on('hide_keyboard', () => {
+      setFocus(false)
+    })
     return () => {
       eventbus.off('emoji_click');
       eventbus.off('reset_input');
+      eventbus.off('hide_keyboard');
     };
   }, []);
 
