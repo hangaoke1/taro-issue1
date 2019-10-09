@@ -23,6 +23,8 @@ export default function ImgView(props) {
   let extendQuery = (imgInfo.url || '').indexOf('?') === -1 ? '?' : '&';
   extendQuery += 'imageView&thumbnail=1500x15000';
 
+  const imgUrl = imgInfo.url + extendQuery
+
   function handleClick() {
     props.onClick(props.item);
   }
@@ -42,12 +44,13 @@ export default function ImgView(props) {
             className="u-img"
             mode="scaleToFill"
             style={`width: ${width}px;height: ${height}px`}
-            src={imgInfo.url + extendQuery}
+            src={imgUrl}
             lazy-load
             onClick={handleClick}
           />
         ) : (
-          <View class="u-progress"></View>
+          <Image src="http://qytest.netease.com/sdk/res/default/robot_portrait.png" class="u-progress"></Image>
+          // <View class="u-progress"></View>
         )}
 
         {status === 1 && item.fromUser ? (
@@ -55,6 +58,7 @@ export default function ImgView(props) {
             <Image
               style="width: 25px;height:25px;"
               src="https://qiyukf.nosdn.127.net/sdk/res/default/loading_3782900ab9d04a1465e574a7d50af408.gif"
+              // src="http://veralsp.qytest.netease.com/prd/res/img/loading_03ce3dcc84af110e9da8699a841e5200.gif"
             />
           </View>
         ) : null}

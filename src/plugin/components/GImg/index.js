@@ -8,6 +8,7 @@ class GImg extends Component {
   static propTypes = {
     maxWidth: PropTypes.number,
     maxHeight: PropTypes.number,
+    radius: PropTypes.number,
     src: PropTypes.string,
     mode: PropTypes.string,
     lazyLoad: PropTypes.bool,
@@ -15,7 +16,8 @@ class GImg extends Component {
   };
 
   static defaultProps = {
-    mode: 'scaleToFill'
+    mode: 'scaleToFill',
+    radiusL: 0
   }
 
   state = {
@@ -42,10 +44,10 @@ class GImg extends Component {
   }
 
   render () {
-    const { src, mode } = this.props;
+    const { src, mode, radius } = this.props;
     const { width, height } = this.state;
     return (
-      <Image src={src} mode={mode} onLoad={this.handleLoad} style={`width: ${width}px;height: ${height}px`} onClick={this.handleClick}>
+      <Image className='u-img' src={src} mode={mode} onLoad={this.handleLoad} style={`width: ${width}px;height: ${height}px;border-radius:${radius}px`} onClick={this.handleClick}>
       </Image>
     )
   }
