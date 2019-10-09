@@ -1,5 +1,8 @@
-import { SET_ENTRY_CONFIG, DEL_ENTRY_BYKEY, SET_EVALUATION_VISIBLE,
-  SET_CHAT_INPUT_DISABLED, SET_CHAT_INPUT_PLACEHOLDER, RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT } from '../constants/chat';
+import {
+  SET_ENTRY_CONFIG, DEL_ENTRY_BYKEY, SET_EVALUATION_VISIBLE,
+  SET_CHAT_INPUT_DISABLED, SET_CHAT_INPUT_PLACEHOLDER, RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT,
+  UPDATE_ENTRY_BYKEY
+} from '../constants/chat';
 
 
 const CorpStatus = (state = {
@@ -52,9 +55,24 @@ const CorpStatus = (state = {
       {
         let entry = [...state.entryConfig];
 
-        entry.forEach((item,index) => {
-          if(item.text == action.value.text){
-            entry[index] = {...action.value};
+        entry.forEach((item, index) => {
+          if (item.text == action.value.text) {
+            entry[index] = { ...action.value };
+          }
+        })
+
+        return {
+          ...state,
+          entryConfig: [...entry]
+        }
+      }
+    case UPDATE_ENTRY_BYKEY:
+      {
+        let entry = [...state.entryConfig];
+
+        entry.forEach((item, index) => {
+          if (item.key == action.value.key) {
+            entry[index] = { ...action.value };
           }
         })
 

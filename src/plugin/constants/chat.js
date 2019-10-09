@@ -8,6 +8,8 @@ export const DEL_ENTRY_BYKEY = `${namespace}/DEL_ENTRY_BYKEY`;
 
 export const UPDATE_ENTRY_BYTEXT = `${namespace}/UPDATE_ENTRY_BYTEXT`;
 
+export const UPDATE_ENTRY_BYKEY = `${namespace}/UPDATE_ENTRY_BYKEY`;
+
 export const SET_CHAT_INPUT_DISABLED = `${namespace}/SET_CHAT_INPUT_DISABLED`;
 
 export const SET_CHAT_INPUT_PLACEHOLDER = `${namespace}/SET_CHAT_INPUT_PLACEHOLDER`;

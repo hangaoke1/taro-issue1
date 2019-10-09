@@ -4,7 +4,7 @@ import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../c
 import { INIT_SESSION,REASON_MAP,SET_SESSION_CODE } from '../constants/session';
 import { INIT_EVALUATION_SETTING,INIT_CURRENT_EVALUATION,INIT_LAST_EVALUATION } from '../constants/evaluation';
 import { SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG,DEL_ENTRY_BYKEY,SET_CHAT_INPUT_DISABLED,
-          SET_CHAT_INPUT_PLACEHOLDER,RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT } from '../constants/chat';
+          SET_CHAT_INPUT_PLACEHOLDER,RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT, UPDATE_ENTRY_BYKEY } from '../constants/chat';
 import { SET_BOT_LIST } from '../constants/bot';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import { timestamp2date, fmtRobot } from '../utils';
@@ -105,7 +105,7 @@ export const assignKefu = (content) => {
     if (!isSameSession) {
       // 先这么搞一下
       dispatch({
-        type: UPDATE_ENTRY_BYTEXT,
+        type: UPDATE_ENTRY_BYKEY,
         value: {
           icon: 'icon-star-linex',
           text: '评价',
@@ -506,7 +506,7 @@ export const onevaluationresult = (content) => {
 
     // 如果会话已经评价过
     dispatch({
-      type: UPDATE_ENTRY_BYTEXT,
+      type: UPDATE_ENTRY_BYKEY,
       value: {
         icon: 'icon-star-line-hookx',
         text: '已评价',
