@@ -39,7 +39,7 @@ export const applyKefu = (
 
   const session = get('store').getState().Session;
 
-  if(session && (session.code == 200 || session.code == 203)){
+  if(!extraParms.entryid && session && (session.code == 200 || session.code == 203)){
     NIM.updateCrmInfo();
     return;
   }
