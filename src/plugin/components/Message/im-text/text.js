@@ -1,20 +1,28 @@
 import Taro from '@tarojs/taro';
 import PropTypes from 'prop-types';
-import { View } from '@tarojs/components';
+import { View, Image } from '@tarojs/components';
+import _get from 'lodash/get';
 import Avatar from '../u-avatar';
 import ParserRichText from '../../ParserRichText/parserRichText';
-import { parseUrlAction } from '../../../actions/chat';
+import Iconfont from '@/components/Iconfont';
+import { parseUrlAction, resendMessage } from '@/actions/chat';
 
 import './text.less';
 
 export default function TextView(props) {
   const item = props.item;
+  const status = _get(item, 'status', 0);
   const { content, type } = item;
   const isRich = type === 'rich';
 
-  function handleLinkpress (event) {
+  function handleLinkpress(event) {
     const { detail } = event;
     parseUrlAction(detail);
+  }
+
+  // 重新发送消息
+  function handleResend() {
+    resendMessage(item);
   }
 
   return (
@@ -24,10 +32,28 @@ export default function TextView(props) {
       }
     >
       <Avatar fromUser={item.fromUser} staff={item.staff} />
-      <View className='u-text-arrow' />
-      <View className='u-text'>
-        <ParserRichText html={content} onLinkpress={handleLinkpress} isRich={isRich}></ParserRichText>
+      <View className="u-text-arrow" />
+      <View className="u-text">
+        <ParserRichText
+          html={content}
+          onLinkpress={handleLinkpress}
+          isRich={isRich}
+        ></ParserRichText>
         {props.children}
+
+        {status === 1 && item.fromUser ? (
+          <View className="u-status">
+            <Image
+              style="width: 25px;height:25px;"
+              src="https://qiyukf.nosdn.127.net/sdk/res/default/loading_3782900ab9d04a1465e574a7d50af408.gif"
+            />
+          </View>
+        ) : null}
+        {status === -1 && item.fromUser ? (
+          <View className="u-status" onClick={handleResend}>
+            <Iconfont type="icon-tishixinxi" color="red" size="25" />
+          </View>
+        ) : null}
       </View>
     </View>
   );
@@ -35,8 +61,8 @@ export default function TextView(props) {
 
 TextView.defaultProps = {
   item: {}
-}
+};
 
 TextView.propTypes = {
   item: PropTypes.object
-}
+};

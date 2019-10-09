@@ -1,6 +1,6 @@
 import _get from 'lodash/get';
 import _findIndex from 'lodash/findIndex';
-import { PUSH_MESSAGE, UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYINDEX, UPDATE_MESSAGE_BYACTION, UPDATE_MESSAGE_BYUUID,TIME_TIP_DURATION } from '../constants/message';
+import { PUSH_MESSAGE, UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYINDEX, UPDATE_MESSAGE_BYACTION, UPDATE_MESSAGE_BYUUID,TIME_TIP_DURATION, REMOVE_MESSAGE_BYUUID } from '../constants/message';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '../lib/uuid';
 import { addUnread } from '@/lib/unread';
@@ -10,6 +10,7 @@ const initMessages = [];
 
 const Message = (state = initMessages, action) => {
     switch(action.type){
+        // 添加消息
         case PUSH_MESSAGE:
 
             if(action.message && action.message.uniqueKey){
@@ -57,14 +58,22 @@ const Message = (state = initMessages, action) => {
 
               return [...state, timeTip, currentMessage];
             }
+        // 根据key更新消息
         case UPDATE_MESSAGE_BYKEY:
             return [...updateMessage(state, action, 'key')];
+        // 根据action更新消息
         case UPDATE_MESSAGE_BYACTION:
             return [...updateMessage(state, action, 'action')];
+        // 根据uuid更新消息
         case UPDATE_MESSAGE_BYUUID:
                 return [...updateMessage(state, action, 'uuid')];
+        // 根据index更新消息
         case UPDATE_MESSAGE_BYINDEX:
             return [...updateMessage(state, action, 'index')];
+        // 根据uuid删除消息 供消息重发使用
+        case REMOVE_MESSAGE_BYUUID:
+            const uuid = action.uuid;
+            return [...state.filter(msg => msg.uuid !== uuid)];
         default:
             return state;
     }

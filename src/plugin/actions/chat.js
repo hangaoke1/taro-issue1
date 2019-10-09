@@ -1,9 +1,10 @@
 import Taro from '@tarojs/taro';
 import _get from 'lodash/get';
+import _cloneDeep from 'lodash/cloneDeep';
 import { queryAccont } from '../service';
 import { get, set } from '../global_config';
 import IMSERVICE,{ STATUS } from '../service/im';
-import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID } from '../constants/message';
+import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID, REMOVE_MESSAGE_BYUUID } from '../constants/message';
 import { SET_EVALUATION_VISIBLE } from '../constants/chat';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import eventbus from '../lib/eventbus';
@@ -84,16 +85,25 @@ export const createAccount = (param = {}) => dispatch => {
  */
 export const sendText = text => dispatch => {
   let message = {
-    content: text,
     type: 'text',
+    uuid: genUUID16(),
+    content: text,
     time: new Date().getTime(),
-    status: 1,
-    fromUser: 1
+    status: 1, // 0成功 1发送中 -1发送失败
+    fromUser: 1,
+    resendContent: text
   };
 
   dispatch({ type: PUSH_MESSAGE, message });
-  NIM.sendTextMsg(text).then(msg => {
-    console.log('文本发送完成', msg);
+
+  return NIM.sendTextMsg(text).then(msg => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = 0
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  }).catch(err => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = -1
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
   });
 };
 
@@ -126,37 +136,55 @@ export const sendRelateText = item => dispatch => {
  * @param {object} res 微信sdk返回对象
  */
 export const sendImage = res => dispatch => {
+  if (!canSendMessage()) {
+    Taro.showToast({
+      title: '请等待连线成功后，再发送消息',
+      icon: 'none',
+      duration: 2000
+    })
+    return;
+  }
+
   const tempFilePaths = res.tempFilePaths;
 
-  // TODO: 处理发送失败问题
   Promise.all(
     tempFilePaths.map(tempFilePath => {
-      const uuid = genUUID16()
       // 1. 生成空消息
-      let defaultMessage = {
+      // 2. 更新消息
+      const uuid = genUUID16()
+
+      let message = {
         type: 'image',
         idClient: '',
         content: {},
         time: Date.now(),
-        status: 'success',
+        status: 1,
         fromUser: 1,
+        resendContent: {
+          tempFilePaths: [tempFilePath]
+        },
         uuid
       };
 
-      dispatch({ type: PUSH_MESSAGE, message: defaultMessage });
+      dispatch({ type: PUSH_MESSAGE, message });
 
       NIM.sendImageMsg(tempFilePath).then(msg => {
-        let message = {
+        const newMessage = {
           type: 'image',
           idClient: msg.idClient,
           content: msg.file,
           time: msg.time,
           status: msg.status,
           fromUser: 1,
+          status: 0,
           uuid
         };
-        // 2. 更新消息
-        dispatch({ type: UPDATE_MESSAGE_BYUUID, message });
+
+        dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+      }).catch(err => {
+        const newMessage = _cloneDeep(message);
+        newMessage.status = -1
+        dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
       });
     })
   );
@@ -372,7 +400,8 @@ export const sendBotGood = item => {
     },
     time: new Date().getTime(),
     status: 1,
-    fromUser: 1
+    fromUser: 1,
+    resendContent: item
   };
 
   dispatch({ type: PUSH_MESSAGE, message });
@@ -545,4 +574,22 @@ export const sendProductCardByUser = () => {
     ...extraParms,
     auto: 0
   });
+}
+
+// 重新发送消息
+export const resendMessage = function (item) {
+  // 删除当前消息
+  const dispatch = get('store').dispatch;
+  dispatch({ type: REMOVE_MESSAGE_BYUUID, uuid: item.uuid });
+
+  setTimeout(() => {
+    // 1. 重新发送文本消息
+    if (item.type === 'text') {
+      sendText(item.resendContent)(dispatch)
+    }
+    // 2. 重新发送图片消息
+    if (item.type === 'image') {
+      sendImage(item.resendContent)(dispatch)
+    }
+  }, 300)
 }

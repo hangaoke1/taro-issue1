@@ -11,4 +11,6 @@ export const UPDATE_MESSAGE_BYACTION = `${namespace}/UPDATE_MESSAGE_BYACTION`;
 
 export const UPDATE_MESSAGE_BYUUID = `${namespace}/UPDATE_MESSAGE_BYUUID`;
 
+export const REMOVE_MESSAGE_BYUUID = `${namespace}/REMOVE_MESSAGE_BYUUID`;
+
 export const TIME_TIP_DURATION = 60000;
