@@ -438,6 +438,7 @@ export const onfinish = (content) => {
         actionText: '评价',
         action: 'evaluation',
         key: `evaluation-${sessionid}`,
+        colorful: true,
         ...extralMessage
       }
 
@@ -469,6 +470,7 @@ export const onevaluation = (content) => {
         time: time,
         actionText: content.evaluationTimes ? '再次评价' : '评价',
         action: 'evaluation',
+        colorful: content.evaluationTimes ? false : true,
         key: `evaluation-${content.sessionid}`
     }
 

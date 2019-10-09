@@ -22,7 +22,7 @@ export default function ActionView(props) {
       {
         item.type == 'action' ?
           (<View className='m-action'>
-            <View className={item.disabled ? 'u-action-btn u-action-btn-disabled' : 'u-action-btn'}
+            <View className={`${item.disabled ? 'u-action-btn-disabled' : ''} ${item.colorful ? 'u-action-btn-colorful' : 'u-action-btn'}`}
               onClick={(ev) => { actionFun({sessionid: item.sessionid}) }}>{item.actionText}
             </View>
           </View>) : null
