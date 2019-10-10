@@ -1,4 +1,4 @@
-import { useState, useEffect } from '@tarojs/taro';
+import Taro, { useState, useEffect } from '@tarojs/taro';
 import { useSelector, useDispatch } from '@tarojs/redux';
 import { View, Button } from '@tarojs/components';
 import Render2Level from './render2Level';
@@ -21,20 +21,13 @@ export default function Evaluation(props) {
   const { tagList, name, value, remarks, evaluation_resolved, selectTagList } = currentEvaluation;
   const { resolvedEnabled, resolvedRequired, list } = evaluationSetting;
 
-  const dispatch = useDispatch()
-  const [resolvedRequiredTip, setRequiredResolvedTip] = useState(false);
-  const [tagRequiredTip, setRequiredTagTip] = useState(false);
-  const [remarksRequiredTip, setRequiredRemarksTip] = useState(false);
-
+  const dispatch = useDispatch();
 
   useEffect(() => {
     eventbus.on('reset_evaluation', () => {
-      setRequiredResolvedTip(false);
-      setRequiredTagTip(false);
-      setRequiredRemarksTip(false);
       setParams({
         remarks: '',
-        evaluation_resolved: null,
+        evaluation_resolved: 0,
         selectTagList: []
       })
     })
@@ -97,25 +90,33 @@ export default function Evaluation(props) {
 
     // 验证标签未填
     if (tagRequired && !selectTagList.length) {
-      setRequiredTagTip(true);
+      Taro.showToast({
+        title: '请选择标签',
+        icon: 'none',
+        duration: 2000
+      })
       return;
     }
 
     // 验证备注未填
     if (commentRequired && !remarks) {
-      setRequiredRemarksTip(true);
+      Taro.showToast({
+        title: '请填写评价备注',
+        icon: 'none',
+        duration: 2000
+      })
       return;
     }
 
     // 验证解决问题是否必填
-    if (resolvedEnabled && resolvedRequired && evaluation_resolved === null) {
-      setRequiredResolvedTip(true);
+    if (resolvedEnabled && resolvedRequired && evaluation_resolved === 0) {
+      Taro.showToast({
+        title: '请选择本次问题是否解决',
+        icon: 'none',
+        duration: 2000
+      })
       return;
     }
-
-    setRequiredTagTip(false);
-    setRequiredRemarksTip(false);
-    setRequiredResolvedTip(false);
 
     dispatch(sendEvaluation({
       evaluation,
@@ -139,33 +140,11 @@ export default function Evaluation(props) {
         {name}
       </View>
       <RenderTag tagList={tagList} onSelect={handleSelectTag} selectTags={selectTagList} />
-      {
-        tagRequiredTip ?
-          <View className="u-RequiredTip">
-            请选择标签
-        </View>
-          :
-          null
-      }
       <RenderMark onInput={handleInput} remarks={remarks} />
-      {
-        remarksRequiredTip ?
-          <View className="u-RequiredTip">请填写评价备注</View>
-          :
-          null
-      }
       {
         resolvedEnabled ?
           <RenderSolve resolved={evaluation_resolved} onSelect={handleSelectSolve} />
           : null
-      }
-      {
-        resolvedRequiredTip ?
-          <View className="u-RequiredTip">
-            请选择本次问题是否解决
-        </View>
-          :
-          null
       }
       <View className="m-evaluation_submit">
         <Button className="u-submit" onClick={handleSubmit}>提交评价</Button>
