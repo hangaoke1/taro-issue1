@@ -116,7 +116,7 @@ export const sendRelateText = item => dispatch => {
     content: item.text,
     type: 'text',
     time: new Date().getTime(),
-    status: 1,
+    status: 0,
     fromUser: 1
   };
   dispatch({ type: PUSH_MESSAGE, message });
@@ -319,7 +319,7 @@ export const sendBotCard = (item, msg) => {
       }
     },
     time: new Date().getTime(),
-    status: 1,
+    status: 0,
     fromUser: 1
   };
 
@@ -361,7 +361,7 @@ export const sendBotForm = (forms, msg) => {
       }
     },
     time: new Date().getTime(),
-    status: 1,
+    status: 0,
     fromUser: 1
   };
   dispatch({ type: PUSH_MESSAGE, message });
@@ -399,7 +399,7 @@ export const sendBotGood = item => {
       }
     },
     time: new Date().getTime(),
-    status: 1,
+    status: 0,
     fromUser: 1,
     resendContent: item
   };
@@ -428,7 +428,7 @@ export const sendTemplateText = item => {
       }
     },
     time: new Date().getTime(),
-    status: 1,
+    status: 0,
     fromUser: 1
   };
   dispatch({ type: PUSH_MESSAGE, message });
@@ -546,7 +546,7 @@ export const sendProductCard = (extraParms) => {
         ...extraParms
       },
       time: new Date().getTime(),
-      status: 1,
+      status: 0,
       fromUser: 1
     }
 
@@ -573,7 +573,7 @@ export const sendProductCardByUser = () => {
       sendByUser: 0,
     },
     time: new Date().getTime(),
-    status: 1,
+    status: 0,
     fromUser: 1
   }
 
