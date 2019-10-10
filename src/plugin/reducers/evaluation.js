@@ -17,9 +17,9 @@ const init = {
 const Evaluation = (state = init, action) => {
   switch (action.type) {
     case INIT_CURRENT_EVALUATION:
-      return { ...state, currentEvaluation: { ...state.currentEvaluation, ...action.value } };
+      return { ...state, currentEvaluation: JSON.parse(JSON.stringify({ ...state.currentEvaluation, ...action.value }))};
     case INIT_LAST_EVALUATION:
-      return { ...state, lastEvaluation: { ...state.lastEvaluation, ...action.value } };
+      return { ...state, lastEvaluation: JSON.parse(JSON.stringify({ ...state.lastEvaluation, ...action.value })) };
     case INIT_EVALUATION_SETTING:
       const evaluation = { ...action.value.evaluation };
       const list = evaluation.list;

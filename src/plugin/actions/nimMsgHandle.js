@@ -518,6 +518,7 @@ export const onevaluationresult = (content) => {
         icon: 'none',
         duration: 2000
       })
+
       return;
     }
     if (content.body == 412) {
@@ -526,8 +527,16 @@ export const onevaluationresult = (content) => {
         icon: 'none',
         duration: 2000
       })
+
       return;
-		}
+    }
+
+    // 评价成功
+    dispatch({
+      type: SET_EVALUATION_VISIBLE,
+      value: false
+    });
+
     // 如果会话已经评价过
     dispatch({
       type: UPDATE_ENTRY_BYKEY,

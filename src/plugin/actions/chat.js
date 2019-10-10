@@ -246,12 +246,7 @@ export const parseUrlAction = url => {
  * @param {*} param
  */
 export const sendEvaluation = (data = {}) => dispatch => {
-  NIM.sendEvaluation(data).then(json => {
-    dispatch({
-      type: SET_EVALUATION_VISIBLE,
-      value: false
-    });
-  });
+  NIM.sendEvaluation(data);
 };
 
 /**
