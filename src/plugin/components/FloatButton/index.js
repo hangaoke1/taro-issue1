@@ -31,18 +31,24 @@ export default class FloatButton extends Component {
     const { visible } = this.state;
 
     return (
-      <View className="m-FloatButton" style={{ right: `${visible ? '0px' : -contentWidth + 'px'}` }}>
-        <View className="m-FloatButton_trigger" onClick={this.handleClick.bind(this, visible)}>
-          <View className="u-trigger-icon">
-            <Iconfont type={icon} color='#337EFF' size='12'></Iconfont>
-          </View>
-        </View>
+      <View className="m-FloatButton" style={entryConfig.length > 1 ? { right: `${visible ? '0px' : -contentWidth + 'px'}` }: null}>
+        {
+          entryConfig.length > 1 ?
+            <View className="m-FloatButton_trigger" onClick={this.handleClick.bind(this, visible)}>
+              <View className="u-trigger-icon">
+                <Iconfont type={icon} color='#337EFF' size='12'></Iconfont>
+              </View>
+            </View>
+            :
+            null
+        }
+
         <View className='m-FloatButton_content' style={{ width: contentWidth + 'px' }}>
           <View className="m-FloatButton_action">
             {
               entryConfig.map(item => {
                 return (
-                  <View className="m-FloatButton_action_item" onClick={this.hanSelect.bind(this,item.key,item)} key={item.key}>
+                  <View className="m-FloatButton_action_item" onClick={this.hanSelect.bind(this, item.key, item)} key={item.key}>
                     <View className='m-FloatButton_action_icon'>
                       <Iconfont type={item.icon} color='#666' size='12'></Iconfont>
                     </View>
@@ -60,7 +66,7 @@ export default class FloatButton extends Component {
 
 FloatButton.defaultProps = {
   icon: 'icon-liebiao',
-  contentWidth: 80,
+  contentWidth: 70,
   entryConfig: [{
     icon: 'icon-star-linex',
     text: '评价',

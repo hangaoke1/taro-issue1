@@ -59,7 +59,7 @@ export const assignKefu = (content) => {
         value:
           {
             icon: 'icon-customerservicex',
-            text: '人工客服',
+            text: '人工',
             key: 'applyHumanStaff'
           }
       })
