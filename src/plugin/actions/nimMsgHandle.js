@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro';
 import _get from 'lodash/get';
 import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
@@ -511,6 +512,22 @@ export const onevaluationresult = (content) => {
     const evaluation = get('store').getState().Evaluation;
     const session = get('store').getState().Session;
 
+    if (content.body == 414) {
+      Taro.showToast({
+        title: '不能评价',
+        icon: 'none',
+        duration: 2000
+      })
+      return;
+    }
+    if (content.body == 412) {
+      Taro.showToast({
+        title: '评价已超时，无法进行评价',
+        icon: 'none',
+        duration: 2000
+      })
+      return;
+		}
     // 如果会话已经评价过
     dispatch({
       type: UPDATE_ENTRY_BYKEY,
