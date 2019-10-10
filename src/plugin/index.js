@@ -128,7 +128,7 @@ export const _$logout = () => {
  * @param {Number} Level
  */
 export const _$setVipLevelSync = (level = 0) => {
-  if (Object.prototype.toString.call(userInfo) === "[object String]" || Object.prototype.toString.call(userInfo) === "[object Number]") {
+  if (Object.prototype.toString.call(level) === "[object String]" || Object.prototype.toString.call(level) === "[object Number]") {
     set('level', level);
   }else{
     reject('userInfo数据格式不符合要求');
@@ -137,7 +137,7 @@ export const _$setVipLevelSync = (level = 0) => {
 
 export const _$setVipLevel = (level = 0) => {
   return new Promise((resolve, reject) => {
-    if (Object.prototype.toString.call(userInfo) === "[object String]" || Object.prototype.toString.call(userInfo) === "[object Number]") {
+    if (Object.prototype.toString.call(level) === "[object String]" || Object.prototype.toString.call(level) === "[object Number]") {
       setTimeout(() => {
         try{
           set('level', level);

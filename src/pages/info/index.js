@@ -139,7 +139,7 @@ export default class Info extends Component {
   handleVipChange = (event) => {
     // event.detail
     let level = event.detail.value;
-    myPluginInterface._$setVipLevel(level);
+    myPluginInterface._$setVipLevelSync(level);
 
     Taro.showToast({
       title: `已切换到VIP${level}，重新申请会话后生效`,
