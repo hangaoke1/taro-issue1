@@ -1,10 +1,13 @@
-import Taro from '@tarojs/taro';
+import Taro, { useState } from '@tarojs/taro';
 import { View, Textarea } from '@tarojs/components';
+import { ParserRichText } from '../ParserRichText/parserRichText';
 
 import './index.less';
 
 export default function RenderMark(props) {
   const { remarks } = props;
+
+  const [isEdit, setIsEdit] = useState(false);
 
   const onFocus = (event) => {
     console.log('event', event);
@@ -14,18 +17,39 @@ export default function RenderMark(props) {
     props.onInput(event);
   }
 
+  const onFocusView = () => {
+    setIsEdit(true);
+  }
+
+  const onBlur = () => {
+    setIsEdit(false);
+  }
+
   return (
     <View className="m-evaluation_mark">
-      <Textarea placeholder="请输入您要反馈的意见"
-        maxlength={200} className="u-mark"
-        placeholderStyle={"color:#999;"}
-        value={remarks}
-        placeholderClass="u-mark-placeholder"
-        onFocus={onFocus}
-        cursorSpacing={175}
-        showConfirmBar={false}
-        onInput={handleInput}>
-      </Textarea>
+      {
+        isEdit ?
+          <Textarea placeholder="请输入您要反馈的意见"
+            maxlength={200} className="u-mark"
+            placeholderStyle={"color:#999;"}
+            value={remarks}
+            placeholderClass="u-mark-placeholder"
+            onFocus={onFocus}
+            onBlur={onBlur}
+            autoFocus
+            cursorSpacing={175}
+            showConfirmBar={false}
+            onInput={handleInput}>
+          </Textarea> :
+          <View
+            className={remarks ? 'u-mark u-mark-view' : 'u-mark u-mark-view u-mark-placeholder'}
+            onTouchStart={onFocusView}>
+              <ParserRichText
+                html={remarks ? remarks : '请输入您要反馈的意见'}
+                isRich
+              ></ParserRichText>
+          </View>
+      }
     </View>
   )
 }
