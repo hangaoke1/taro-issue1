@@ -461,6 +461,7 @@ export const onfinish = (content) => {
 export const onevaluation = (content) => {
     const dispatch = get('store').dispatch;
     const session = get('store').getState().Session;
+    const { evaluationSetting } = get('store').getState().Evaluation;
 
     let time = new Date().getTime();
 
@@ -475,7 +476,8 @@ export const onevaluation = (content) => {
         key: `evaluation-${content.sessionid}`
     }
 
-    if(content.evaluation_auto_popup){
+    // pattern==2是新页面的模式，没做，不弹窗了
+    if(content.evaluation_auto_popup && evaluationSetting.pattern != 2){
       eventbus.trigger('hide_keyboard');
       dispatch({
         type: SET_EVALUATION_VISIBLE,
