@@ -5,7 +5,6 @@ import { queryAccont } from '../service';
 import { get, set } from '../global_config';
 import IMSERVICE,{ STATUS } from '../service/im';
 import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID, REMOVE_MESSAGE_BYUUID } from '../constants/message';
-import { SET_EVALUATION_VISIBLE } from '../constants/chat';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '@/lib/uuid';
@@ -96,7 +95,7 @@ export const sendText = text => dispatch => {
 
   dispatch({ type: PUSH_MESSAGE, message });
 
-  return NIM.sendTextMsg(text).then(msg => {
+  return NIM.sendTextMsg(text).then(res => {
     const newMessage = _cloneDeep(message)
     newMessage.status = 0
     dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
@@ -116,7 +115,7 @@ export const sendRelateText = item => dispatch => {
     content: item.text,
     type: 'text',
     time: new Date().getTime(),
-    status: 0,
+    status: 1,
     fromUser: 1
   };
   dispatch({ type: PUSH_MESSAGE, message });
@@ -128,7 +127,15 @@ export const sendRelateText = item => dispatch => {
     questionMsgidClient: item.idClient, // 与该问题关联的消息id，即用户所选问题对应的消息id
     msgidClient: item.idClient // 随机生成消息id，用于（72条指令中）服务器广播回来时使用
   };
-  return NIM.sendCustomSysMsg(msg);
+  return NIM.sendCustomSysMsg(msg).then(res => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = 0
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  }).catch(err => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = -1
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  });
 };
 
 /**
@@ -314,7 +321,7 @@ export const sendBotCard = (item, msg) => {
       }
     },
     time: new Date().getTime(),
-    status: 0,
+    status: 1,
     fromUser: 1
   };
 
@@ -325,7 +332,15 @@ export const sendBotCard = (item, msg) => {
     target: item.target,
     params: item.params,
     template: message.content.template
-  });
+  }).then(res => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = 0
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  }).catch(err => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = -1
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  });;
 };
 
 /**
@@ -356,7 +371,7 @@ export const sendBotForm = (forms, msg) => {
       }
     },
     time: new Date().getTime(),
-    status: 0,
+    status: 1,
     fromUser: 1
   };
   dispatch({ type: PUSH_MESSAGE, message });
@@ -368,7 +383,15 @@ export const sendBotForm = (forms, msg) => {
       id: 'qiyu_template_botForm',
       forms
     }
-  });
+  }).then(res => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = 0
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  }).catch(err => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = -1
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  });;
 };
 
 /**
@@ -394,7 +417,7 @@ export const sendBotGood = item => {
       }
     },
     time: new Date().getTime(),
-    status: 0,
+    status: 1,
     fromUser: 1,
     resendContent: item
   };
@@ -406,7 +429,15 @@ export const sendBotGood = item => {
     target: item.target,
     params: item.params,
     template: message.content.template
-  });
+  }).then(res => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = 0
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  }).catch(err => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = -1
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  });;
 };
 
 export const sendTemplateText = item => {
@@ -423,7 +454,7 @@ export const sendTemplateText = item => {
       }
     },
     time: new Date().getTime(),
-    status: 0,
+    status: 1,
     fromUser: 1
   };
   dispatch({ type: PUSH_MESSAGE, message });
@@ -433,7 +464,15 @@ export const sendTemplateText = item => {
     target: item.target,
     params: item.params,
     template: message.content.template
-  });
+  }).then(res => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = 0
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  }).catch(err => {
+    const newMessage = _cloneDeep(message)
+    newMessage.status = -1
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  });;
 };
 
 /* ----bot相关结束---- */
