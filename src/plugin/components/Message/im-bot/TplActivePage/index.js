@@ -25,15 +25,18 @@ class ActivePage extends Component {
     const params = _get(this, 'props.tpl.action.params')
     const target = _get(this, 'props.tpl.action.target')
     const url = _get(this, 'props.tpl.action.url')
-    if (type === 'block') {
-      sendTemplateText({
-        label,
-        target,
-        params
-      })
-    } else {
-      setClipboardData(url);
-    }
+    
+    // http://jira.netease.com/browse/YSF-30788
+    setClipboardData(url);
+    // if (type === 'block') {
+    //   sendTemplateText({
+    //     label,
+    //     target,
+    //     params
+    //   })
+    // } else {
+    //   setClipboardData(url);
+    // }
   };
 
   render() {

@@ -24,16 +24,17 @@ class OrderLogistic extends Component {
     const target = _get(this, 'props.tpl.action.target', '');
     const params = _get(this, 'props.tpl.action.params', '');
     const label = _get(this, 'props.tpl.action.p_name', '');
-    if (type === 'url') {
+    if (type === 'url' || type === 'block') {
       setClipboardData(target);
     }
-    if (type === 'block') {
-      sendTemplateText({
-        target,
-        params,
-        label
-      })
-    }
+    // http://jira.netease.com/browse/YSF-30788
+    // if (type === 'block') {
+    //   sendTemplateText({
+    //     target,
+    //     params,
+    //     label
+    //   })
+    // }
   };
 
   render() {
