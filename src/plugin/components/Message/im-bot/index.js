@@ -146,7 +146,8 @@ export default class Bot extends Component {
         break;
       }
       default: {
-        layout = <View className="u-tip">暂不支持该bot类型{tpl.id}</View>;
+        // layout = <View className="u-tip">暂不支持该bot类型{tpl.id}</View>;
+        layout = <View className="u-tip">微信小程序不支持展示该消息类型</View>;
       }
     }
 
