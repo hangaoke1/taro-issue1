@@ -596,6 +596,9 @@ export const sendProductCard = (extraParms) => {
 export const sendProductCardByUser = () => {
   const dispatch = get('store').dispatch;
 
+  if(!get('product'))
+    return;
+
   let extraParms = {
     ...get('product')
   };

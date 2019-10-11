@@ -234,3 +234,14 @@ export const _$clearUnreadCount = () => {
     message: null
   })
 }
+
+
+/**
+ * 监听点击事件
+ * @param {fun} cb
+ */
+export const _$onClickAction = (cb) => {
+  eventbus.on('click_action', (extralParams) => {
+    cb(extralParams);
+  })
+}

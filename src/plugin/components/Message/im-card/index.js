@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { View } from '@tarojs/components';
 import Avatar from '../u-avatar';
 import { sendProductCardByUser } from '../../../actions/chat';
+import { clickAction } from '../../../utils';
 
 import './index.less';
 
@@ -12,6 +13,15 @@ export default function CardView(props) {
 
   const actionFun = () => {
     sendProductCardByUser();
+  }
+
+  const clickProductAction = (ev, url) => {
+    clickAction({
+      type: 'click',
+      event: ev,
+      url,
+      from: 'qiyu_product_card'
+    })
   }
 
   return (
@@ -25,7 +35,7 @@ export default function CardView(props) {
       {
         item.type == 'product' ?
           <View className='m-product-card_content'>
-            <View className='m-product-card'>
+            <View className='m-product-card' onClick={(ev) => { clickProductAction(ev, content.url, 'qiyu_product_card') }}>
               <View className="m-product-card_pic">
                 <Image src={content.picture} className="m-product-card_pic_img"></Image>
               </View>
@@ -55,7 +65,7 @@ export default function CardView(props) {
       {
         item.type == 'order-card' ?
           <View className='m-product-card_content'>
-            <View className='m-product-card'>
+            <View className='m-product-card' onClick={(ev) => { clickProductAction(ev, content.url, 'qiyu_product_card') }}>
               <View className="m-product-card_pic">
                 <Image src={content.picture} className="m-product-card_pic_img"></Image>
               </View>
@@ -116,7 +126,7 @@ export default function CardView(props) {
             }
             {
               content.activity ?
-                <View className="m-order-card_activity">
+                <View className="m-order-card_activity" onClick={(ev) => { clickProductAction(ev, content.activityHref, 'qiyu_product_card_activity') }}>
                   {content.activity}
                 </View>
                 : null
@@ -126,7 +136,8 @@ export default function CardView(props) {
                 <View className="m-order-card_tags">
                   {
                     content.tags.map(it => {
-                      return <View className="m-order-card_tags_btn">
+                      return <View className="m-order-card_tags_btn"
+                        onClick={(ev) => { clickProductAction(ev, it.url, 'qiyu_product_card_tag') }}>
                         {it.label}
                       </View>
                     })
@@ -142,7 +153,9 @@ export default function CardView(props) {
 }
 
 CardView.defaultProps = {
-  item: {}
+  item: {
+    content: {}
+  }
 }
 
 CardView.propTypes = {
