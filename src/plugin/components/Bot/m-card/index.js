@@ -1,20 +1,29 @@
 import Taro from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
-import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import eventbus from '@/lib/eventbus';
+import { setClipboardData } from '@/utils/extendTaro';
 
 import './index.less';
 
 export default function MCard(props) {
 
+  const item = _get(props, 'item', {});
+
   function handleClick () {
-    if (!props.disabled) {
+    if (props.disabled) {
+      return
+    }
+    if (item.type === 'display') {
+      return;
+    }
+    if (item.type === 'url') {
+      setClipboardData(item.target)
+    }
+    if (item.type === 'block') {
       eventbus.trigger('bot_card_show', item, props.message);
     }
   }
-
-  const item = _get(props, 'item', {});
 
   return item ? (
     <View className="m-card" onClick={handleClick}>

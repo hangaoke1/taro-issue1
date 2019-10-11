@@ -3,18 +3,30 @@ import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import eventbus from '@/lib/eventbus';
+import { setClipboardData } from '@/utils/extendTaro';
 import MCard from '@/components/Bot/m-card';
 import MGroup from '@/components/Bot/m-group';
 
 import './index.less';
 
 export default function TplBubbleList(props) {
-  function handleSearchMore() {
-    eventbus.trigger('bot_show_bubble_list', props.item.uuid);
-  }
 
   const item = _get(props, 'item');
   const tpl = _get(props, 'tpl');
+  const type = _get(props, 'tpl.action.type');
+  const target = _get(props, 'tpl.action.target');
+
+  function handleSearchMore() {
+    if (type === 'display') {
+      return;
+    }
+    if (type === 'url') {
+      setClipboardData(target)
+    }
+    if (type === 'block') {
+      eventbus.trigger('bot_show_bubble_list', props.item.uuid);
+    }
+  }
 
   return item ? (
     <View>
