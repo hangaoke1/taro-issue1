@@ -55,6 +55,12 @@ export default class BotList extends Component {
     });
   };
 
+  handleTabChange = index => {
+    this.setState({
+      tabIndex: index
+    })
+  }
+
   render() {
     const { Message } = this.props;
     const { visible, uuid, tabIndex, scrollTop } = this.state;
@@ -79,11 +85,11 @@ export default class BotList extends Component {
                   style={`width: ${100 / len}%;min-width: 100px;`}
                   className="u-tab-item"
                 >
-                  <Text className={`${tabIndex === index ? 'z-active' : ''}`} >{tab.tab_name || '未命名'}</Text>
+                  <Text className={`${tabIndex === index ? 'z-active' : ''}`} onClick={this.handleTabChange.bind(this, index)}>{tab.tab_name || '未命名'}</Text>
                 </View>
               ))}
             </ScrollView>
-            <Swiper className="u-swiper" onChange={this.handleSwiperChange}>
+            <Swiper className="u-swiper" onChange={this.handleSwiperChange} current={tabIndex}>
               {tabList.map(tab => (
                 <SwiperItem key={tab.tab_id}>
                   <MTabList
