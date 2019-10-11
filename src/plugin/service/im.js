@@ -432,6 +432,7 @@ export default class IMSERVICE {
           });
           console.log('assign staff', content);
           assignKefu(content);
+          this.clearQueueTimer();
           if (content.code == 203) {
             this.askQueueStatus();
           }
@@ -480,6 +481,7 @@ export default class IMSERVICE {
             this.clearQueueTimer();
           } else {
             console.log('queue code 异常');
+            this.clearQueueTimer();
           }
           break;
         case RECEIVE_SHOW_EVALUATION_ENTRY:
@@ -523,6 +525,9 @@ export default class IMSERVICE {
       deviceid: get('deviceid')
     }
   ) => {
+    if(this.queueTimer)
+    clearInterval(this.queueTimer);
+
     this.queueTimer = setInterval(() => {
       return new Promise((resolve, reject) => {
         let content = {
