@@ -25,13 +25,16 @@ export default function Index(props) {
           <View className="u-icon">
             <Iconfont type="icon-express" size="16" color="#333"></Iconfont>
           </View>
-          <View className="u-content">{tpl.status}</View>
+          <View className="u-content" style="color: #333;">{tpl.status}</View>
         </View>
         <View className="u-item">
           <View className="u-icon">
             <Iconfont type="icon-gps" size="16" color="#333"></Iconfont>
           </View>
-          <View className="u-content u-address">{tpl.address}</View>
+          <View className="u-content u-address">
+            <View style="color: #333;">{tpl.user_name}</View>
+            <View>{tpl.address}</View>
+          </View>
         </View>
         <View className="u-item">
           <View className="u-icon">
