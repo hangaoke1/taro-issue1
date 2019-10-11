@@ -13,7 +13,8 @@ export default function MImg(props) {
 
   function handleUpload() {
     Taro.chooseImage({
-      count: 1
+      count: 1,
+      sourceType: ['album', 'camera']
     }).then(res => {
       previewFile(res.tempFilePaths[0]).then(file => {
         if (_isFunction(props.onAdd)) {

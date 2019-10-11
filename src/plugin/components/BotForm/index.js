@@ -35,15 +35,19 @@ export default class BotForm extends Component {
 
   componentDidMount() {
     eventbus.on('bot_show_bot_form', uuid => {
-      if (this.state.uuid === uuid) {
-        this.setState({ visible: true });
-        return;
-      }
-      const { Message } = this.props;
-      const message = Message.filter(item => item.uuid === uuid)[0];
-      const forms = _get(message, 'content.template.forms', []);
-      forms.forEach(form => (form.value = ''));
-      this.setState({ uuid, visible: true, forms, message }, () => {});
+      eventbus.trigger('hide_keyboard');
+
+      setTimeout(() => {
+        if (this.state.uuid === uuid) {
+          this.setState({ visible: true });
+          return;
+        }
+        const { Message } = this.props;
+        const message = Message.filter(item => item.uuid === uuid)[0];
+        const forms = _get(message, 'content.template.forms', []);
+        forms.forEach(form => (form.value = ''));
+        this.setState({ uuid, visible: true, forms, message }, () => {});
+      }, 600)
     });
     eventbus.on('bot_close_bot_form', () => {
       this.handleClose();
@@ -126,11 +130,9 @@ export default class BotForm extends Component {
               return (
                 <View className="u-form-item" key={form.id}>
                   <View
-                    className={`u-form-label ${
-                      Number(form.required) === 1 ? 'z-required' : ''
-                    }`}
+                    className={`u-form-label`}
                   >
-                    {form.label}
+                    {form.label}  {Number(form.required) === 1?<Text className="z-required">*</Text>:null}
                   </View>
                   <View className="u-form-content">
                     { 
