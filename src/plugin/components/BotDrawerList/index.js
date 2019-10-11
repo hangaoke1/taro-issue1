@@ -30,9 +30,12 @@ export default class BotList extends Component {
 
   componentDidMount() {
     eventbus.on('bot_show_drawer_list', uuid => {
-      this.setState({ uuid, visible: true, scrollTop: 0, tabIndex: 0 }, () => {
-        // this.setState({ uuid });
-      });
+
+      eventbus.trigger('hide_keyboard');
+      
+      setTimeout(() => {
+        this.setState({ uuid, visible: true, scrollTop: 0, tabIndex: 0 }, () => {});
+      }, 600)
     });
     eventbus.on('bot_close_drawer_list', () => {
       this.handleClose();
@@ -73,11 +76,9 @@ export default class BotList extends Component {
               {tabList.map((tab, index) => (
                 <View
                   style={`width: ${100 / (tabList.length || 1)}%;`}
-                  className={`u-tab-item ${
-                    tabIndex === index ? 'z-active' : ''
-                  }`}
+                  className="u-tab-item"
                 >
-                  {tab.tab_name || '未命名'}
+                  <Text className={`${tabIndex === index ? 'z-active' : ''}`} >{tab.tab_name || '未命名'}</Text>
                 </View>
               ))}
             </ScrollView>

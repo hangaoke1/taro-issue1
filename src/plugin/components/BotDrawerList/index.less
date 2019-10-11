@@ -24,15 +24,16 @@
       .fn_ellipsis();
     }
     .z-active {
+      position: relative;
       color: #337EFF;
     }
     .z-active:after {
       content: '';
       position: absolute;
-      left: 0;
-      bottom: 4px;
-      width: 100%;
-      height: 3px;
+      width: 120%;
+      left: -10%;
+      height: 4px;
+      bottom: -4px;
       background: #337EFF;
     }
   }
