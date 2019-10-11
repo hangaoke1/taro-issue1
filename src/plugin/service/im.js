@@ -237,12 +237,15 @@ export default class IMSERVICE {
         ...extraParams
       };
 
+      console.log('apply staff', content);
       this.sendCustomSysMsg(content)
         .then(msg => {
+          console.log('apply staff success', msg);
           this.updateCrmInfo();
           resolve(msg);
         })
         .catch(error => {
+          console.log('apply staff error', error);
           reject(error);
         });
     });
@@ -427,6 +430,7 @@ export default class IMSERVICE {
           Taro.setNavigationBarTitle({
             title: NAVIGATIONBAR_TITLE
           });
+          console.log('assign staff', content);
           assignKefu(content);
           if (content.code == 203) {
             this.askQueueStatus();
