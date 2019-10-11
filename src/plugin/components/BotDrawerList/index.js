@@ -61,6 +61,7 @@ export default class BotList extends Component {
     const message = Message.filter(item => item.uuid === uuid)[0];
     const tpl = _get(message, 'content.template', {});
     const tabList = _get(message, 'content.template.tabList', []);
+    const len = tabList.length || 1;
 
     return message ? (
       <FloatLayout
@@ -75,7 +76,7 @@ export default class BotList extends Component {
             <ScrollView scrollX className="u-tab">
               {tabList.map((tab, index) => (
                 <View
-                  style={`width: ${100 / (tabList.length || 1)}%;`}
+                  style={`width: ${100 / len}%;min-width: 100px;`}
                   className="u-tab-item"
                 >
                   <Text className={`${tabIndex === index ? 'z-active' : ''}`} >{tab.tab_name || '未命名'}</Text>
