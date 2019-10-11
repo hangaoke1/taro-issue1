@@ -1,10 +1,8 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View } from '@tarojs/components';
 import _get from 'lodash/get';
 import eventbus from '@/lib/eventbus';
 
 import FloatLayout from '@/components/FloatLayout';
-import MShop from '@/components/Bot/m-shop';
 import MList from './m-list';
 
 import './index.less';
@@ -41,7 +39,6 @@ class BotOrderList extends Component {
   render() {
     const { visible, message, scrollTop } = this.state;
     const tpl = _get(message, 'content.template', {});
-    const list = _get(tpl, 'list', []);
 
     return message ? (
       <FloatLayout
@@ -51,11 +48,9 @@ class BotOrderList extends Component {
         bodyPadding={0}
         onClose={this.handleClose}
       >
-        <MList scrollTop={scrollTop} tpl={tpl} message={message}>
-          {list.map(shop => {
-            return <MShop shop={shop} key={shop.s_status}></MShop>;
-          })}
-        </MList>
+        {visible ? (
+          <MList scrollTop={scrollTop} tpl={tpl} message={message}></MList>
+        ) : null}
       </FloatLayout>
     ) : null;
   }
