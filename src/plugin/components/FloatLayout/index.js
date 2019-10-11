@@ -84,14 +84,20 @@ export default class FloatLayout extends Component {
         ></View>
         <View className="m-FloatLayout-layout">
           <View className="layout-header">
-            {title ? (
+            {/* {title ? (
               <View className="layout-title">
                 <Text>{title}</Text>
                 <View className="u-close" onClick={this.onClose}>
                   <Iconfont type="icon-close" color="#666" size="36"></Iconfont>
                 </View>
               </View>
-            ) : null}
+            ) : null} */}
+            <View className="layout-title">
+              <Text>{title}</Text>
+              <View className="u-close" onClick={this.onClose}>
+                <Iconfont type="icon-close" color="#666" size="36"></Iconfont>
+              </View>
+            </View>
           </View>
           <View className="layout-body">
             <ScrollView
