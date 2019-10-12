@@ -120,6 +120,7 @@ export default function ChatBox(props) {
 
   return (
     <View className='m-ChatBox'>
+      { this.props.children }
       <View className='u-voice-icon'>
         {/* <Iconfont type='icon-chat-voice-btn' className='u-voice-icon' /> */}
       </View>

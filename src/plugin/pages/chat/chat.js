@@ -5,6 +5,7 @@ import _get from 'lodash/get';
 
 import { clearUnreadHome } from '@/lib/unread';
 import Index from '../../app';
+import getSystemInfo from '@/lib/systemInfo';
 
 import MessageView from '../../components/Message';
 import ChatBox from '../../components/ChatBox';
@@ -100,7 +101,13 @@ class Chat extends Component {
       wrapHeight: 0,
       scrollWithAnimation: true,
       showAssociate: false,
-      lockBot: [] // 锁定bot入口1s
+      lockBot: [], // 锁定bot入口1s
+      // 位置哨兵
+      bottomSentry: -1,
+      scrollViewOffset: 0,
+      constOffset: 0,
+      showTopPlaceHolder: false,
+      maskHeight: 0
     };
   }
 
@@ -115,6 +122,7 @@ class Chat extends Component {
 
     eventbus.on('push_message', this.scrollToBottom);
     eventbus.on('video_click', this.handlePlay);
+
     this.scrollToBottom(false, 1000);
   }
 
@@ -126,11 +134,16 @@ class Chat extends Component {
 
   componentDidHide() {}
 
+  componentDidUpdate() {}
+
   // 重置底部区域
-  scrollToBottom = (scrollWithAnimation = true, delay = 300) => {
+  scrollToBottom = (scrollWithAnimation = true, delay = 100) => {
+
     if (this.timer) {
+      this.handleOffsetCalc();
       return;
     }
+
     this.setState({
       lastId: '',
       scrollWithAnimation
@@ -139,6 +152,7 @@ class Chat extends Component {
       this.setState({
         lastId: 'm-bottom',
       });
+      this.handleOffsetCalc();
 
       this.timer = null;
     }, delay);
@@ -160,7 +174,38 @@ class Chat extends Component {
 
   handleBodyClick = () => {
     this.props.hideAction();
+    this.handleOffsetCalc();
   };
+
+  handleOffsetCalc = () => {
+    const query = Taro.createSelectorQuery().in(this.$scope);
+    const node = query.select('#m-bottom');
+    const { scrollViewOffset } = this.state;
+    node
+      .boundingClientRect(rect => {
+        getSystemInfo.then(res => {
+          const offsetBottom = res.windowHeight - rect.top;
+          const offsetBottomCalc = offsetBottom - scrollViewOffset
+          const ratio = res.windowWidth / 375;
+          console.log('ratio', ratio)
+          console.log('屏幕高度', res.windowHeight)
+          console.log('哨兵距离底部距离: ', offsetBottom); // 667 ---> 0
+          console.log('哨兵距离底部距离计算: ', offsetBottomCalc); // 667 ---> 0
+          if (!this.state.showTopPlaceHolder && offsetBottom <= 65 * ratio ) {
+            this.setState({
+              showTopPlaceHolder: true
+            })
+          }
+
+          this.setState({
+            bottomSentry: offsetBottomCalc > 0 ? offsetBottomCalc : 0
+          }, () => {
+            this.getScrollViewOffset(ratio)
+          })
+        })
+      })
+      .exec();
+  }
 
   // 处理选择表情
   handlePortraitClick = () => {
@@ -172,8 +217,10 @@ class Chat extends Component {
 
   // 处理点击加号
   handlePlusClick = () => {
+
     this.props.toggleShowFun();
     this.setState({ height: 0 });
+
     if (this.state.height) return;
     this.scrollToBottom();
   };
@@ -218,8 +265,11 @@ class Chat extends Component {
   handleBlur = () => {
     const { Options } = this.props;
     const isOpen = Options.showFunc || Options.showPortrait;
-    if (isOpen) return;
-    this.setState({ height: 0 });
+    if (isOpen) {
+      this.handleOffsetCalc();
+    } else {
+      this.setState({ height: 0 }, () => {this.handleOffsetCalc();});
+    };
   };
 
   /** 消息体点击事件处理 **/
@@ -333,6 +383,43 @@ class Chat extends Component {
     emptyAssociate();
   };
 
+  getScrollViewOffset= (ratio) => {
+    const {
+      Options,
+      Bot,
+      Session
+    } = this.props;
+    const {
+      height,
+      bottomSentry
+    } = this.state;
+
+    const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
+    const hasBot = isRobot && Bot.botList.length;
+    const isOpen = Options.showFunc || Options.showPortrait;
+
+    let constOffset = 65 * ratio + (hasBot ? 45 * ratio : 0); // chatbox固定高度
+    let offset = height + (isOpen ? 272 * ratio : 0) + constOffset; // 动态高度
+
+    // 如果哨兵距离底部距离 > 偏移距离，无需移动
+    if (bottomSentry >= offset) {
+      offset = 0;
+    } else {
+      // 如果哨兵距离底部距离 < 偏移距离
+      offset = offset - bottomSentry
+    }
+
+    if (bottomSentry === -1) {
+      offset = 0
+    }
+
+    this.setState({
+      scrollViewOffset: offset,
+      constOffset,
+      maskHeight: offset
+    })
+  }
+
   render() {
     const {
       Message,
@@ -349,6 +436,9 @@ class Chat extends Component {
       scrollWithAnimation,
       showAssociate,
       lockBot,
+      scrollViewOffset,
+      showTopPlaceHolder,
+      maskHeight
     } = this.state;
 
     const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
@@ -356,13 +446,10 @@ class Chat extends Component {
     const hasBot = isRobot && Bot.botList.length
     
     const isOpen = Options.showFunc || Options.showPortrait;
-    
-    // 键盘高度 + 聊天窗口高度 + 功能菜单高度 + bot入口高度
-    const offset = `calc(${height}px + ${Taro.pxTransform(130)} + ${
-      isOpen ? Taro.pxTransform(544) : '0px'
-    } + ${hasBot ? Taro.pxTransform(90) : '0px'})`
 
-    const gHeight = `calc(100vh - ${Taro.pxTransform(130)} - ${hasBot ? Taro.pxTransform(90) : '0px'})`
+    let offset = scrollViewOffset + 'px'
+
+    const gHeight = `calc(100vh)`
 
     return (
       <Index className="m-page-wrapper">
@@ -393,12 +480,13 @@ class Chat extends Component {
             onTouchStart={this.handleBodyClick}
           >
             <View className="u-message-list">
+              <View style={`height: ${showTopPlaceHolder ? constOffset : 0}px`}></View>
               <MessageView
                 Message={Message}
                 onImgClick={this.handleImgClick}
               ></MessageView>
+              <View id="m-bottom"></View>
             </View>
-            <View id="m-bottom"></View>
           </ScrollView>
         </View>
 
@@ -448,11 +536,13 @@ class Chat extends Component {
             onPortraitClick={this.handlePortraitClick}
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
-          ></ChatBox>
+          >
+            <View id="chat-sentry"></View>
+          </ChatBox>
         </View>
         <View
           className="u-mask"
-          style={`height: ${offset}`}
+          style={`height: ${maskHeight}px`}
         ></View>
         <View className={`u-funcbox ${Options.showFunc ? 'open' : ''}`}>
           <FuncBox
