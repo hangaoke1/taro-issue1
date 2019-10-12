@@ -41,6 +41,7 @@ export default function Index(props) {
             <Iconfont type="icon-order" size="16" color="#333"></Iconfont>
           </View>
           <View className="u-content u-date">
+            <View style="color: #333;">{tpl.orderNo}</View>
             {tpl.date.map(date => (
               <View>{date}</View>
             ))}
