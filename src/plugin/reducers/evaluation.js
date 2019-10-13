@@ -28,11 +28,17 @@ const Evaluation = (state = init, action) => {
         value: 100,
         name: '非常满意'
       }
-      if (action.value.type != 2) {
+
+      if (action.value.evaluation.type != 2) {
         list.sort((a, b) => {
           return a.value - b.value;
         })
+      }else{
+        list.sort((a,b) => {
+          return b.value - a.value;
+        })
       }
+
       list.forEach(item => {
         if (item.value == 100) {
           defaultStatus.tagList = item.tagList;
