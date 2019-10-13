@@ -5,6 +5,7 @@ import { queryAccont } from '../service';
 import { get, set } from '../global_config';
 import IMSERVICE,{ STATUS } from '../service/im';
 import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID, REMOVE_MESSAGE_BYUUID } from '../constants/message';
+import { DEL_ENTRY_BYKEY } from '../constants/chat';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '@/lib/uuid';
@@ -637,4 +638,14 @@ export const resendMessage = function (item) {
       sendImage(item.resendContent)(dispatch)
     }
   }, 300)
+}
+
+/**
+ * 删除掉人工客服的入口
+ */
+export const delApplyHumanStaffEntry = () => dispatch => {
+  dispatch({
+    type: DEL_ENTRY_BYKEY,
+    value: 'applyHumanStaff'
+  })
 }

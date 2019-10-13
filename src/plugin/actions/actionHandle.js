@@ -24,7 +24,7 @@ export const anctionHandle = (type, data) => {
         type: SET_SHUNT_ENTRIES_STATUS,
         value: false
       })
-      console.log('点击后禁用分流')
+
       // 点击后禁用分流
       dispatch({
         type: UPDATE_MESSAGE_BYACTION,

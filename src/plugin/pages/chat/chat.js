@@ -29,7 +29,8 @@ import {
   sendImage,
   applyHumanStaff,
   emptyAssociate,
-  associate
+  associate,
+  delApplyHumanStaffEntry
 } from '../../actions/chat';
 import {
   toggleShowFun,
@@ -82,6 +83,9 @@ const dAssociate = _debounce(associate, 300, false);
     },
     openEvaluationModal() {
       dispatch(openEvaluationModal());
+    },
+    delApplyHumanStaffEntry() {
+      dispatch(delApplyHumanStaffEntry());
     }
   })
 )
@@ -353,7 +357,9 @@ class Chat extends Component {
         openEvaluationModal();
         break;
       case 'applyHumanStaff':
+        const { delApplyHumanStaffEntry } = this.props;
         applyHumanStaff();
+        delApplyHumanStaffEntry();
         break;
     }
   };
@@ -444,7 +450,7 @@ class Chat extends Component {
     const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
 
     const hasBot = isRobot && Bot.botList.length
-    
+
     const isOpen = Options.showFunc || Options.showPortrait;
 
     let offset = scrollViewOffset + 'px'
@@ -453,7 +459,7 @@ class Chat extends Component {
 
     return (
       <Index className="m-page-wrapper">
-        
+
         {/* 视频全局对象 */}
         <View
           style={`display: ${
