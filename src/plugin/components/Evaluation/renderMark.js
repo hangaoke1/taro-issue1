@@ -44,12 +44,17 @@ export default function RenderMark(props) {
           <View
             className={remarks ? 'u-mark u-mark-view' : 'u-mark u-mark-view u-mark-placeholder'}
             onTouchStart={onFocusView}>
-              <ParserRichText
-                html={remarks ? remarks : '请输入您要反馈的意见'}
-                isRich
-              ></ParserRichText>
+              <View className="u-mark-view-inner">
+                <ParserRichText
+                  html={remarks ? remarks : '请输入您要反馈的意见'}
+                  isRich
+                ></ParserRichText>
+              </View>
           </View>
       }
+      <View className="m-evaluation_mark_counter">
+        {remarks.length}/200
+      </View>
     </View>
   )
 }
