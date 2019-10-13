@@ -353,7 +353,19 @@ class Chat extends Component {
   handleSelectEntry = key => {
     switch (key) {
       case 'evaluation':
-        const { openEvaluationModal } = this.props;
+        const { openEvaluationModal,Session } = this.props;
+
+        let sessionCloseTime = Session.closeTime;
+        let curTime = new Date().getTime();
+        let evaluation_timeout = Session.shop.setting && Session.shop.setting.evaluation_timeout*60*1000 || 10*60*1000;
+        if (sessionCloseTime && curTime - sessionCloseTime > evaluation_timeout) {
+          Taro.showToast({
+            title: '评价已超时，无法进行评价',
+            icon: 'none',
+            duration: 2000
+          })
+          return;
+        }
         openEvaluationModal();
         break;
       case 'applyHumanStaff':

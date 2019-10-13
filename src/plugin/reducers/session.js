@@ -1,4 +1,4 @@
-import { INIT_SESSION, SET_SESSION_CODE } from '../constants/session';
+import { INIT_SESSION, SET_SESSION_CODE,UPDATE_SESSION } from '../constants/session';
 import { set } from '../global_config';
 const initSession = {};
 
@@ -13,6 +13,10 @@ const Session = (state = initSession, action) => {
       return {
         ...state,
         code : action.value
+      }
+    case UPDATE_SESSION:
+      return {
+        ...state, ...action.value
       }
     default:
       return state;

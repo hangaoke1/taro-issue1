@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro';
 import { get } from '../global_config'
 import { SET_EVALUATION_VISIBLE, SET_SHUNT_ENTRIES_STATUS } from '../constants/chat';
 import { applyKefu, cancelQueue } from '../actions/chat';
@@ -9,9 +10,21 @@ import eventbus from '../lib/eventbus';
 export const anctionHandle = (type, data) => {
   const dispatch = get('store').dispatch;
   const evaluation = get('store').getState().Evaluation;
+  const session = get('store').getState().Session;
 
   switch (type) {
     case 'evaluation':
+        let sessionCloseTime = session.closeTime;
+        let curTime = new Date().getTime();
+        let evaluation_timeout = session.shop.setting && session.shop.setting.evaluation_timeout*60*1000 || 10*60*1000;
+        if (sessionCloseTime && curTime - sessionCloseTime > evaluation_timeout) {
+          Taro.showToast({
+            title: '评价已超时，无法进行评价',
+            icon: 'none',
+            duration: 2000
+          })
+          return;
+        }
       dispatch(setEvaluationVisible(true));
       break;
     case 'reApplyKefu':

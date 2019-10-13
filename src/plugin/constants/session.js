@@ -4,6 +4,8 @@ export const INIT_SESSION = `${namespace}/INIT_SESSION`;
 
 export const SET_SESSION_CODE = `${namespace}/SET_SESSION_CODE`;
 
+export const UPDATE_SESSION = `${namespace}/UPDATE_SESSION`;
+
 
 /*
 * 会话关闭提示语

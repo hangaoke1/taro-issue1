@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro';
 import _get from 'lodash/get';
 import { get,set } from '../global_config';
 import { PUSH_MESSAGE,UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
-import { INIT_SESSION,REASON_MAP,SET_SESSION_CODE } from '../constants/session';
+import { INIT_SESSION,REASON_MAP,SET_SESSION_CODE,UPDATE_SESSION } from '../constants/session';
 import { INIT_EVALUATION_SETTING,INIT_CURRENT_EVALUATION,INIT_LAST_EVALUATION } from '../constants/evaluation';
 import { SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG,DEL_ENTRY_BYKEY,SET_CHAT_INPUT_DISABLED,
           SET_CHAT_INPUT_PLACEHOLDER,RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT, UPDATE_ENTRY_BYKEY,SET_SHUNT_ENTRIES_STATUS } from '../constants/chat';
@@ -408,6 +408,14 @@ export const onfinish = (content) => {
     dispatch({
       type: SET_SESSION_CODE,
       value: 206
+    })
+
+    // 更新会话结束的时间
+    dispatch({
+      type: UPDATE_SESSION,
+      value: {
+        closeTime: time
+      }
     })
 
     // 7为用户主动关闭会话，不用提示文案
