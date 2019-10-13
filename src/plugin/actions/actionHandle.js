@@ -2,6 +2,7 @@ import { get } from '../global_config'
 import { SET_EVALUATION_VISIBLE, SET_SHUNT_ENTRIES_STATUS } from '../constants/chat';
 import { applyKefu, cancelQueue } from '../actions/chat';
 import { INIT_CURRENT_EVALUATION } from '../constants/evaluation';
+import { UPDATE_MESSAGE_BYACTION } from '../constants/message';
 
 import eventbus from '../lib/eventbus';
 
@@ -22,6 +23,16 @@ export const anctionHandle = (type, data) => {
       dispatch({
         type: SET_SHUNT_ENTRIES_STATUS,
         value: false
+      })
+      console.log('点击后禁用分流')
+      // 点击后禁用分流
+      dispatch({
+        type: UPDATE_MESSAGE_BYACTION,
+        message: {
+          type: 'entries',
+          disabled: true,
+          action: 'selectEntries'
+        }
       })
       break;
     case 'cancelQueue':

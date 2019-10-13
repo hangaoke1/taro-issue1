@@ -9,6 +9,8 @@ export default function ActionView(props) {
   const item = props.item;
 
   const actionFun = (data) => {
+    if(item.disabled)
+      return;
     anctionHandle(item.action, data);
   }
 
