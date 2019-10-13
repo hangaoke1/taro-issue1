@@ -3,6 +3,7 @@ import {
   SET_CHAT_INPUT_DISABLED, SET_CHAT_INPUT_PLACEHOLDER, RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT,
   UPDATE_ENTRY_BYKEY,SET_SHUNT_ENTRIES_STATUS
 } from '../constants/chat';
+import eventbus from '../lib/eventbus';
 
 
 const CorpStatus = (state = {
@@ -14,6 +15,12 @@ const CorpStatus = (state = {
 }, action) => {
   switch (action.type) {
     case SET_EVALUATION_VISIBLE:
+      // 先解决ios下的滚动穿透吧
+      if(action.value){
+        eventbus.trigger('disabled_chat_scrollY');
+      }else{
+        eventbus.trigger('enable_chat_scrollY');
+      }
       return {
         ...state,
         evaluationVisible: action.value

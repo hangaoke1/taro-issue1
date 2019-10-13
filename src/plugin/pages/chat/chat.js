@@ -111,7 +111,8 @@ class Chat extends Component {
       scrollViewOffset: 0,
       constOffset: 0,
       showTopPlaceHolder: false,
-      maskHeight: 0
+      maskHeight: 0,
+      chatViewScrollY : true
     };
   }
 
@@ -126,6 +127,16 @@ class Chat extends Component {
 
     eventbus.on('push_message', this.scrollToBottom);
     eventbus.on('video_click', this.handlePlay);
+    eventbus.on('disabled_chat_scrollY', () => {
+      this.setState({
+        chatViewScrollY: false
+      })
+    });
+    eventbus.on('enable_chat_scrollY', () => {
+      this.setState({
+        chatViewScrollY: true
+      })
+    });
 
     this.scrollToBottom(false, 1000);
   }
@@ -456,7 +467,8 @@ class Chat extends Component {
       lockBot,
       scrollViewOffset,
       showTopPlaceHolder,
-      maskHeight
+      maskHeight,
+      chatViewScrollY
     } = this.state;
 
     const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
@@ -492,7 +504,7 @@ class Chat extends Component {
           <ScrollView
             className="u-scroll"
             style={`bottom: ${offset};height: ${gHeight};`}
-            scrollY
+            scrollY={chatViewScrollY}
             scrollWithAnimation={scrollWithAnimation}
             scrollIntoView={lastId}
             onTouchStart={this.handleBodyClick}
