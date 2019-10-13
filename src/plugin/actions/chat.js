@@ -4,7 +4,7 @@ import _cloneDeep from 'lodash/cloneDeep';
 import { queryAccont } from '../service';
 import { get, set } from '../global_config';
 import IMSERVICE,{ STATUS } from '../service/im';
-import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID, REMOVE_MESSAGE_BYUUID } from '../constants/message';
+import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID, REMOVE_MESSAGE_BYUUID,UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { DEL_ENTRY_BYKEY } from '../constants/chat';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import eventbus from '../lib/eventbus';
@@ -269,6 +269,12 @@ export const cancelQueue = (data = {}) => dispatch => {
       time: new Date().getTime()
     };
     dispatch({ type: PUSH_MESSAGE, message });
+
+    let updateMessage = {
+      action: 'cancelQueue',
+      disabled: true
+    }
+    dispatch({ type: UPDATE_MESSAGE_BYACTION, message:updateMessage});
   });
 };
 

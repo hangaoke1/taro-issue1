@@ -121,6 +121,15 @@ export const assignKefu = (content) => {
       value: null
     })
 
+    //进线了之前的排队按钮都禁用掉
+    dispatch({
+      type: UPDATE_MESSAGE_BYACTION,
+      message: {
+        action: 'cancelQueue',
+        disabled: true
+      }
+    })
+
     switch(code){
         case 200:
             // related_session_type == 1 // 机器人转人工接入 session_transfer_robot_switch=0开关关闭
