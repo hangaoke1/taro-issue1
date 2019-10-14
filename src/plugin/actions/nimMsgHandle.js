@@ -463,6 +463,7 @@ export const onfinish = (content) => {
       dispatch({type: PUSH_MESSAGE, message: evaluationMsg});
 
       if(evaluation_auto_popup){
+        eventbus.trigger('hide_keyboard');
         dispatch({
           type: SET_EVALUATION_VISIBLE,
           value: true
