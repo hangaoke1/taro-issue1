@@ -150,7 +150,13 @@ export default class Info extends Component {
 
   componentWillMount() { }
 
-  componentDidMount() { }
+  componentDidMount() {
+    if(Taro.getStorageSync('selectedName')){
+      this.setState({
+        selectedName: Taro.getStorageSync('selectedName')
+      })
+    }
+  }
 
   componentWillUnmount() { }
 
