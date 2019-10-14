@@ -24,7 +24,8 @@ export default class TabList extends Component {
     tab: PropTypes.object,
     tpl: PropTypes.object,
     message: PropTypes.object,
-    scrollTop: PropTypes.number
+    scrollTop: PropTypes.number,
+    active: PropTypes.bool
   };
 
   state = {
@@ -86,7 +87,7 @@ export default class TabList extends Component {
 
   render() {
     const { loading, finished } = this.state;
-    const { scrollTop, tab, tpl } = this.props;
+    const { scrollTop, tab, tpl, active } = this.props;
     return (
       <GList
         loading={loading}
@@ -94,6 +95,7 @@ export default class TabList extends Component {
         onLoadMore={this.loadMore}
         scrollTop={scrollTop}
         height={400}
+        active={active}
       >
         {this.props.children}
         {finished && tab.list.length === 0 ? (

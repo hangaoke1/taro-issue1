@@ -90,7 +90,7 @@ export default class BotList extends Component {
               ))}
             </ScrollView>
             <Swiper className="u-swiper" onChange={this.handleSwiperChange} current={tabIndex}>
-              {tabList.map(tab => (
+              {tabList.map((tab, index) => (
                 <SwiperItem key={tab.tab_id}>
                   <MTabList
                     className="u-list"
@@ -98,6 +98,7 @@ export default class BotList extends Component {
                     tab={tab}
                     tpl={tpl}
                     message={message}
+                    active={tabIndex === index}
                   >
                     {tab.list.map(item => {
                       return String(item.p_item_type) === '0' ? (

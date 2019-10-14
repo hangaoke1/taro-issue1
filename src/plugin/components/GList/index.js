@@ -9,14 +9,16 @@ export default class GList extends Component {
   static propTypes = {
     loading: PropTypes.bool,
     finished: PropTypes.bool,
+    active: PropTypes.bool,
     scrollTop: PropTypes.number,
-    height: PropTypes.number
+    height: PropTypes.number,
   };
 
   static defaultProps = {
     loading: false,
     finished: false,
-    scrollTop: 0
+    scrollTop: 0,
+    active: true
   };
 
   state = {
@@ -28,7 +30,9 @@ export default class GList extends Component {
   }
 
   componentDidUpdate() {
-    this.needLoadMore();
+    if (this.props.active) {
+      this.needLoadMore();
+    }
   }
 
   calcWrapHeight = () => {
@@ -36,9 +40,10 @@ export default class GList extends Component {
     const node = query.select('.root-class');
     node
       .fields({ size: true }, res => {
-        // console.log('计算容器高度: ', res.height)
         this.setState({ wrapHeight: res.height }, () => {
-          this.needLoadMore();
+          if (this.props.active) {
+            this.needLoadMore();
+          }
         })
       })
       .exec();
