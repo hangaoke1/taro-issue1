@@ -52,16 +52,18 @@ export const anctionHandle = (type, data) => {
       dispatch(cancelQueue(data));
       break;
     case 'updateEvaluation':
-      let sessionCloseTime = session.closeTime;
-      let curTime = new Date().getTime();
-      let evaluation_timeout = session.shop.setting && session.shop.setting.evaluation_timeout*60*1000 || 10*60*1000;
-      if (sessionCloseTime && curTime - sessionCloseTime > evaluation_timeout) {
-        Taro.showToast({
-          title: '评价已超时，无法进行评价',
-          icon: 'none',
-          duration: 2000
-        })
-        return;
+      {
+        let sessionCloseTime = session.closeTime;
+        let curTime = new Date().getTime();
+        let evaluation_timeout = session.shop.setting && session.shop.setting.evaluation_timeout*60*1000 || 10*60*1000;
+        if (sessionCloseTime && curTime - sessionCloseTime > evaluation_timeout) {
+          Taro.showToast({
+            title: '评价已超时，无法进行评价',
+            icon: 'none',
+            duration: 2000
+          })
+          return;
+        }
       }
       dispatch({
         type: INIT_CURRENT_EVALUATION,
