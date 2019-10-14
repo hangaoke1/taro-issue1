@@ -38,15 +38,15 @@ export const anctionHandle = (type, data) => {
         value: false
       })
 
-      // 点击后禁用分流
-      // dispatch({
-      //   type: UPDATE_MESSAGE_BYACTION,
-      //   message: {
-      //     type: 'entries',
-      //     disabled: true,
-      //     action: 'selectEntries'
-      //   }
-      // })
+      点击后禁用分流
+      dispatch({
+        type: UPDATE_MESSAGE_BYACTION,
+        message: {
+          type: 'entries',
+          disabled: true,
+          action: 'selectEntries'
+        }
+      })
       break;
     case 'cancelQueue':
       dispatch(cancelQueue(data));

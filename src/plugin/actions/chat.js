@@ -50,7 +50,7 @@ export const applyKefu = (
     account: account,
     token: token
   });
-  console.log('调用云信的方法');
+
   NIM.applyKefu(extraParms);
 };
 
