@@ -6,7 +6,7 @@ export default function Iconfont(props) {
     const { size = 28, color = '#ccc' } = props;
 
     return <View className={'u-iconfont iconfont ' + props.type} style={{
-        display: 'inline-block',
+        display: 'flex',
         color: color,
         fontSize: size + 'px'
     }}

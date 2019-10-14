@@ -86,6 +86,16 @@ export const createAccount = (param = {}) => dispatch => {
 export const sendText = text => dispatch => {
   if (!text.trim()) {return}
 
+  if(isShuntEntriesStatus()){
+    Taro.showToast({
+      title: '为了给您提供更专业的服务，请您选择要咨询的内容类型',
+      icon: 'none',
+      duration: 2000
+    })
+
+    return;
+  }
+
   let message = {
     type: 'text',
     uuid: genUUID16(),

@@ -416,6 +416,12 @@ export const onfinish = (content) => {
       value: 206
     })
 
+    // 只要新会话正常接入，访客分流提示的状态都重置了
+    dispatch({
+      type: SET_SHUNT_ENTRIES_STATUS,
+      value: false
+    })
+
     // 更新会话结束的时间
     dispatch({
       type: UPDATE_SESSION,
