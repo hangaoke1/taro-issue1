@@ -84,6 +84,8 @@ export const createAccount = (param = {}) => dispatch => {
  * @param {string} text 文本内容
  */
 export const sendText = text => dispatch => {
+  if (text.trim()) {return}
+
   let message = {
     type: 'text',
     uuid: genUUID16(),
@@ -112,6 +114,15 @@ export const sendText = text => dispatch => {
  * @param {object} item 消息对象 { id, text, idClient }
  */
 export const sendRelateText = item => dispatch => {
+  if (!canSendMessage()) {
+    Taro.showToast({
+      title: '请等待连线成功后，再发送消息',
+      icon: 'none',
+      duration: 2000
+    })
+    return;
+  }
+
   let message = {
     content: item.text,
     type: 'text',
@@ -204,6 +215,15 @@ export const sendImage = res => dispatch => {
  * @param {string} evalcontent 差评原因
  */
 export const evaluationContent = (msgidClient, evalcontent = '') => {
+  if (!canSendMessage()) {
+    Taro.showToast({
+      title: '请等待连线成功后，再操作',
+      icon: 'none',
+      duration: 2000
+    })
+    return;
+  }
+
   const msg = {
     cmd: 66,
     msgidClient,
@@ -356,6 +376,15 @@ export const sendBotCard = (item, msg) => {
  * @param {object} msg  消息体
  */
 export const sendBotForm = (forms, msg) => {
+  if (!canSendMessage()) {
+    Taro.showToast({
+      title: '请等待连线成功后，再发送消息',
+      icon: 'none',
+      duration: 2000
+    })
+    return;
+  }
+
   const dispatch = get('store').dispatch;
   let params = _get(msg, 'content.template.params');
 
@@ -406,6 +435,15 @@ export const sendBotForm = (forms, msg) => {
  * @param {object} item 商品信息
  */
 export const sendBotGood = item => {
+  if (!canSendMessage()) {
+    Taro.showToast({
+      title: '请等待连线成功后，再发送消息',
+      icon: 'none',
+      duration: 2000
+    })
+    return;
+  }
+
   const dispatch = get('store').dispatch;
   // 生成本地消息
   const message = {
@@ -448,6 +486,15 @@ export const sendBotGood = item => {
 };
 
 export const sendTemplateText = item => {
+  if (!canSendMessage()) {
+    Taro.showToast({
+      title: '请等待连线成功后，再发送消息',
+      icon: 'none',
+      duration: 2000
+    })
+    return;
+  }
+
   const dispatch = get('store').dispatch;
 
   const message = {
