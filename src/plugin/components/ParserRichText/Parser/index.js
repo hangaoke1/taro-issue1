@@ -135,16 +135,16 @@ Component({
   methods: {
     //事件
     tapEvent(e) {
-      if (this.data.autocopy && e.detail && /^http/.test(e.detail)) {
-        wx.setClipboardData({
-          data: e.detail,
-          success() {
-            wx.showToast({
-              title: '链接已复制',
-            })
-          }
-        })
-      }
+      // if (this.data.autocopy && e.detail && /^http/.test(e.detail)) {
+      //   wx.setClipboardData({
+      //     data: e.detail,
+      //     success() {
+      //       wx.showToast({
+      //         title: '链接已复制',
+      //       })
+      //     }
+      //   })
+      // }
       this.triggerEvent('linkpress', e.detail);
     },
     errorEvent(e) {

@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro';
 import { filterHtml, text2emoji } from '../../utils';
-
+import { unescape } from '../../utils/xss';
 import './parserRichText.less';
 
 /**
@@ -15,7 +15,18 @@ class ParserRichText extends Taro.Component {
   };
 
   handleLinkpress = event => {
-    this.props.onLinkpress && this.props.onLinkpress(event);
+    let url = unescape(event.detail)
+    if (this.props.autocopy && event.detail) {
+      wx.setClipboardData({
+        data: url,
+        success() {
+          wx.showToast({
+            title: '链接已复制',
+          })
+        }
+      })
+    }
+    this.props.onLinkpress && this.props.onLinkpress({ type: event.type, detail: url });
   };
 
   handleError = error => {
@@ -39,9 +50,9 @@ class ParserRichText extends Taro.Component {
 
     if (!isRich) {
       html = filterHtml(html);
+    } else {
+      html = text2emoji(html);
     }
-
-    html = text2emoji(html);
 
     const style = Object.assign({}, tagStyle, customerTagStyle)
 
