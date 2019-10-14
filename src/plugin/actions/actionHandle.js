@@ -39,14 +39,14 @@ export const anctionHandle = (type, data) => {
       })
 
       // 点击后禁用分流
-      dispatch({
-        type: UPDATE_MESSAGE_BYACTION,
-        message: {
-          type: 'entries',
-          disabled: true,
-          action: 'selectEntries'
-        }
-      })
+      // dispatch({
+      //   type: UPDATE_MESSAGE_BYACTION,
+      //   message: {
+      //     type: 'entries',
+      //     disabled: true,
+      //     action: 'selectEntries'
+      //   }
+      // })
       break;
     case 'cancelQueue':
       dispatch(cancelQueue(data));

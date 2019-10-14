@@ -47,7 +47,7 @@ export const __configDomain = (domain) => {
  */
 export const _$setUserInfoSync = (userInfo) => {
 
-  if (Object.prototype.toString.call(userInfo) === "[object Object]") {
+  if (Object.prototype.toString.call(userInfo) === "[object Object]" || Object.prototype.toString.call(userInfo) === "[object Null]") {
     // vip
     if (userInfo && userInfo.level) {
       _$setVipLevel(userInfo.level);
@@ -68,7 +68,7 @@ export const _$setUserInfo = (userInfo) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       try {
-        if (Object.prototype.toString.call(userInfo) === "[object Object]") {
+        if (Object.prototype.toString.call(userInfo) === "[object Object]" || Object.prototype.toString.call(userInfo) === "[object Null]") {
           try {
             // vip
             if (userInfo && userInfo.level) {

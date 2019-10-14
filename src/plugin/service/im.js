@@ -66,14 +66,15 @@ export default class IMSERVICE {
         initer.account != this.instance.account ||
         initer.token != this.instance.token
       ) {
-        STATUS.status = 'disconnect';
-        this.instance.getNim().then(nim => {
-          nim.destroy({
-            done: () => {
-              console.log('destroy really done!');
-            }
-          });
-        });
+        // STATUS.status = 'disconnect';
+        this.instance = new IMSERVICE(initer);
+        // this.instance.getNim().then(nim => {
+        //   nim.destroy({
+        //     done: () => {
+        //       console.log('destroy really done!');
+        //     }
+        //   });
+        // });
       }
     }
 
@@ -126,6 +127,7 @@ export default class IMSERVICE {
   sendCustomSysMsg(content, to = -1) {
     return new Promise((resolve, reject) => {
       this.getNim().then(nim => {
+        console.log('发自定义消息');
         nim.sendCustomSysMsg({
           to: to,
           cc: !0,
@@ -134,12 +136,16 @@ export default class IMSERVICE {
           content: JSON.stringify(content),
           done: (error, msg) => {
             if (error) {
+              console.log('自定义消息错误', error);
               reject(error);
             } else {
+              console.log('自定义消息成功', msg);
               resolve(error, msg);
             }
           }
         });
+      }).catch(error => {
+        console.log('getNim 错了', error)
       });
     });
   }
@@ -232,7 +238,7 @@ export default class IMSERVICE {
         foreignid: get('foreignid'),
         fromType: FROM_TYPE,
         level: get('level'),
-        bundleid: get('bundleid'),
+        bundleid: 'wx795c356346639689' || get('bundleid'),
         version: 64,
         ...extraParams
       };
