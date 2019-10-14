@@ -131,6 +131,7 @@ export default function RobotView(props) {
     setIsOpened(false);
   }
   function handleClose() {
+    handleEvalReason();
     setIsOpened(false);
   }
   function handleChangeReson(event) {
