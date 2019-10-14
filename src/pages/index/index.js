@@ -28,6 +28,11 @@ export default class Index extends Component {
         unReadCount: total
       })
     })
+
+    if(Taro.getStorageSync('YSF-APPKEY') && Taro.getStorageSync('YSF-DOMAIN')){
+      myPluginInterface._$configAppKey(Taro.getStorageSync('YSF-APPKEY'));
+      myPluginInterface.__configDomain( Taro.getStorageSync('YSF-DOMAIN'));
+    }
   }
 
   componentWillUnmount () { }
@@ -77,6 +82,15 @@ export default class Index extends Component {
       if(queryParam.key){
         myPluginInterface._$configAppKey(queryParam.key);
         myPluginInterface.__configDomain(domain);
+
+        Taro.setStorageSync(
+          'YSF-APPKEY', queryParam.key
+        )
+
+        Taro.setStorageSync(
+          'YSF-DOMAIN', domain
+        )
+
       }
 
       Taro.showToast({
