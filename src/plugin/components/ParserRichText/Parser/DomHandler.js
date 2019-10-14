@@ -285,6 +285,13 @@ DomHandler.prototype.ontext = function(data) {
       type: 'text'
     };
     if (/&#*((?!sp|lt|gt).){2,5};/.test(data)) element.decode = true;
+
+    // 如果是纯链接不转码
+    const URL_FILTER = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/ig;
+    if (URL_FILTER.test(data)) {
+      element.decode = false;
+    }
+  
     this._addDomElement(element);
   }
 };

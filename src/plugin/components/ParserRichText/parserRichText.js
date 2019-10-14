@@ -33,7 +33,8 @@ class ParserRichText extends Taro.Component {
       imgMode,
       showWithAnimation,
       animationDuration,
-      isRich
+      isRich,
+      customerTagStyle
     } = this.props;
 
     if (!isRich) {
@@ -42,6 +43,8 @@ class ParserRichText extends Taro.Component {
 
     html = text2emoji(html);
 
+    const style = Object.assign({}, tagStyle, customerTagStyle)
+
     return (
       <parser
         html={html}
@@ -49,7 +52,7 @@ class ParserRichText extends Taro.Component {
         autopause={autopause}
         autosetTitle={autosetTitle}
         selectable={selectable}
-        tag-style={tagStyle}
+        tag-style={style}
         img-mode={imgMode}
         show-with-animation={showWithAnimation}
         animation-duration={animationDuration}
@@ -72,6 +75,7 @@ ParserRichText.defaultProps = {
     img: 'width: auto; height: auto;max-width: 220px;max-height: 400px;',
     video: 'width: auto; height: auto;max-width: 220px;max-height: 400px;'
   },
+  customerTagStyle: {},
   imgMode: 'aspectFit',
   isRich: true
 };

@@ -38,6 +38,7 @@ export default function TextView(props) {
           html={content}
           onLinkpress={handleLinkpress}
           isRich={isRich}
+          customerTagStyle={{a: item.fromUser ? 'color: #fff;': 'color: #1069d6;'}}
         ></ParserRichText>
         {props.children}
 
