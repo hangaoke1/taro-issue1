@@ -50,12 +50,6 @@ export default function RobotView(props) {
 
   // 评价机器人答案
   function handleAction(val) {
-    if (evaluation !== 1) {
-      return Taro.showToast({
-        title: '已评价',
-        icon: 'none'
-      });
-    }
 
     // 会话有效期判断
     if (item.sessionid !== Session.sessionid) {
@@ -66,8 +60,10 @@ export default function RobotView(props) {
     }
 
     let userEvaluation = val;
+
+    // 已经评价的不能取消
     if (evaluation === val) {
-      userEvaluation = 1;
+      return;
     }
 
     // TODO修改数据状态

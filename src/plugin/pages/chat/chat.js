@@ -30,7 +30,8 @@ import {
   applyHumanStaff,
   emptyAssociate,
   associate,
-  delApplyHumanStaffEntry
+  delApplyHumanStaffEntry,
+  canSendMessage
 } from '../../actions/chat';
 import {
   toggleShowFun,
@@ -330,6 +331,14 @@ class Chat extends Component {
     // 如果在锁列表中则中断后续操作
     if (this.state.lockBot.includes(label)) {
       return;
+    }
+
+    if (!canSendMessage()) {
+      return Taro.showToast({
+        title: '请等待连线成功后，再发送消息',
+        icon: 'none',
+        duration: 2000
+      })
     }
 
     const { sendText } = this.props;
