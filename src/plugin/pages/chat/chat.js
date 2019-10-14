@@ -99,7 +99,6 @@ class Chat extends Component {
     this.createAction();
     this.state = {
       lastId: '',
-      scrollTop: 0,
       height: 0,
       videoUrl: '',
       wrapHeight: 0,
@@ -112,7 +111,9 @@ class Chat extends Component {
       constOffset: 0,
       showTopPlaceHolder: false,
       maskHeight: 0,
-      chatViewScrollY : true
+      chatViewScrollY : true,
+      // 优化体验
+      showLoading: true,
     };
   }
 
@@ -122,6 +123,11 @@ class Chat extends Component {
   }
 
   componentDidMount() {
+    setTimeout(() => {
+      this.setState({
+        showLoading: false
+      })
+    }, 1000);
     // 清空未读消息
     clearUnreadHome();
 
@@ -138,7 +144,8 @@ class Chat extends Component {
       })
     });
 
-    this.scrollToBottom(false, 1000);
+    this.scrollToBottom(false, 0);
+    this.handleOffsetCalc();
   }
 
   componentWillUnmount() {
@@ -167,7 +174,10 @@ class Chat extends Component {
       this.setState({
         lastId: 'm-bottom',
       });
-      this.handleOffsetCalc();
+
+      if (scrollWithAnimation) {
+        this.handleOffsetCalc();
+      }
 
       this.timer = null;
     }, delay);
@@ -192,7 +202,7 @@ class Chat extends Component {
     this.handleOffsetCalc();
   };
 
-  handleOffsetCalc = () => {
+  handleOffsetCalc = (cb) => {
     const query = Taro.createSelectorQuery().in(this.$scope);
     const node = query.select('#m-bottom');
     const { scrollViewOffset } = this.state;
@@ -202,20 +212,23 @@ class Chat extends Component {
           const offsetBottom = res.windowHeight - rect.top;
           const offsetBottomCalc = offsetBottom - scrollViewOffset
           const ratio = res.windowWidth / 375;
-          console.log('ratio', ratio)
-          console.log('屏幕高度', res.windowHeight)
-          console.log('哨兵距离底部距离: ', offsetBottom); // 667 ---> 0
-          console.log('哨兵距离底部距离计算: ', offsetBottomCalc); // 667 ---> 0
+          // console.log('ratio', ratio)
+          // console.log('屏幕高度', res.windowHeight)
+          // console.log('哨兵距离底部距离: ', offsetBottom); // 667 ---> 0
+          // console.log('哨兵距离底部距离计算: ', offsetBottomCalc); // 667 ---> 0
           if (!this.state.showTopPlaceHolder && offsetBottom <= 65 * ratio ) {
             this.setState({
               showTopPlaceHolder: true
+            }, () => {
+              this.scrollToBottom();
             })
           }
 
           this.setState({
-            bottomSentry: offsetBottomCalc > 0 ? offsetBottomCalc : 0
+            bottomSentry: offsetBottomCalc > 0 ? offsetBottomCalc : 0 // 获取哨兵位置
           }, () => {
-            this.getScrollViewOffset(ratio)
+            // 获取内容区域偏移距离
+            this.getScrollViewOffset(ratio, cb);
           })
         })
       })
@@ -412,7 +425,7 @@ class Chat extends Component {
     emptyAssociate();
   };
 
-  getScrollViewOffset= (ratio) => {
+  getScrollViewOffset= (ratio, cb) => {
     const {
       Options,
       Bot,
@@ -446,6 +459,8 @@ class Chat extends Component {
       scrollViewOffset: offset,
       constOffset,
       maskHeight: offset
+    }, () => {
+      cb && cb();
     })
   }
 
@@ -468,7 +483,9 @@ class Chat extends Component {
       scrollViewOffset,
       showTopPlaceHolder,
       maskHeight,
-      chatViewScrollY
+      chatViewScrollY,
+      constOffset,
+      showLoading
     } = this.state;
 
     const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
@@ -483,7 +500,7 @@ class Chat extends Component {
 
     return (
       <Index className="m-page-wrapper">
-
+        <View class="u-loading" style={`visibility: ${showLoading ? 'visible': 'hidden'}`}>消息加载中...</View>
         {/* 视频全局对象 */}
         <View
           style={`display: ${
