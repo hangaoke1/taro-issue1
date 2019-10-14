@@ -1,3 +1,5 @@
+@import '../../../../styles/function.less';
+@import '../../../../styles/common.less';
 .m-bubble-node {
   color: #333;
 }
@@ -42,23 +44,24 @@
 }
 .u-line {
   position: absolute;
-  left: -21px;
+  left: -20px;
   top: 36px;
-  width: 2px;
+  width: 1px;
   height: 100%;
   background: #E1E3E6;
 }
 .z-active {
+  color: #337EFF;
   .u-dot {
     background: #337EFF;              
   }
 }
 .u-action {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 0;
+  box-sizing: border-box;
+  padding: 10px 20px;
   font-size: 14px;
   color: #337EFF;
+  text-align: center;
   border-top: 1px solid #EDEDED;
+  .fn_ellipsis();
 }

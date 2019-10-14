@@ -48,7 +48,7 @@ class OrderLogistic extends Component {
           {list.map((node, index) => {
             return (
               <View className={`u-list-item ${index === 0 ? 'z-active' : ''}`}>
-                <View className="u-logistic">{node.logistic}</View>
+                <View className={`u-logistic ${index === 0 ? 'z-active' : ''}`}>{node.logistic}</View>
                 <View className="u-timestamp">{node.timestamp}</View>
                 {list.length !== index + 1 ? (
                   <View className="u-line"></View>

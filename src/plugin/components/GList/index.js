@@ -61,7 +61,7 @@ export default class GList extends Component {
     node
       .fields({ size: true }, res => {
         if (res.height <= this.state.wrapHeight) {
-          this.props.onLoadMore();
+          this.loadMore();
         } else {
         }
       })
@@ -69,13 +69,14 @@ export default class GList extends Component {
   };
 
   loadMore = () => {
-    console.log('触发loadmore----')
     const { loading, finished } = this.props;
     if (loading || finished) {
       return;
     }
     if (_isFunction(this.props.onLoadMore)) {
-      this.props.onLoadMore();
+      setTimeout(()=>{
+        this.props.onLoadMore();
+      }, 0);
     }
   };
 

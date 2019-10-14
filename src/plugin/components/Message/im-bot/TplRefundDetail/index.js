@@ -34,7 +34,7 @@ class RefundDetail extends Component {
               type={
                 type === 'success'
                   ? `icon-hints-success-o`
-                  : `icon-hints-error-o`
+                  : `icon-kfzt-xx-qtx`
               }
               size="16"
               color={type === 'success' ? `#23b566` : `#f0404d`}

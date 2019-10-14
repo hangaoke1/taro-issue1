@@ -139,7 +139,7 @@ export default class BotForm extends Component {
                       {
                       'input': <Input
                                 className="u-form-input"
-                                placeholder="输入内容"
+                                placeholder="请输入内容"
                                 value={form.value}
                                 onChange={this.handleChange.bind(this, index)}
                               ></Input>,

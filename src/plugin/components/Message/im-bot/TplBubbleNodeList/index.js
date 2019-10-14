@@ -29,8 +29,12 @@ export default function TplBubbleNodeList(props) {
                 Number(node.p_is_current) === 1 ? 'z-active' : ''
               }`}
             >
-              <View className="u-p_title">{node.p_title}</View>
-              <View className="u-p_desc">{node.p_desc}</View>
+              <View className={`u-p_title ${
+                Number(node.p_is_current) === 1 ? 'z-active' : ''
+              }`}>{node.p_title}</View>
+              <View className={`u-p_desc ${
+                Number(node.p_is_current) === 1 ? 'z-active' : ''
+              }`}>{node.p_desc}</View>
               {nodeList.length !== index + 1 ? (
                 <View className="u-line"></View>
               ) : null}

@@ -66,6 +66,7 @@ export default class MList extends Component {
   };
 
   loadMore = () => {
+    if (this.state.loading) return;
     this.setState({
       loading: true
     });
