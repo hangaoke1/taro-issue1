@@ -11,7 +11,18 @@ export default function ActionView(props) {
   const actionFun = (data) => {
     if(item.disabled)
       return;
-    anctionHandle(item.action, data);
+
+    let params = {
+      entryid: data.entryid,
+      stafftype: 1
+    }
+    if(data.type == 2){
+      params.staffid = data.id
+    }else{
+      params.groupid = data.id
+    }
+
+    anctionHandle(item.action, params);
   }
 
   const richProps = {
@@ -38,7 +49,7 @@ export default function ActionView(props) {
                 return (
                   <View className="u-entry">
                     <View className="u-dot"></View>
-                    <View className="u-label" onClick={(ev) => { actionFun({entryid: it.entryid, stafftype: 1}) }}>{it.label}</View>
+                    <View className="u-label" onClick={(ev) => { actionFun({entryid: it.entryid, type: it.type, id: it.id}) }}>{it.label}</View>
                   </View>
                 )
               })
