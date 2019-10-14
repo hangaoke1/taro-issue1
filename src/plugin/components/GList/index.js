@@ -62,7 +62,6 @@ export default class GList extends Component {
       .fields({ size: true }, res => {
         if (res.height <= this.state.wrapHeight) {
           this.loadMore();
-        } else {
         }
       })
       .exec();
@@ -74,9 +73,7 @@ export default class GList extends Component {
       return;
     }
     if (_isFunction(this.props.onLoadMore)) {
-      setTimeout(()=>{
-        this.props.onLoadMore();
-      }, 0);
+      this.props.onLoadMore();
     }
   };
 

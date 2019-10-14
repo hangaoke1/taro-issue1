@@ -14,7 +14,6 @@ import './index.less'
   ({}) => ({}),
   dispatch => ({
     updateMessage(newMessage) {
-      console.log(newMessage);
       dispatch(changeMessageByUUID(newMessage));
     }
   })
@@ -43,6 +42,7 @@ export default class TabList extends Component {
 
   handleLoadMoreList = data => {
     if (!this.state.loading) { return }
+    this.state.loading = true;
 
     const { tpl, tab, message } = this.props;
     const id = _get(data, 'template.id');
@@ -74,6 +74,7 @@ export default class TabList extends Component {
 
   loadMore = () => {
     if (this.state.loading) return;
+    this.state.loading = true;
     console.log('---加载更多请求发送开始---');
     console.log('---action---', this.props.tab.action);
     console.log('---加载更多请求发送结束---');
@@ -85,7 +86,8 @@ export default class TabList extends Component {
       id: this.props.tpl.id,
       target: this.props.tab.action.target,
       params: this.props.tab.action.params
-    }).then(() => {});
+    });
+
   };
 
   render() {

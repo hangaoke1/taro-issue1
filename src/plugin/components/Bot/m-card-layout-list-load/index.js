@@ -51,6 +51,7 @@ class CardLayoutListLoad extends Component {
     if (!this.state.loading || appendTpl.id !== 'card_layout') {
       return
     };
+    this.state.loading = true;
 
     if (!appendTpl.action || !appendTpl.list.length) {
       this.setState({
@@ -68,6 +69,8 @@ class CardLayoutListLoad extends Component {
 
   loadMore = () => {
     if (!this.state.action || this.state.loading) return;
+    this.state.loading = true;
+
     this.setState({
       loading: true
     });
