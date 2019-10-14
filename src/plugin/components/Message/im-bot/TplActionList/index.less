@@ -1,3 +1,10 @@
+// 单行省略
+.fn_ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .u-label {
   padding: 9px 12px;
   font-size: 14px;
@@ -10,16 +17,16 @@
 }
 
 .u-list-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 221px;
   height: 32px;
+  line-height: 32px;
+  text-align: center;
   margin: 0 auto;
   margin-bottom: 12px;
   font-size: 14px;
   color: #337EFF;
   border: 1px solid #337EFF;
+  .fn_ellipsis();
   &:nth-last-of-type(1) {
     margin-bottom: 0;
   }
