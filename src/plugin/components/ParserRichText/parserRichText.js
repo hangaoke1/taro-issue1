@@ -72,8 +72,8 @@ ParserRichText.defaultProps = {
   animationDuration: 400,
   selectable: true,
   tagStyle: {
-    img: 'width: auto; height: auto;max-width: 220px;max-height: 400px;',
-    video: 'width: auto; height: auto;max-width: 220px;max-height: 400px;'
+    img: 'width: auto; height: auto;max-width: 200px;max-height: 400px;',
+    video: 'width: auto; height: auto;max-width: 200px;max-height: 400px;'
   },
   customerTagStyle: {},
   imgMode: 'aspectFit',
