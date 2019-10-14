@@ -38,7 +38,7 @@ export default function ActionView(props) {
                 return (
                   <View className="u-entry">
                     <View className="u-dot"></View>
-                    <View className="u-label" onClick={(ev) => { actionFun({entryid: it.entryid}) }}>{it.label}</View>
+                    <View className="u-label" onClick={(ev) => { actionFun({entryid: it.entryid, stafftype: 1}) }}>{it.label}</View>
                   </View>
                 )
               })

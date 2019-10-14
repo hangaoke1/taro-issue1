@@ -2,6 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import Iconfont from '../Iconfont';
+import eventbus from '../../lib/eventbus';
 
 import './index.less';
 
@@ -11,13 +12,23 @@ export default class FloatLayout extends Component {
 
     if (props.defaultVisible === undefined) {
       this.state = {
-        visible: false
+        visible: false,
+        scrollTop: 0
       };
     } else {
       this.state = {
         visible: props.defaultVisible
       };
     }
+  }
+
+  componentDidMount(){
+    eventbus.on('float_layout_scroll_bottom', () => {
+      console.log('滚动条')
+      this.setState({
+        scrollTop: 1000
+      })
+    })
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -49,6 +60,13 @@ export default class FloatLayout extends Component {
     onClickMask && onClickMask();
   };
 
+  handleScroll = (event) => {
+    let {scrollTop} = event.detail;
+    this.setState({
+      scrollTop
+    })
+  }
+
   onClose = () => {
     const { onClose } = this.props;
 
@@ -68,10 +86,9 @@ export default class FloatLayout extends Component {
     const {
       title,
       contentHeight,
-      bodyPadding,
-      visibleRenderChildren
+      bodyPadding
     } = this.props;
-    const { visible } = this.state;
+    const { visible,scrollTop } = this.state;
 
     return (
       <View
@@ -103,9 +120,11 @@ export default class FloatLayout extends Component {
             <ScrollView
               className="layout-body_content"
               scrollY
+              scrollTop = {scrollTop}
               style={{
-                maxHeight: contentHeight + 'px'
+                maxHeight: contentHeight ? contentHeight + 'px' : '60vh'
               }}
+              onScroll={this.handleScroll}
             >
               <View
                 className="layout-body_content_scroll_body"
@@ -124,7 +143,6 @@ export default class FloatLayout extends Component {
 FloatLayout.defaultProps = {
   title: '',
   visible: false,
-  contentHeight: 500,
   maskClosable: false,
   bodyPadding: 32
 };
