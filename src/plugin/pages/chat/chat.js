@@ -144,7 +144,7 @@ class Chat extends Component {
       })
     });
 
-    this.scrollToBottom(false, 0);
+    this.scrollToBottom(false, 500);
     this.handleOffsetCalc();
   }
 
@@ -159,7 +159,7 @@ class Chat extends Component {
   componentDidUpdate() {}
 
   // 重置底部区域
-  scrollToBottom = (scrollWithAnimation = true, delay = 100) => {
+  scrollToBottom = (scrollWithAnimation = true, delay = 300) => {
 
     if (this.timer) {
       this.handleOffsetCalc();
@@ -440,7 +440,7 @@ class Chat extends Component {
     const hasBot = isRobot && Bot.botList.length;
     const isOpen = Options.showFunc || Options.showPortrait;
 
-    let constOffset = 65 * ratio + (hasBot ? 45 * ratio : 0); // chatbox固定高度
+    let constOffset = 65 * ratio + (hasBot ? 38 * ratio : 0); // chatbox固定高度
     let offset = height + (isOpen ? 272 * ratio : 0) + constOffset; // 动态高度
 
     // 如果哨兵距离底部距离 > 偏移距离，无需移动
