@@ -14,28 +14,30 @@
   .u-tab {
     white-space: nowrap;
     border-bottom: 1px solid #e6e6e6;
+    height: 30px;
     &-item {
       position: relative;
       display: inline-block;
-      padding: 10px 0;
+      box-sizing: border-box;
       font-size: 14px;
+      height: 30px;
+      line-height: 30px;
       color: #333;
       text-align: center;
       .fn_ellipsis();
     }
-    .z-active {
-      position: relative;
-      color: #337EFF;
-    }
     .z-active:after {
       content: '';
       position: absolute;
-      width: 35px;
+      width: 40px;
       left: 50%;
       transform: translateX(-50%);
       height: 4px;
-      bottom: -4px;
+      bottom: 0;
       background: #337EFF;
+    }
+    .z-active-text {
+      color: #337EFF;
     }
   }
   .u-swiper {

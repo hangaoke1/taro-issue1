@@ -82,10 +82,10 @@ export default class BotList extends Component {
             <ScrollView scrollX className="u-tab">
               {tabList.map((tab, index) => (
                 <View
-                  style={`width: ${100 / len}%;min-width: 100px;`}
-                  className="u-tab-item"
+                  style={`width: ${100 / len}%;`}
+                  className={`${tabIndex === index ? 'z-active u-tab-item' : 'u-tab-item'}`}
                 >
-                  <Text className={`${tabIndex === index ? 'z-active' : ''}`} onClick={this.handleTabChange.bind(this, index)}>{tab.tab_name || '未命名'}</Text>
+                  <Text className={`${tabIndex === index ? 'z-active-text' : ''}`} onClick={this.handleTabChange.bind(this, index)}>{tab.tab_name || '未命名'}</Text>
                 </View>
               ))}
             </ScrollView>
