@@ -84,7 +84,7 @@ export const createAccount = (param = {}) => dispatch => {
  * @param {string} text 文本内容
  */
 export const sendText = text => dispatch => {
-  if (text.trim()) {return}
+  if (!text.trim()) {return}
 
   let message = {
     type: 'text',
