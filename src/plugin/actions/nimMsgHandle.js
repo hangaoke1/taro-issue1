@@ -130,6 +130,12 @@ export const assignKefu = (content) => {
       }
     })
 
+    // 只要新会话正常接入，访客分流提示的状态都重置了
+    dispatch({
+      type: SET_SHUNT_ENTRIES_STATUS,
+      value: false
+    })
+
     switch(code){
         case 200:
             // related_session_type == 1 // 机器人转人工接入 session_transfer_robot_switch=0开关关闭
