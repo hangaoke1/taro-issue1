@@ -12,17 +12,23 @@ export default function ActionView(props) {
     if(item.disabled)
       return;
 
-    let params = {
-      entryid: data.entryid,
-      stafftype: 1
-    }
-    if(data.type == 2){
-      params.staffid = data.id
-    }else{
-      params.groupid = data.id
-    }
+    let {entryid} = data;
 
-    anctionHandle(item.action, params);
+    if(entryid){
+      let params = {
+        entryid: data.entryid,
+        stafftype: 1
+      }
+      if(data.type == 2){
+        params.staffid = data.id
+      }else{
+        params.groupid = data.id
+      }
+
+      anctionHandle(item.action, params);
+    }else{
+      anctionHandle(item.action, data);
+    }
   }
 
   const richProps = {
