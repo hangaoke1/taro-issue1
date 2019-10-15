@@ -38,7 +38,7 @@ export const anctionHandle = (type, data) => {
         value: false
       })
 
-      点击后禁用分流
+      //点击后禁用分流
       dispatch({
         type: UPDATE_MESSAGE_BYACTION,
         message: {
