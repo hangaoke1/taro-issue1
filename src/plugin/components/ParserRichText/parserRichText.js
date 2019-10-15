@@ -17,14 +17,16 @@ class ParserRichText extends Taro.Component {
   handleLinkpress = event => {
     let url = unescape(event.detail)
     if (this.props.autocopy && event.detail) {
-      wx.setClipboardData({
-        data: url,
-        success() {
-          wx.showToast({
-            title: '链接已复制',
-          })
-        }
-      })
+      if (url !== 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
+        wx.setClipboardData({
+          data: url,
+          success() {
+            wx.showToast({
+              title: '链接已复制',
+            })
+          }
+        })
+      }
     }
     this.props.onLinkpress && this.props.onLinkpress({ type: event.type, detail: url });
   };
@@ -50,9 +52,9 @@ class ParserRichText extends Taro.Component {
 
     if (!isRich) {
       html = filterHtml(html);
-    } else {
-      html = text2emoji(html);
     }
+
+    html = text2emoji(html);
 
     const style = Object.assign({}, tagStyle, customerTagStyle)
 
