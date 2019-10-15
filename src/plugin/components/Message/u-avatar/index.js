@@ -1,5 +1,6 @@
 import { View, Image } from '@tarojs/components';
 import { DEFAULT_KEFU_AVATAR, DEFAULT_ROBOT_AVATAR } from '../../../constants/session';
+import { get } from '../../../global_config';
 
 import './index.less';
 
@@ -17,7 +18,16 @@ export default function Avatar(props) {
             avatarSrc = staff.avatar || DEFAULT_KEFU_AVATAR;
         }
     }else{
-        avatarSrc = DEFAULT_KEFU_AVATAR
+        let userInfo = get('userInfo');
+        let userImg;
+        if(userInfo && userInfo.data && userInfo.data.length){
+          userInfo.data.forEach(item => {
+            if(item.key == 'avatar'){
+              userImg = item.value;
+            }
+          })
+        }
+        avatarSrc = userImg || DEFAULT_KEFU_AVATAR
     }
 
     return (

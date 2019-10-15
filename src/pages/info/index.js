@@ -28,7 +28,7 @@ export default class Info extends Component {
           { "index": 1, "key": "sex", "label": "性别", "value": "先生" },
           { "index": 2, "key": "reg_date", "label": "注册日期", "value": "2015-11-16" },
           { "index": 3, "key": "last_login", "label": "上次登录时间", "value": "2015-12-22 15:38:54" },
-          { "index": 4, "key": "avatar", "label": "头像", "value": "https://xxxxx.jpg" }
+          { "index": 4, "key": "avatar", "label": "头像", "value": "https://ysf.nosdn.127.net/985726b5a8840b84a8a90c6b71642813" }
         ]
       }, {
         userId: 'user222222222',
@@ -41,7 +41,7 @@ export default class Info extends Component {
           { "index": 1, "key": "sex", "label": "性别", "value": "先生" },
           { "index": 2, "key": "reg_date", "label": "注册日期", "value": "2015-11-16" },
           { "index": 3, "key": "last_login", "label": "上次登录时间", "value": "2015-12-22 15:38:54" },
-          { "index": 4, "key": "avatar", "label": "头像", "value": "https://xxxxx.jpg" }
+          { "index": 4, "key": "avatar", "label": "头像", "value": "https://ysf.nosdn.127.net/f6c1b2cd3308cd29fe8709596ce7ac25" }
         ]
       }, {
         userId: 'user3333333',
