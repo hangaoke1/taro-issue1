@@ -21,31 +21,43 @@ export default function TplBubbleNodeList(props) {
     <View className="m-bubble-node">
       <View className="u-label">{_get(tpl, 'label')}</View>
       <View className="u-title">{_get(tpl, 'title.label')}</View>
-      <View className="u-list">
-        {nodeList.map((node, index) => {
-          return (
-            <View
-              className={`u-list-item ${
-                Number(node.p_is_current) === 1 ? 'z-active' : ''
-              }`}
-            >
-              <View className={`u-p_title ${
-                Number(node.p_is_current) === 1 ? 'z-active' : ''
-              }`}>{node.p_title}</View>
-              <View className={`u-p_desc ${
-                Number(node.p_is_current) === 1 ? 'z-active' : ''
-              }`}>{node.p_desc}</View>
-              {nodeList.length !== index + 1 ? (
-                <View className="u-line"></View>
-              ) : null}
-              <View className="u-dot"></View>
-            </View>
-          );
-        })}
-      </View>
+      {nodeList.length ? (
+        <View className="u-list">
+          {nodeList.map((node, index) => {
+            return (
+              <View
+                className={`u-list-item ${
+                  Number(node.p_is_current) === 1 ? 'z-active' : ''
+                }`}
+              >
+                <View
+                  className={`u-p_title ${
+                    Number(node.p_is_current) === 1 ? 'z-active' : ''
+                  }`}
+                >
+                  {node.p_title}
+                </View>
+                <View
+                  className={`u-p_desc ${
+                    Number(node.p_is_current) === 1 ? 'z-active' : ''
+                  }`}
+                >
+                  {node.p_desc}
+                </View>
+                {nodeList.length !== index + 1 ? (
+                  <View className="u-line"></View>
+                ) : null}
+                <View className="u-dot"></View>
+              </View>
+            );
+          })}
+        </View>
+      ) : (
+        <View className="u-empty">{_get(tpl, 'empty_list_hint')}</View>
+      )}
       {!show && nodeLen > 4 ? (
         <View className="u-action" onClick={handleClick}>
-          查看全部
+          查看更多
         </View>
       ) : null}
     </View>

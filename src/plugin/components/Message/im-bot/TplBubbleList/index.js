@@ -15,6 +15,7 @@ export default function TplBubbleList(props) {
   const tpl = _get(props, 'tpl');
   const type = _get(props, 'tpl.action.type');
   const target = _get(props, 'tpl.action.target');
+  const list = _get(tpl, 'list', []);
 
   function handleSearchMore() {
     if (type === 'display') {
@@ -31,20 +32,20 @@ export default function TplBubbleList(props) {
   return item ? (
     <View>
       <View className="u-label">{tpl.label}</View>
-      <View className="u-bubble-list">
-        {tpl.list.slice(0, 4).map(p => {
+      {list.length ? <View className="u-bubble-list">
+        {list.slice(0, 4).map(p => {
           return String(p.p_item_type) === '0' ? (
             <MCard key={p.params} item={p} message={item}></MCard>
           ) : (
             <MGroup key={p.params} item={p}></MGroup>
           );
         })}
-        {tpl.list.length > 4 ? (
+        {list.length > 4 ? (
           <View className="u-bubble-more" onClick={handleSearchMore}>
             查看更多
           </View>
         ) : null}
-      </View>
+      </View> : <View className="u-empty">{tpl.empty_list_hint}</View>}
     </View>
   ) : null;
 }
