@@ -449,7 +449,8 @@ class Chat extends Component {
     const hasBot = isRobot && Bot.botList.length;
     const isOpen = Options.showFunc || Options.showPortrait;
 
-    let constOffset = 65 * ratio + (hasBot ? 38 * ratio : 0); // chatbox固定高度
+    // let constOffset = 65 * ratio + (hasBot ? 38 * ratio : 0); // chatbox固定高度
+    let constOffset = 65 * ratio;
     let offset = height + (isOpen ? 272 * ratio : 0) + constOffset; // 动态高度
 
     // 如果哨兵距离底部距离 > 偏移距离，无需移动
@@ -541,6 +542,7 @@ class Chat extends Component {
                 Message={Message}
                 onImgClick={this.handleImgClick}
               ></MessageView>
+              <View style={`height: ${hasBot ? Taro.pxTransform(76) : 0}`}></View>
               <View id="m-bottom"></View>
             </View>
           </ScrollView>

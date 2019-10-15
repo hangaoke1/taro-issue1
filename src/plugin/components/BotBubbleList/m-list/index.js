@@ -32,14 +32,26 @@ export default class MList extends Component {
 
   componentDidMount() {
     eventbus.on('bot_loadmore_list', this.handleLoadMoreList);
+    eventbus.on('bot_bubble_list_reset', this.reset);
   }
 
   componentWillUnmount() {
     eventbus.off('bot_loadmore_list', this.handleLoadMoreList);
+    eventbus.off('bot_bubble_list_reset', this.reset);
   }
 
+  reset = () => {
+    this.setState({
+      loading: false,
+      finished: false
+    })
+  };
+
+
   handleLoadMoreList = data => {
-    if (!this.state.loading) { return }
+    if (!this.state.loading) {
+      return;
+    }
     this.state.loading = true;
 
     const { tpl } = this.props;
@@ -53,7 +65,9 @@ export default class MList extends Component {
     newTpl.list = [...newTpl.list, ...appendTpl.list];
     newTpl.action = appendTpl.action;
 
-    this.props.updateMessage(newMessage);
+    // 数据不做全局缓存，每次唤醒重置状态
+    // this.props.updateMessage(newMessage);
+    this.props.update(newMessage);
 
     this.setState({
       loading: false,
@@ -69,9 +83,7 @@ export default class MList extends Component {
       id: this.props.tpl.id,
       target: this.props.tpl.action.target,
       params: this.props.tpl.action.params
-    }).then(res => {
-      // console.log('---加载更多请求发送成功---');
-    });
+    }).then(res => {});
   };
 
   render() {
@@ -83,7 +95,7 @@ export default class MList extends Component {
         finished={finished}
         onLoadMore={this.loadMore}
         scrollTop={scrollTop}
-        height={400}
+        // height={400}
       >
         {this.props.children}
         {finished && tpl.list.length === 0 ? (

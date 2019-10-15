@@ -2,6 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { View, ScrollView, Swiper, SwiperItem } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import _get from 'lodash/get';
+import _cloneDeep from 'lodash/cloneDeep';
 import FloatLayout from '@/components/FloatLayout';
 import eventbus from '@/lib/eventbus';
 import MCard from '@/components/Bot/m-card';
@@ -25,16 +26,28 @@ export default class BotList extends Component {
     uuid: '',
     visible: false,
     tabIndex: 0,
-    scrollTop: 0
+    scrollTop: 0,
+    message: ''
   };
 
   componentDidMount() {
     eventbus.on('bot_show_drawer_list', uuid => {
 
       eventbus.trigger('hide_keyboard');
+
+      // 重置list
+      eventbus.trigger('bot_drawer_list_reset');
       
       setTimeout(() => {
-        this.setState({ uuid, visible: true, scrollTop: 0, tabIndex: 0 }, () => {});
+        this.setState((state, props) => {
+          return {
+            uuid,
+            visible: true,
+            scrollTop: 0,
+            tabIndex: 0,
+            message: _cloneDeep(props.Message.filter(item => item.uuid === uuid)[0])
+          }
+        });
       }, 600)
     });
     eventbus.on('bot_close_drawer_list', () => {
@@ -61,10 +74,14 @@ export default class BotList extends Component {
     })
   }
 
+  handleUpdate = (message) => {
+    this.setState({
+      message: message
+    })
+  }
+
   render() {
-    const { Message } = this.props;
-    const { visible, uuid, tabIndex, scrollTop } = this.state;
-    const message = Message.filter(item => item.uuid === uuid)[0];
+    const { visible, message, tabIndex, scrollTop } = this.state;
     const tpl = _get(message, 'content.template', {});
     const tabList = _get(message, 'content.template.tabList', []);
     const len = tabList.length || 1;
@@ -93,12 +110,12 @@ export default class BotList extends Component {
               {tabList.map((tab, index) => (
                 <SwiperItem key={tab.tab_id}>
                   <MTabList
-                    className="u-list"
                     scrollTop={scrollTop}
                     tab={tab}
                     tpl={tpl}
                     message={message}
                     active={tabIndex === index}
+                    update={this.handleUpdate}
                   >
                     {tab.list.map(item => {
                       return String(item.p_item_type) === '0' ? (

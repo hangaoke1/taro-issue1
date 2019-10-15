@@ -34,10 +34,12 @@ export default class TabList extends Component {
 
   componentDidMount() {
     eventbus.on('bot_loadmore_list', this.handleLoadMoreList);
+    eventbus.on('bot_drawer_list_reset', this.reset);
   }
 
   componentWillUnmount() {
     eventbus.off('bot_loadmore_list', this.handleLoadMoreList);
+    eventbus.on('bot_drawer_list_reset', this.reset);
   }
 
   handleLoadMoreList = data => {
@@ -63,7 +65,8 @@ export default class TabList extends Component {
       newTab.list = [...newTab.list, ...appendTab.list];
       newTab.action = appendTab.action;
 
-      this.props.updateMessage(newMessage);
+      // this.props.updateMessage(newMessage);
+      this.props.update(newMessage);
 
       this.setState({
         loading: false,
@@ -99,7 +102,7 @@ export default class TabList extends Component {
         finished={finished}
         onLoadMore={this.loadMore}
         scrollTop={scrollTop}
-        height={400}
+        // height={400}
         active={active}
       >
         {this.props.children}
