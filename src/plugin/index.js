@@ -29,6 +29,8 @@ export const _$configAppKey = (key) => {
         reject(err);
       }
     }, 0)
+  }).catch((err) => {
+    console.error(err);
   })
 }
 
@@ -67,7 +69,6 @@ export const _$setUserInfo = (userInfo) => {
 
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      try {
         if (Object.prototype.toString.call(userInfo) === "[object Object]" || Object.prototype.toString.call(userInfo) === "[object Null]") {
           try {
             // vip
@@ -87,10 +88,9 @@ export const _$setUserInfo = (userInfo) => {
         } else {
           reject('userInfo数据格式不符合要求');
         }
-      } catch (err) {
-        reject(err);
-      }
     }, 0)
+  }).catch((err) => {
+    console.error(err);
   })
 }
 
@@ -120,6 +120,8 @@ export const _$logout = () => {
         reject(err);
       }
     }, 0)
+  }).catch((err) => {
+    console.error(err);
   })
 }
 
@@ -149,6 +151,8 @@ export const _$setVipLevel = (level = 0) => {
     }else{
       reject('level数据格式不符合要求');
     }
+  }).catch((err) => {
+    console.error(err);
   })
 }
 
@@ -185,6 +189,8 @@ export const _$configProduct = (product) => {
     }else{
       reject('product数据格式不符合要求');
     }
+  }).catch((err) => {
+    console.error(err);
   })
 }
 
