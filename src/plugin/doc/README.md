@@ -12,6 +12,21 @@
 
 2. 七鱼对外提供名字为chat的页面插件，请确保在配置企业appKey后再跳转到chat页面申请客服。
 
+### 接入代码示例
+
+引入插件代码包:使用插件前，使用者要在 app.json 中声明需要使用的插件
+
+```js
+{
+  "plugins": {
+    "myPlugin": {
+      "version": "1.1.0",
+      "provider": "wxae5e29812005203f"
+    }
+  }
+}
+```
+
 ### 初始化企业appKey
 
 配置企业的appKey采用接口插件对外接口的形式，使用requirePlugin引用插件后调用 _$configAppKey(appKey) 方法。
@@ -24,6 +39,12 @@
 | :----: | :----: | :---- | :--- |
 | appKey | String | 是 | 企业appKey的查看方法见注1 |
 
+```js
+var myPluginInterface = requirePlugin('myPlugin');
+
+myPluginInterface_$configAppKey('3858be3c20ceb6298575736cf27858a7');
+```
+
 #### _$configAppKeySync(appKey)
 
 _$configAppKey的同步方法。
@@ -31,6 +52,19 @@ _$configAppKey的同步方法。
 *[注1] 企业appKey的查看方法： 七鱼管理后台 — 在线系统 — 在线接入中查看。*
 
 *[注2] 此方法为必须调用，请确保在跳转到插件的聊天界面之前配置了正确的appKey。*
+
+*[注3] 在对接之前请确定在 七鱼管理后台 — 在线系统 — 微信小程序 界面绑定您的微信小程序，否则可能会出现连接不到客服的情况。 *
+
+
+### 跳转客服页面
+
+七鱼提供一个名称为chat的插件页面
+
+```js
+<navigator url="plugin://myPlugin/chat">
+  联系客服
+</navigator>
+```
 
 ## CRM对接
 
@@ -40,11 +74,11 @@ _$configAppKey的同步方法。
 
 七鱼 SDK 允许 App 的用户以匿名方式向客户咨询，但如果希望客服知道咨询的用户的身份信息，可以通过插件提供的 _$setUserInfo 接口告诉给客服。 该接口包含两个功能：
 
-> 关联用户账户。调用过该接口后，客服即可知道当前用户是谁，并可以调看该用户之前发生过的访问记录。通过该接口，SDK还会把 App 端相同用户 ID 的咨询记录整合在一起。如果调用 _$setUserInfo(userInfo) 接口前是匿名状态，那么匿名状态下的聊天记录也会被整合到新设置的这个用户下面。
+1. 关联用户账户。调用过该接口后，客服即可知道当前用户是谁，并可以调看该用户之前发生过的访问记录。通过该接口，SDK还会把 App 端相同用户 ID 的咨询记录整合在一起。如果调用 _$setUserInfo(userInfo) 接口前是匿名状态，那么匿名状态下的聊天记录也会被整合到新设置的这个用户下面。
 
-> 提供用户的详细资料。通过设置参数 userInfo 的 data 字段，小程序 能把用户的详细信息告诉给客服，这些信息会显示在客服会话窗口的用户信息栏中。
+2. 提供用户的详细资料。通过设置参数 userInfo 的 data 字段，小程序 能把用户的详细信息告诉给客服，这些信息会显示在客服会话窗口的用户信息栏中。
 
-该接口接受一个userInfo对象为参数，userInfo的具体格式如下：
+该接口接受一个userInfo对象为参数，支持Promise化使用，userInfo的具体格式如下：
 
 | 参数    | 类型   | 描述  |
 | :----: | :----: | :---- |
@@ -62,6 +96,25 @@ data的具体格式如下：
 | href   | String  | 否 | 超链接地址。若指定该值，则该项数据将显示为超链接样式，点击后跳转到其值所指定的 URL 地址。 |
 | hidden | Boolean | 否 | 仅对mobile_phone、email两个保留字段有效，表示是否隐藏对应的数据项，true为隐藏，false为不隐藏。若不指定，默认为false不隐藏。 |
 
+
+```js
+var myPluginInterface = requirePlugin('myPlugin');
+var userInfo = {
+        userId: 'user111111111',
+        data: [
+          { "key": "real_name", "value": "用户A" },
+          { "key": "mobile_phone", "value": 15669060662 },
+          { "key": "email", "value": "13800000000@163.com" },
+          { "index": 0, "key": "account", "label": "账号", "value": "zhangsan", "href": "http://example.domain/user/zhangsan" },
+          { "index": 1, "key": "sex", "label": "性别", "value": "先生" },
+          { "index": 2, "key": "reg_date", "label": "注册日期", "value": "2015-11-16" },
+          { "index": 3, "key": "last_login", "label": "上次登录时间", "value": "2015-12-22 15:38:54" },
+          { "index": 4, "key": "avatar", "label": "头像", "value": "https://ysf.nosdn.127.net/985726b5a8840b84a8a90c6b71642813" }
+        ]
+      }
+myPluginInterface._$setUserInfo(userInfo);
+```
+
 #### _$setUserInfoSync(userInfo)
 
 _$setUserInfo的同步接口
@@ -74,9 +127,17 @@ _$setUserInfo的同步接口
 
 ####  _$setVipLevel(level)
 
+设置用户的vip等级，支持Promise化使用。
+
 + 如果为 0，为普通用户；
 + 如果为 1-10，为用户 VIP 等级 1-10 级；
 + 如果为 11，为通用 VIP 用户，即不显示用户等级。
+
+```js
+var myPluginInterface = requirePlugin('myPlugin');
+
+myPluginInterface._$setVipLevel(10);
+```
 
 ####  _$setVipLevelSync(level)
 
@@ -104,6 +165,22 @@ product的内容如下：
 | sendByUser   | 是否需要用户手动发送 | 默认为false，当为 true 的时候，商品的下面讲出现一个按钮，用户可以点击该按钮发送商品 |
 | actionText   |手动发送按钮的文本 | 默认文本为发送链接 |
 | actionTextColor   | 手动发送按钮文本的颜色 | 十六进制颜色例如：0xFFDB7093 |
+
+```js
+var myPluginInterface = requirePlugin('myPlugin');
+
+var product = {
+    title: '任天堂（Nintendo）Switch游戏机',
+    desc: '任天堂（Nintendo） Switch NS NX掌上游戏机便携 塞尔达马里奥新款游戏机 主机不锁 日版黑机彩色手柄+中文赛/塞尔达传说(指南+地图)',
+    note: '$2330',
+    picture: 'https://img10.360buyimg.com/n5/s75x75_jfs/t4030/290/29851193/293745/d5e2b731/58ac3506Nbb57b5f6.jpg',
+    url: 'https://www.qi.163.com/',
+    show: 1,
+    sendByUser: 1
+  };
+
+myPluginInterface._$configProduct(product);
+```
 
 ##### _$configProductSync(product)
 
