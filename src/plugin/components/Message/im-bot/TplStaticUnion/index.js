@@ -56,10 +56,10 @@ class StaticUnion extends Component {
             <Block>
               {
                 {
-                  image: <GImg maxWidth={220} src={union.detail.url} onClick={this.previewImage.bind(this, union.detail.url)}></GImg>,
-                  text: <View className="u-text">{union.detail.label}</View>,
-                  richText: <View className="u-richText"><ParserRichText html={union.detail.label} onLinkpress={this.handleLinkpress}></ParserRichText></View>,
-                  link: <View className="u-link" onClick={this.handleLinkClick.bind(this, union.detail)}>{union.detail.label}</View>
+                  'image': <GImg maxWidth={220} src={union.detail.url} onClick={this.previewImage.bind(this, union.detail.url)}></GImg>,
+                  'text': <View className="u-text">{union.detail.label}</View>,
+                  'richText': <View className="u-richText"><ParserRichText html={union.detail.label} onLinkpress={this.handleLinkpress}></ParserRichText></View>,
+                  'link': <View className="u-link" onClick={this.handleLinkClick.bind(this, union.detail)}>{union.detail.label}</View>
                 }[
                   union.type
                 ]
