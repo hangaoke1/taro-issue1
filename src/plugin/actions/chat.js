@@ -340,6 +340,7 @@ export const getMoreBotList = data => {
  */
 export const sendBotCard = (item, msg) => {
   const dispatch = get('store').dispatch;
+
   // 生成本地消息
   const message = {
     type: 'bot',
@@ -363,6 +364,11 @@ export const sendBotCard = (item, msg) => {
   };
 
   dispatch({ type: PUSH_MESSAGE, message });
+
+  // 更新原消息
+  const updateMessage = _cloneDeep(msg);
+  updateMessage.content.template.choosed = true;
+  dispatch({type: UPDATE_MESSAGE_BYUUID, message: updateMessage});
 
   return NIM.sendCustomSysMsg({
     cmd: 202,

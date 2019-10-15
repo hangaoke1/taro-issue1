@@ -66,7 +66,7 @@ export default class Bot extends Component {
   render() {
     const { item } = this.props;
     const tpl = _get(item, 'content.template', {});
-    const layout = null;
+    let layout = null;
     let showFormAction = false;
     switch (tpl.id) {
       case 'active_page': {
