@@ -32,6 +32,7 @@ export default function TplBubbleList(props) {
   return item ? (
     <View>
       <View className="u-label">{tpl.label}</View>
+      <View className="u-title">{_get(tpl, 'title.label')}</View>
       {list.length ? <View className="u-bubble-list">
         {list.slice(0, 4).map(p => {
           return String(p.p_item_type) === '0' ? (

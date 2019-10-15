@@ -1,6 +1,6 @@
 import _get from 'lodash/get';
 import _findIndex from 'lodash/findIndex';
-import { PUSH_MESSAGE, UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYINDEX, UPDATE_MESSAGE_BYACTION, UPDATE_MESSAGE_BYUUID,TIME_TIP_DURATION, REMOVE_MESSAGE_BYUUID } from '../constants/message';
+import { PUSH_MESSAGE, UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYINDEX, UPDATE_MESSAGE_BYACTION, UPDATE_MESSAGE_BYUUID,TIME_TIP_DURATION, REMOVE_MESSAGE_BYUUID, LIMIT_MESSAGE } from '../constants/message';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '../lib/uuid';
 import { addUnread } from '@/lib/unread';
@@ -10,6 +10,9 @@ const initMessages = [];
 
 const Message = (state = initMessages, action) => {
     switch(action.type){
+        // 截取消息
+        case LIMIT_MESSAGE:
+            break;
         // 添加消息
         case PUSH_MESSAGE:
 

@@ -13,4 +13,6 @@ export const UPDATE_MESSAGE_BYUUID = `${namespace}/UPDATE_MESSAGE_BYUUID`;
 
 export const REMOVE_MESSAGE_BYUUID = `${namespace}/REMOVE_MESSAGE_BYUUID`;
 
+export const LIMIT_MESSAGE = `${namespace}/LIMIT_MESSAGE`;
+
 export const TIME_TIP_DURATION = 60000;
