@@ -86,6 +86,15 @@ export const assignKefu = (content) => {
               key: 'evaluation'
             }
         })
+
+        // 更新会话结束的时间
+      dispatch({
+        type: UPDATE_SESSION,
+        value: {
+          closeTime: null
+        }
+      })
+
       }else{
         dispatch({
           type: DEL_ENTRY_BYKEY,
