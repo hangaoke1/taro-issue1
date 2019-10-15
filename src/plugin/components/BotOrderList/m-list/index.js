@@ -74,7 +74,7 @@ export default class MList extends Component {
       loading: true
     });
     getMoreBotList(this.state.params).then(res => {
-      console.log('---加载更多请求发送成功---');
+      // console.log('---加载更多请求发送成功---');
     });
   };
 

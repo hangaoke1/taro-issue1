@@ -189,13 +189,13 @@ export default class IMSERVICE {
             to: to,
             wxFilePath: tempFilePath,
             beforesend: function(msg) {
-              console.log('正在发送p2p image消息, id=' + msg.idClient);
+              // console.log('正在发送p2p image消息, id=' + msg.idClient);
             },
             uploadprogress: function(obj) {
-              console.log('文件总大小: ' + obj.total + 'bytes');
-              console.log('已经上传的大小: ' + obj.loaded + 'bytes');
-              console.log('上传进度: ' + obj.percentage);
-              console.log('上传进度文本: ' + obj.percentageText);
+              // console.log('文件总大小: ' + obj.total + 'bytes');
+              // console.log('已经上传的大小: ' + obj.loaded + 'bytes');
+              // console.log('上传进度: ' + obj.percentage);
+              // console.log('上传进度文本: ' + obj.percentageText);
             },
             uploaddone: function(error, file) {
               console.log('上传' + (!error ? '成功' : '失败'), error, file);

@@ -68,8 +68,8 @@ export default class ImAudio extends Component {
       this.setState({ playing: false })
     })
     audioCtx.onError((res) => {
-      console.log(res.errMsg)
-      console.log(res.errCode)
+      // console.log(res.errMsg)
+      // console.log(res.errCode)
     })
 
     this.setState({

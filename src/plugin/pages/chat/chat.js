@@ -263,7 +263,7 @@ class Chat extends Component {
         Taro.chooseImage({
           sourceType: ['album']
         }).then(res => {
-          console.log('选择图片: ', res);
+          // console.log('选择图片: ', res);
           _sendImage(res);
         });
         break;
@@ -272,7 +272,7 @@ class Chat extends Component {
         Taro.chooseImage({
           sourceType: ['camera']
         }).then(res => {
-          console.log('照相: ', res);
+          // console.log('照相: ', res);
           _sendImage(res);
         });
         break;

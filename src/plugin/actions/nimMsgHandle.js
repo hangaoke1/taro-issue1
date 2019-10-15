@@ -334,7 +334,7 @@ export const receiveMsg = (msg) => {
     if (msg.type === 'custom') {
         const fmtContent = JSON.parse(msg.content);
         const { cmd, content } = fmtContent;
-        console.log('格式化: ', fmtContent);
+        // console.log('格式化: ', fmtContent);
 
         switch(cmd) {
             case 60:

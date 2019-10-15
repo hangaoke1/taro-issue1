@@ -73,13 +73,13 @@ export default function RobotView(props) {
     );
 
     evalRobotAnswer(idClient, userEvaluation).then(() => {
-      console.log('-----🙏success 评价完成🙏----');
+      // console.log('-----🙏success 评价完成🙏----');
     });
 
     // 用户差评且无需评价原因
     if (userEvaluation === 3 && evaluation_reason === 0) {
       evaluationContent(idClient, '').then(() => {
-        console.log('-----🙏success 差评原因提交完成🙏----');
+        // console.log('-----🙏success 差评原因提交完成🙏----');
       });
     }
 
@@ -98,7 +98,7 @@ export default function RobotView(props) {
     );
 
     evaluationContent(idClient, reason).then(() => {
-      console.log('-----🙏success 差评原因提交完成🙏----');
+      // console.log('-----🙏success 差评原因提交完成🙏----');
     });
   }
 

@@ -75,9 +75,9 @@ export default class TabList extends Component {
   loadMore = () => {
     if (this.state.loading) return;
     this.state.loading = true;
-    console.log('---加载更多请求发送开始---');
-    console.log('---action---', this.props.tab.action);
-    console.log('---加载更多请求发送结束---');
+    // console.log('---加载更多请求发送开始---');
+    // console.log('---action---', this.props.tab.action);
+    // console.log('---加载更多请求发送结束---');
     
     this.setState({
       loading: true

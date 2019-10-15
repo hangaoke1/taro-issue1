@@ -12,7 +12,7 @@ export default function RenderMark(props) {
   const [isFocus, setIsFocus] = useState();
 
   const onFocus = (event) => {
-    console.log('event', event);
+    // console.log('event', event);
   }
 
   const handleInput = (event) => {

@@ -239,7 +239,7 @@ export const evaluationContent = (msgidClient, evalcontent = '') => {
     msgidClient,
     evaluation_content: evalcontent
   };
-  console.log('----机器人差评原因----', msg);
+  // console.log('----机器人差评原因----', msg);
   return NIM.sendCustomSysMsg(msg);
 };
 
@@ -255,7 +255,7 @@ export const evalRobotAnswer = (msgidClient, evaluation) => {
     msgidClient,
     evaluation
   };
-  console.log('----机器人评价----', msg);
+  // console.log('----机器人评价----', msg);
   return NIM.sendCustomSysMsg(msg);
 };
 
@@ -264,13 +264,13 @@ export const evalRobotAnswer = (msgidClient, evaluation) => {
  * @param {string} url 链接地址
  */
 export const parseUrlAction = url => {
-  console.log('----点击富文本a标签----', url);
+  // console.log('----点击富文本a标签----', url);
 
   // 处理转人工请求
   if (url === 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
     const isRobot = get('isRobot');
     if (!isRobot) {
-      console.log('----非机器人情况下无法转人工----');
+      // console.log('----非机器人情况下无法转人工----');
     } else {
       NIM.applyKefu({
         stafftype: 1
@@ -565,7 +565,7 @@ export const previewFile = (wxFilePath, type = 'image') => {
         //     console.log('上传进度文本: ' + obj.percentageText);
         // },
         done: function(error, file) {
-          console.log('上传image' + (!error ? '成功' : '失败'));
+          // console.log('上传image' + (!error ? '成功' : '失败'));
           if (!error) {
             resolve(file);
           } else {

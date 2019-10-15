@@ -70,7 +70,7 @@ export default class MList extends Component {
       target: this.props.tpl.action.target,
       params: this.props.tpl.action.params
     }).then(res => {
-      console.log('---加载更多请求发送成功---');
+      // console.log('---加载更多请求发送成功---');
     });
   };
 

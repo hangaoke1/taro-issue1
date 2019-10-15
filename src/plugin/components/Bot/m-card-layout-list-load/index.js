@@ -47,7 +47,7 @@ class CardLayoutListLoad extends Component {
 
   handleLoadMore = (data) => {
     const appendTpl = _get(data, 'template', {});
-    console.log('---监听---', appendTpl);
+    // console.log('---监听---', appendTpl);
     if (!this.state.loading || appendTpl.id !== 'card_layout') {
       return
     };
@@ -75,7 +75,7 @@ class CardLayoutListLoad extends Component {
       loading: true
     });
     getMoreBotList(this.state.action).then(() => {
-      console.log('---加载更多 card_layout---');
+      // console.log('---加载更多 card_layout---');
     });
   };
 
