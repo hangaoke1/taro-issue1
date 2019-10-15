@@ -42,6 +42,13 @@ export default class TabList extends Component {
     eventbus.on('bot_drawer_list_reset', this.reset);
   }
 
+  reset = () => {
+    this.setState({
+      loading: false,
+      finished: false
+    })
+  };
+
   handleLoadMoreList = data => {
     if (!this.state.loading) { return }
     this.state.loading = true;

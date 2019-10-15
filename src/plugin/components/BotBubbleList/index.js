@@ -50,13 +50,6 @@ export default class BotList extends Component {
     });
   }
 
-  reset = () => {
-    this.setState({
-      loading: false,
-      finished: false
-    })
-  };
-
   handleClose = () => {
     this.setState({
       visible: false,
