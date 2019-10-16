@@ -20,12 +20,16 @@ export const text2emoji = function(html) {
 
   try{
     html = html.replace(reg, function(all, $1) {
-      var img = getImgHTML({
+      if (pmap2[$1] && pmap[pmap2[$1]] && pmap[pmap2[$1]].file) {
+        var img = getImgHTML({
           id: pmap2[$1],
           tag: $1,
           src: prefix + pmap[pmap2[$1]].file
-      });
+        });
         return img;
+      } else {
+        return ''
+      }
     });
   }catch(err){}
 

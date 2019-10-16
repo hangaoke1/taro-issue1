@@ -6,8 +6,8 @@
     <rich-text wx:if="{{item.name=='img'}}" style="{{cssHandler.getStyle(item.attrs.style,'inline-block')}}" nodes='{{cssHandler.setImgStyle(item,controls.imgMode)}}' data-ignore='{{item.attrs.ignore}}' data-src='{{item.attrs.src}}' bindtap='previewEvent' />
     <!--文本-->
     <block wx:elif="{{item.type=='text'}}">
-      <text wx:if="{{!item.decode}}" decode style="word-break:break-all">{{item.text}}</text>
-      <rich-text wx:else style="display:inline-block" nodes="{{[item]}}"></rich-text>
+      <text wx:if="{{!item.decode}}" decode style="word-break:break-all;">{{item.text}}</text>
+      <rich-text wx:else style="display:inline-block;word-break:break-all;" nodes="{{[item]}}"></rich-text>
     </block>
     <text wx:elif="{{item.name=='br'}}">\n</text>
     <!--视频-->
@@ -41,7 +41,7 @@
       </view>
     </view>
     <!--富文本-->
-    <rich-text wx:else class="{{item.name}}" style="{{cssHandler.getStyle(item.attrs.style,'block')}}" nodes="{{cssHandler.setStyle(item)}}" />
+    <rich-text wx:else class="{{item.name}}" style="{{cssHandler.getStyle(item.attrs.style,'block') + ';word-break:break-all;'}}" nodes="{{cssHandler.setStyle(item)}}" />
   </block>
   <!--链接-->
   <navigator wx:elif="{{item.name=='a'}}" url="{{item.attrs.href}}" style="{{item.attrs.style}}" data-href='{{item.attrs.href}}' hover-class="navigator-hover" hover-start-time="25" hover-stay-time="300" bindtap="tapEvent">
