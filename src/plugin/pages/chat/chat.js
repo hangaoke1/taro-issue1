@@ -600,7 +600,7 @@ class Chat extends Component {
         </View>
         <View
           className="u-mask"
-          style={`height: ${maskHeight}px`}
+          style={`height: ${height}px`}
         ></View>
         <View className={`u-funcbox ${Options.showFunc ? 'open' : ''}`}>
           <FuncBox
