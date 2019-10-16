@@ -235,7 +235,7 @@ export default class IMSERVICE {
         foreignid: get('foreignid'),
         fromType: FROM_TYPE,
         level: get('level'),
-        bundleid: get('bundleid'),
+        bundleid: get('bundleid') || Taro.getAccountInfoSync().miniProgram.appId,
         version: 64,
         ...extraParams
       };

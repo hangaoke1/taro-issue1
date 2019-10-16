@@ -251,3 +251,10 @@ export const _$onClickAction = (cb) => {
     cb(extralParams);
   })
 }
+
+/**
+ * 内部api，虚拟appId
+ */
+export const __configAppId = (appId) => {
+  set('bundleid', appId);
+}
