@@ -31,7 +31,8 @@ import {
   emptyAssociate,
   associate,
   delApplyHumanStaffEntry,
-  canSendMessage
+  canSendMessage,
+  getSdkSetting
 } from '../../actions/chat';
 import {
   toggleShowFun,
@@ -52,13 +53,14 @@ import './chat.less';
 const dAssociate = _debounce(associate, 300, false);
 
 @connect(
-  ({ Session, Message, Options, CorpStatus, Bot, Associate }) => ({
+  ({ Session, Message, Options, CorpStatus, Bot, Associate, Setting }) => ({
     Session,
     Message,
     Options,
     CorpStatus,
     Bot,
-    Associate
+    Associate,
+    Setting
   }),
   dispatch => ({
     hideAction() {
@@ -98,6 +100,7 @@ class Chat extends Component {
   constructor(props) {
     super(props);
     this.createAction();
+    getSdkSetting();
     this.state = {
       lastId: '',
       height: 0,
@@ -481,7 +484,8 @@ class Chat extends Component {
       CorpStatus,
       Bot,
       Associate,
-      Session
+      Session,
+      Setting
     } = this.props;
     const {
       lastId,
@@ -579,6 +583,7 @@ class Chat extends Component {
                   className={`m-bot-item ${
                     lockBot.includes(bot.label) ? 'z-bot-disable' : ''
                   }`}
+                  style={`border-color: ${Setting.setting.dialogColor || '#e1e3e6'}`}
                   key={bot.id}
                   onClick={e => this.handleBotClick(bot, e)}
                 >

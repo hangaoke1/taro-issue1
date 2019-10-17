@@ -6,6 +6,7 @@ import Options from './options';
 import Bot from './bot';
 import Evaluation from './evaluation';
 import Associate from './associate';
+import Setting from './setting';
 
 export default combineReducers({
   CorpStatus,
@@ -14,5 +15,6 @@ export default combineReducers({
   Options,
   Bot,
   Evaluation,
-  Associate
+  Associate,
+  Setting
 })

@@ -1,12 +1,13 @@
 import Taro from '@tarojs/taro';
 import _get from 'lodash/get';
 import _cloneDeep from 'lodash/cloneDeep';
-import { queryAccont } from '../service';
+import { queryAccont, querySdkSetting } from '../service';
 import { get, set } from '../global_config';
 import IMSERVICE,{ STATUS } from '../service/im';
 import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID, REMOVE_MESSAGE_BYUUID,UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { DEL_ENTRY_BYKEY } from '../constants/chat';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
+import { SET_SETTING } from '../constants/setting';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '@/lib/uuid';
 
@@ -23,6 +24,22 @@ eventbus.on('clear_unread', function(extraParms){
     NIM.clearUnreadMsg();
   }
 });
+
+/**
+ * 获取访客端配置
+ */
+export const getSdkSetting = () => {
+  const dispatch = get('store').dispatch;
+  const appKey = get('appKey');
+  if (!appKey) return;
+  return querySdkSetting({
+    appKey,
+    fromType: 'ios'
+  }).then(res => {
+    console.log('获取访客端配置', res)
+    dispatch({ type: SET_SETTING, value: res.result });
+  })
+}
 
 /**
  * 申请分配客服

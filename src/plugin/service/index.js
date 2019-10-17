@@ -10,8 +10,12 @@ const post = (url="", params={}) => {
     })
 }
 
-
 export const queryAccont = (params) => {
     const domain = get('domain');
     return post(`${domain}/webapi/user/create.action`, params);
+}
+
+export const querySdkSetting = (params) => {
+    const domain = get('domain');
+    return post(`${domain}/webapi/sdk/setting`, params);
 }
