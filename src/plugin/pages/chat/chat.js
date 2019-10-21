@@ -448,11 +448,8 @@ class Chat extends Component {
       bottomSentry
     } = this.state;
 
-    const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
-    const hasBot = isRobot && Bot.botList.length;
     const isOpen = Options.showFunc || Options.showPortrait;
 
-    // let constOffset = 65 * ratio + (hasBot ? 38 * ratio : 0); // chatbox固定高度
     let constOffset = 65 * ratio;
     let offset = height + (isOpen ? 272 * ratio : 0) + constOffset; // 动态高度
 
@@ -504,7 +501,7 @@ class Chat extends Component {
 
     const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
 
-    const hasBot = isRobot && Bot.botList.length
+    const hasBot = isRobot && Bot.len
 
     const isOpen = Options.showFunc || Options.showPortrait;
 
@@ -578,12 +575,12 @@ class Chat extends Component {
           ) : null}
           {hasBot ? (
             <ScrollView scrollX className="m-bot">
-              {Bot.botList.map(bot => (
+              {Bot.botList.map((bot, index) => (
                 <View
                   className={`m-bot-item ${
                     lockBot.includes(bot.label) ? 'z-bot-disable' : ''
                   }`}
-                  style={`border-color: ${Setting.setting.dialogColor || '#e1e3e6'}`}
+                  style={`border-color: ${Setting.setting.dialogColor || '#e1e3e6'};animation-delay: ${index * 200}ms;`}
                   key={bot.id}
                   onClick={e => this.handleBotClick(bot, e)}
                 >

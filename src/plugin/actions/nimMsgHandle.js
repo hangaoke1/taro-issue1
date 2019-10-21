@@ -683,7 +683,11 @@ export const onRobotTip = (content) => {
  */
 export const onBotEntry = (content) => {
     const dispatch = get('store').dispatch;
-    dispatch({ type: SET_BOT_LIST, value: content.bot || []});
+    const len = _get(content, 'bot.length', 0);
+    dispatch({ type: SET_BOT_LIST, value: [], len});
+    setTimeout(() => {
+      dispatch({ type: SET_BOT_LIST, value: content.bot || [], len});
+    }, 500)
 }
 
 /**
