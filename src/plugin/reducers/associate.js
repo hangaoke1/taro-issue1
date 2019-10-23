@@ -1,6 +1,7 @@
 import _get from 'lodash/get';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 
+// 输入实时联想语
 const Associate = (state = {
   content: '',
   questionContents: []

@@ -4,12 +4,13 @@ import _cloneDeep from 'lodash/cloneDeep';
 import { queryAccont, querySdkSetting } from '../service';
 import { get, set } from '../global_config';
 import IMSERVICE,{ STATUS } from '../service/im';
-import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID, REMOVE_MESSAGE_BYUUID,UPDATE_MESSAGE_BYACTION } from '../constants/message';
+import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID, REMOVE_MESSAGE_BYUUID,UPDATE_MESSAGE_BYACTION, UNSHIFT_MESSAGE, INIT_MESSAGE } from '../constants/message';
 import { DEL_ENTRY_BYKEY } from '../constants/chat';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import { SET_SETTING } from '../constants/setting';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '@/lib/uuid';
+import { loadHistroy } from '@/lib/history';
 
 eventbus.on('do_send_product_card', function(extraParms){
   sendProductCard(extraParms);
@@ -113,6 +114,8 @@ export const sendText = text => dispatch => {
     return;
   }
 
+  eventbus.trigger('reset_scrollIntoView');
+
   let message = {
     type: 'text',
     uuid: genUUID16(),
@@ -149,7 +152,7 @@ export const sendRelateText = item => dispatch => {
     })
     return;
   }
-
+  eventbus.trigger('reset_scrollIntoView');
   let message = {
     content: item.text,
     type: 'text',
@@ -527,7 +530,7 @@ export const sendTemplateText = item => {
     })
     return;
   }
-
+  eventbus.trigger('reset_scrollIntoView');
   const dispatch = get('store').dispatch;
 
   const message = {
@@ -734,4 +737,19 @@ export const delApplyHumanStaffEntry = () => dispatch => {
     type: DEL_ENTRY_BYKEY,
     value: 'applyHumanStaff'
   })
+}
+
+// TODO: 加载历史消息
+export const unshiftMessage =  (uuid, pageSize = 10) => {
+  const dispatch = get('store').dispatch;
+  const messages = loadHistroy(uuid, pageSize) || [];
+  dispatch({ type: UNSHIFT_MESSAGE, messages, finished: messages.length < pageSize });
+}
+
+// 初始化消息
+export const initMessage =  (uuid, pageSize = 10) => {
+  const dispatch = get('store').dispatch;
+  const messages = loadHistroy(uuid, pageSize) || [];
+  console.log('加载消息长度: ', messages.length, pageSize)
+  dispatch({ type: INIT_MESSAGE, messages, finished: messages.length < pageSize });
 }

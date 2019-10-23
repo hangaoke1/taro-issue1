@@ -1,5 +1,6 @@
 import { SET_BOT_LIST } from '../constants/bot';
 
+// 快捷回复列表
 const Bot = (state = {
   botList: [],
   len: 0

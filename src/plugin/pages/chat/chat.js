@@ -32,7 +32,9 @@ import {
   associate,
   delApplyHumanStaffEntry,
   canSendMessage,
-  getSdkSetting
+  getSdkSetting,
+  unshiftMessage,
+  initMessage
 } from '../../actions/chat';
 import {
   toggleShowFun,
@@ -102,11 +104,11 @@ class Chat extends Component {
     this.createAction();
     getSdkSetting();
     this.state = {
-      lastId: '',
+      scrollIntoView: '',
+      scrollWithAnimation: true,
       height: 0,
       videoUrl: '',
       wrapHeight: 0,
-      scrollWithAnimation: true,
       showAssociate: false,
       lockBot: [], // 锁定bot入口1s
       // 位置哨兵
@@ -114,56 +116,87 @@ class Chat extends Component {
       scrollViewOffset: 0,
       constOffset: 0,
       showTopPlaceHolder: false,
-      maskHeight: 0,
-      chatViewScrollY : true,
+      chatViewScrollY: true,
       // 优化体验
-      showLoading: true,
+      showLoading: true
     };
-  }
+  };
 
   createAction() {
     const { createAccount: _createAccount } = this.props;
     _createAccount();
-  }
+  };
 
   componentDidMount() {
     setTimeout(() => {
       this.setState({
         showLoading: false
-      })
+      });
     }, 1000);
     // 清空未读消息
     clearUnreadHome();
+    eventbus.on('unshift_message', this.handleUnshiftMessage);
+    eventbus.on('push_message', this.handlePushMessage);
+    eventbus.on('reset_scrollIntoView', this.handleResetScrollIntoView);
 
-    eventbus.on('push_message', this.scrollToBottom);
     eventbus.on('video_click', this.handlePlay);
     eventbus.on('disabled_chat_scrollY', () => {
       this.setState({
         chatViewScrollY: false
-      })
+      });
     });
     eventbus.on('enable_chat_scrollY', () => {
       this.setState({
         chatViewScrollY: true
-      })
+      });
     });
 
-    this.scrollToBottom(false, 500);
+    initMessage();
+
+    this.scrollToBottom(false, 500, true);
     this.handleOffsetCalc();
-  }
+  };
 
   componentWillUnmount() {
-    eventbus.off('push_message', this.scrollToBottom);
+    eventbus.off('unshift_message', this.handleUnshiftMessage);
+    eventbus.off('push_message', this.handlePushMessage);
+    eventbus.off('reset_scrollIntoView', this.handleResetScrollIntoView);
+    eventbus.off('video_click', this.handlePlay);
+  };
+
+  handleResetScrollIntoView = () => {
+    this.setState({
+      scrollIntoView: ''
+    })
+  };
+
+  handleUnshiftMessage = (id, finished) => {
+    this.state.finished = finished;
+    this.setState({
+      showLoading: true
+    })
+    setTimeout(() => {
+      Taro.hideLoading();
+      this.state.loading = false;
+      this.setState({
+        showLoading: false
+      })
+    }, 1000)
+    setTimeout(() => {
+      this.setState({
+        scrollIntoView: id,
+        scrollWithAnimation: false,
+      });
+    }, 500)
+  };
+
+  handlePushMessage = () => {
+    this.scrollToBottom(true, 300, false)
   }
-
-  componentDidShow() {}
-
-  componentDidHide() {}
-
-  componentDidUpdate() {}
-
   // 重置底部区域
-  scrollToBottom = (scrollWithAnimation = true, delay = 300) => {
+  scrollToBottom = (scrollWithAnimation = true, delay = 300, force = true) => {
+
+    if (this.state.scrollIntoView !== '' && this.state.scrollIntoView !== 'm-bottom' && !force) { return; }
 
     if (this.timer) {
       this.handleOffsetCalc();
@@ -171,17 +204,16 @@ class Chat extends Component {
     }
 
     this.setState({
-      lastId: '',
+      scrollIntoView: '',
       scrollWithAnimation
     });
+
     this.timer = setTimeout(() => {
       this.setState({
-        lastId: 'm-bottom',
+        scrollIntoView: 'm-bottom'
       });
 
-      if (scrollWithAnimation) {
-        this.handleOffsetCalc();
-      }
+      this.handleOffsetCalc();
 
       this.timer = null;
     }, delay);
@@ -202,11 +234,13 @@ class Chat extends Component {
   };
 
   handleBodyClick = () => {
-    this.props.hideAction();
-    this.handleOffsetCalc();
+    if (this.props.Options.showFunc || this.props.Options.showPortrait) {
+      this.props.hideAction();
+      this.handleOffsetCalc();
+    }
   };
 
-  handleOffsetCalc = (cb) => {
+  handleOffsetCalc = cb => {
     const query = Taro.createSelectorQuery().in(this.$scope);
     const node = query.select('#m-bottom');
     const { scrollViewOffset } = this.state;
@@ -214,30 +248,36 @@ class Chat extends Component {
       .boundingClientRect(rect => {
         getSystemInfo.then(res => {
           const offsetBottom = res.windowHeight - rect.top;
-          const offsetBottomCalc = offsetBottom - scrollViewOffset
+          const offsetBottomCalc = offsetBottom - scrollViewOffset;
           const ratio = res.windowWidth / 375;
           // console.log('ratio', ratio)
           // console.log('屏幕高度', res.windowHeight)
           // console.log('哨兵距离底部距离: ', offsetBottom); // 667 ---> 0
           // console.log('哨兵距离底部距离计算: ', offsetBottomCalc); // 667 ---> 0
-          if (!this.state.showTopPlaceHolder && offsetBottom <= 65 * ratio ) {
-            this.setState({
-              showTopPlaceHolder: true
-            }, () => {
-              this.scrollToBottom();
-            })
+          if (!this.state.showTopPlaceHolder && offsetBottom <= 65 * ratio) {
+            this.setState(
+              {
+                showTopPlaceHolder: true
+              },
+              () => {
+                this.scrollToBottom();
+              }
+            );
           }
 
-          this.setState({
-            bottomSentry: offsetBottomCalc > 0 ? offsetBottomCalc : 0 // 获取哨兵位置
-          }, () => {
-            // 获取内容区域偏移距离
-            this.getScrollViewOffset(ratio, cb);
-          })
-        })
+          this.setState(
+            {
+              bottomSentry: offsetBottomCalc > 0 ? offsetBottomCalc : 0 // 获取哨兵位置
+            },
+            () => {
+              // 获取内容区域偏移距离
+              this.getScrollViewOffset(ratio, cb);
+            }
+          );
+        });
       })
       .exec();
-  }
+  };
 
   // 处理选择表情
   handlePortraitClick = () => {
@@ -249,7 +289,6 @@ class Chat extends Component {
 
   // 处理点击加号
   handlePlusClick = () => {
-
     this.props.toggleShowFun();
     this.setState({ height: 0 });
 
@@ -266,7 +305,6 @@ class Chat extends Component {
         Taro.chooseImage({
           sourceType: ['album']
         }).then(res => {
-          // console.log('选择图片: ', res);
           _sendImage(res);
         });
         break;
@@ -275,7 +313,6 @@ class Chat extends Component {
         Taro.chooseImage({
           sourceType: ['camera']
         }).then(res => {
-          // console.log('照相: ', res);
           _sendImage(res);
         });
         break;
@@ -300,8 +337,10 @@ class Chat extends Component {
     if (isOpen) {
       this.handleOffsetCalc();
     } else {
-      this.setState({ height: 0 }, () => {this.handleOffsetCalc();});
-    };
+      this.setState({ height: 0 }, () => {
+        this.handleOffsetCalc();
+      });
+    }
   };
 
   /** 消息体点击事件处理 **/
@@ -341,7 +380,7 @@ class Chat extends Component {
         title: '请等待连线成功后，再发送消息',
         icon: 'none',
         duration: 2000
-      })
+      });
     }
 
     const { sendText } = this.props;
@@ -389,17 +428,23 @@ class Chat extends Component {
   handleSelectEntry = key => {
     switch (key) {
       case 'evaluation':
-        const { openEvaluationModal,Session } = this.props;
+        const { openEvaluationModal, Session } = this.props;
 
         let sessionCloseTime = Session.closeTime;
         let curTime = new Date().getTime();
-        let evaluation_timeout = Session.shop.setting && Session.shop.setting.evaluation_timeout*60*1000 || 10*60*1000;
-        if (sessionCloseTime && curTime - sessionCloseTime > evaluation_timeout) {
+        let evaluation_timeout =
+          (Session.shop.setting &&
+            Session.shop.setting.evaluation_timeout * 60 * 1000) ||
+          10 * 60 * 1000;
+        if (
+          sessionCloseTime &&
+          curTime - sessionCloseTime > evaluation_timeout
+        ) {
           Taro.showToast({
             title: '评价已超时，无法进行评价',
             icon: 'none',
             duration: 2000
-          })
+          });
           return;
         }
         openEvaluationModal();
@@ -437,16 +482,9 @@ class Chat extends Component {
     emptyAssociate();
   };
 
-  getScrollViewOffset= (ratio, cb) => {
-    const {
-      Options,
-      Bot,
-      Session
-    } = this.props;
-    const {
-      height,
-      bottomSentry
-    } = this.state;
+  getScrollViewOffset = (ratio, cb) => {
+    const { Options } = this.props;
+    const { height, bottomSentry } = this.state;
 
     const isOpen = Options.showFunc || Options.showPortrait;
 
@@ -458,21 +496,47 @@ class Chat extends Component {
       offset = 0;
     } else {
       // 如果哨兵距离底部距离 < 偏移距离
-      offset = offset - bottomSentry
+      offset = offset - bottomSentry;
     }
 
     if (bottomSentry === -1) {
-      offset = 0
+      offset = 0;
     }
 
-    this.setState({
-      scrollViewOffset: offset,
-      constOffset,
-      maskHeight: offset
-    }, () => {
-      cb && cb();
-    })
-  }
+    this.setState(
+      {
+        scrollViewOffset: offset,
+        constOffset
+      },
+      () => {
+        cb && cb();
+      }
+    );
+  };
+
+  handleOnScrollToUpper = () => {
+    if (!canSendMessage()) { return; }
+    const uuid = _get(this.props, 'Message[0].uuid')
+    if (!uuid) {
+      return;
+    }
+    if (this.state.loading || this.state.finished) {
+      return;
+    }
+    this.state.loading = true;
+    Taro.showLoading();
+    setTimeout(() => {
+      unshiftMessage(uuid);
+    }, 500)
+  };
+
+  handleOnScrollToLower = () => {
+    // if (this.state.scrollIntoView !== 'm-bottom') {
+    //   this.setState({
+    //     scrollIntoView: 'm-bottom'
+    //   })
+    // }
+  } 
 
   render() {
     const {
@@ -485,33 +549,37 @@ class Chat extends Component {
       Setting
     } = this.props;
     const {
-      lastId,
       height,
       videoUrl,
-      scrollWithAnimation,
       showAssociate,
       lockBot,
       scrollViewOffset,
       showTopPlaceHolder,
-      maskHeight,
       chatViewScrollY,
       constOffset,
-      showLoading
+      showLoading,
+      scrollWithAnimation,
+      scrollIntoView
     } = this.state;
 
     const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
 
-    const hasBot = isRobot && Bot.len
+    const hasBot = isRobot && Bot.len;
 
     const isOpen = Options.showFunc || Options.showPortrait;
 
-    let offset = scrollViewOffset + 'px'
+    let offset = scrollViewOffset + 'px';
 
-    const gHeight = `calc(100vh)`
+    const gHeight = `calc(100vh)`;
 
     return (
       <Index className="m-page-wrapper">
-        <View class="u-loading" style={`visibility: ${showLoading ? 'visible': 'hidden'}`}>消息加载中...</View>
+        <View
+          class="u-loading"
+          style={`visibility: ${showLoading ? 'visible' : 'hidden'}`}
+        >
+          消息加载中...
+        </View>
         {/* 视频全局对象 */}
         <View
           style={`display: ${
@@ -534,18 +602,23 @@ class Chat extends Component {
             style={`bottom: ${offset};height: ${gHeight};`}
             scrollY={chatViewScrollY}
             scrollWithAnimation={scrollWithAnimation}
-            scrollIntoView={lastId}
+            scrollIntoView={scrollIntoView}
             onTouchStart={this.handleBodyClick}
+            onScrollToUpper={this.handleOnScrollToUpper}
+            onScrollToLower={this.handleOnScrollToLower}
           >
-            <View className="u-message-list">
-              <View style={`height: ${showTopPlaceHolder ? constOffset : 0}px`}></View>
-              <MessageView
-                Message={Message}
-                onImgClick={this.handleImgClick}
-              ></MessageView>
-              <View style={`height: ${hasBot ? Taro.pxTransform(76) : 0}`}></View>
-              <View id="m-bottom"></View>
-            </View>
+            <View
+              style={`height: ${showTopPlaceHolder ? constOffset : 0}px`}
+            ></View>
+            {Message.map(it => (
+              <View key={it.uuid} id={it.uuid}>
+                <MessageView
+                it={it}
+                onImgClick={this.handleImgClick}></MessageView>
+              </View>
+            ))}
+            <View style={`height: ${hasBot ? Taro.pxTransform(76) : 0}`}></View>
+            <View id="m-bottom"></View>
           </ScrollView>
         </View>
 
@@ -580,7 +653,8 @@ class Chat extends Component {
                   className={`m-bot-item ${
                     lockBot.includes(bot.label) ? 'z-bot-disable' : ''
                   }`}
-                  style={`border-color: ${Setting.setting.dialogColor || '#e1e3e6'};animation-delay: ${index * 200}ms;`}
+                  style={`border-color: ${Setting.setting.dialogColor ||
+                    '#e1e3e6'};animation-delay: ${index * 200}ms;`}
                   key={bot.id}
                   onClick={e => this.handleBotClick(bot, e)}
                 >
@@ -600,10 +674,7 @@ class Chat extends Component {
             <View id="chat-sentry"></View>
           </ChatBox>
         </View>
-        <View
-          className="u-mask"
-          style={`height: ${height}px`}
-        ></View>
+        <View className="u-mask" style={`height: ${height}px`}></View>
         <View className={`u-funcbox ${Options.showFunc ? 'open' : ''}`}>
           <FuncBox
             list={functionList}
