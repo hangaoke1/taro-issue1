@@ -240,6 +240,56 @@ export const sendImage = res => dispatch => {
 };
 
 /**
+ * 发送语音消息
+ * @param {object} res 微信skd返回对象 
+ */
+export const sendVoice = res => dispatch => {
+  if (!canSendMessage()) {
+    Taro.showToast({
+      title: '请等待连线成功后，再发送消息',
+      icon: 'none',
+      duration: 2000
+    })
+    return;
+  }
+
+  const tempFilePath = res.tempFilePath;
+  const uuid = genUUID16()
+  let message = {
+    type: 'audio',
+    idClient: '',
+    content: {
+      dur: res.duration
+    },
+    time: Date.now(),
+    status: 1,
+    fromUser: 1,
+    resendContent: res,
+    uuid
+  };
+  dispatch({ type: PUSH_MESSAGE, message });
+
+  NIM.sendVoiceMsg(tempFilePath).then(msg => {
+    const newMessage = {
+      type: 'audio',
+      idClient: msg.idClient,
+      content: msg.file,
+      time: msg.time,
+      status: msg.status,
+      fromUser: 1,
+      status: 0,
+      uuid
+    };
+
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  }).catch(err => {
+    const newMessage = _cloneDeep(message);
+    newMessage.status = -1
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  });
+}
+
+/**
  * 机器人差评原因
  * @param {string} msgidClient 客户端消息唯一标志
  * @param {string} evalcontent 差评原因
@@ -725,6 +775,9 @@ export const resendMessage = function (item) {
     // 2. 重新发送图片消息
     if (item.type === 'image') {
       sendImage(item.resendContent)(dispatch)
+    }
+    if (item.type === 'audio') {
+      sendVoice(item.resendContent)(dispatch)
     }
   }, 300)
 }

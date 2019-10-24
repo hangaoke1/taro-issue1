@@ -254,7 +254,7 @@ class Chat extends Component {
           // console.log('屏幕高度', res.windowHeight)
           // console.log('哨兵距离底部距离: ', offsetBottom); // 667 ---> 0
           // console.log('哨兵距离底部距离计算: ', offsetBottomCalc); // 667 ---> 0
-          if (!this.state.showTopPlaceHolder && offsetBottom <= 65 * ratio) {
+          if (!this.state.showTopPlaceHolder && offsetBottom <= 75 * ratio) {
             this.setState(
               {
                 showTopPlaceHolder: true
@@ -488,7 +488,7 @@ class Chat extends Component {
 
     const isOpen = Options.showFunc || Options.showPortrait;
 
-    let constOffset = 65 * ratio;
+    let constOffset = 75 * ratio;
     let offset = height + (isOpen ? 272 * ratio : 0) + constOffset; // 动态高度
 
     // 如果哨兵距离底部距离 > 偏移距离，无需移动
@@ -530,13 +530,7 @@ class Chat extends Component {
     }, 500)
   };
 
-  handleOnScrollToLower = () => {
-    // if (this.state.scrollIntoView !== 'm-bottom') {
-    //   this.setState({
-    //     scrollIntoView: 'm-bottom'
-    //   })
-    // }
-  } 
+  handleOnScrollToLower = () => {} 
 
   render() {
     const {
@@ -624,9 +618,12 @@ class Chat extends Component {
 
         <View
           className={`u-chatbox`}
-          style={`transform: translateY(-${
+          // style={`transform: translateY(-${
+          //   height ? height + 'px' : isOpen ? Taro.pxTransform(544) : '0'
+          // });`}
+          style={`bottom: ${
             height ? height + 'px' : isOpen ? Taro.pxTransform(544) : '0'
-          });`}
+          };`}
         >
           {showAssociate ? (
             <View className="m-associate">

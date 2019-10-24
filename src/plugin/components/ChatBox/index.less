@@ -1,13 +1,16 @@
 .m-ChatBox {
     position: relative;
     display: flex;
+    width: 375px;
     justify-items: center;
     align-items: center;
     min-height: 56px;
-    padding: 5px 0;
+    padding: 5px 0 15px 0;
     background: #F6F6F6;
     .u-edtior {
-        width: 307px;
+        position: relative;
+        // width: 307px;
+        flex: 1;
         min-height: 40px;
         max-height: 80px;
         background: #FFFFFF;
@@ -25,7 +28,7 @@
     .u-portrait {
         position: absolute;
         right: 60px;
-        top: 50%;
+        top: 33px;
         transform: translateY(-50%);
     }
     .u-plus-icon{

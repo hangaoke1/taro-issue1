@@ -17,7 +17,7 @@ const Message = (state = initMessages, action) => {
             return [...action.messages];
         // 顶部添加消息
         case UNSHIFT_MESSAGE:
-            const tipStr = '———————— 上次看到这里 ————————'
+            const tipStr = '———— 上次看到这里 ————'
             const historyTip = {
               type: 'systip',
               content: tipStr,

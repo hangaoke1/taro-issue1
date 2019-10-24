@@ -22,34 +22,45 @@ import './index.less';
 export default class ImAudio extends Component {
 
   state = {
-    playing: false,
-    audioCtx: null
+    playing: false
   }
 
   handleClick = () => {
-    if (!this.state.audioCtx) return;
+    if (!this.audioCtx) return;
 
     if (!this.state.playing) {
       eventbus.trigger('audio_stop');
-      this.state.audioCtx.play();
+      // Taro.showToast({title: '播放'})
+      this.audioCtx.play();
     } else {
-      this.state.audioCtx.stop();
+      this.audioCtx.stop();
     }
   }
 
   play = () => {
-    if (this.state.audioCtx) {
-      this.state.audioCtx.play();
+    if (this.audioCtx) {
+      this.audioCtx.play();
     }
   }
 
   stop = () => {
-    if (this.state.audioCtx) {
-      this.state.audioCtx.stop();
+    if (this.audioCtx) {
+      this.audioCtx.stop();
     }
   }
 
   componentWillMount () { }
+
+
+  componentDidUpdate(prevProps){
+    if (this.audioCtx && !this.audioCtx.src) {
+      const item = this.props.item;
+      const audioInfo = item ? item.content : {};
+      if (audioInfo.url) {
+        this.audioCtx.src = audioInfo.url;
+      }
+    }
+  }
 
   componentDidMount () {
     const audioCtx = Taro.createInnerAudioContext();
@@ -57,7 +68,9 @@ export default class ImAudio extends Component {
     const audioInfo = item ? item.content : {};
 
     audioCtx.autoplay = false;
-    audioCtx.src = audioInfo.mp3Url;
+
+    audioCtx.src = audioInfo.url || '';
+
     audioCtx.onPlay(() => {
       this.setState({ playing: true })
     })
@@ -67,14 +80,12 @@ export default class ImAudio extends Component {
     audioCtx.onEnded(() => {
       this.setState({ playing: false })
     })
-    audioCtx.onError((res) => {
-      // console.log(res.errMsg)
-      // console.log(res.errCode)
+    audioCtx.onError((error) => {
+      console.error(error)
+      // Taro.showToast({title: '报错啦'})
     })
 
-    this.setState({
-      audioCtx
-    })
+    this.audioCtx = audioCtx
 
     eventbus.on('audio_stop', this.stop)
   }

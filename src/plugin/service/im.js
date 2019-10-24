@@ -188,22 +188,48 @@ export default class IMSERVICE {
             scene: 'p2p',
             to: to,
             wxFilePath: tempFilePath,
-            beforesend: function(msg) {
-              // console.log('正在发送p2p image消息, id=' + msg.idClient);
-            },
-            uploadprogress: function(obj) {
-              // console.log('文件总大小: ' + obj.total + 'bytes');
-              // console.log('已经上传的大小: ' + obj.loaded + 'bytes');
-              // console.log('上传进度: ' + obj.percentage);
-              // console.log('上传进度文本: ' + obj.percentageText);
-            },
-            uploaddone: function(error, file) {
-              console.log('上传' + (!error ? '成功' : '失败'), error, file);
-            },
+            beforesend: function(msg) {},
+            uploadprogress: function(obj) {},
+            uploaddone: function(error, file) {},
             done: (error, msg) => {
               if (error) {
                 reject(error);
               } else {
+                resolve(msg);
+              }
+            }
+          });
+        })
+        .catch(reject);
+    });
+  }
+
+  /**
+   * 发送语音消息
+   * @param {string} tempFilePath 微信图片临时路径
+   * @param {number} to 标志发送方
+   * @return {promise<>}
+   */
+  sendVoiceMsg(tempFilePath, to = -1) {
+    return new Promise((resolve, reject) => {
+      this.getNim()
+        .then(nim => {
+          nim.sendFile({
+            type: 'audio',
+            scene: 'p2p',
+            to: to,
+            wxFilePath: tempFilePath,
+            beforesend: function(msg) {},
+            uploadprogress: function(obj) {},
+            uploaddone: function(error, file) {},
+            done: (error, msg) => {
+              if (error) {
+                reject(error);
+              } else {
+                const mp3Url = nim.audioToMp3({
+                  url: msg.file.url
+                });
+                console.log('aaaaaaa', mp3Url)
                 resolve(msg);
               }
             }
