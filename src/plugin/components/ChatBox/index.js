@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from '@tarojs/redux';
 import Taro, { useState, useEffect } from '@tarojs/taro';
 import { Input, View } from '@tarojs/components';
 import _isFunction from 'lodash/isFunction';
+import _get from 'lodash/get';
 import eventbus from '@/lib/eventbus';
 import { hideAction } from '@/actions/options';
 import {
@@ -21,6 +22,8 @@ export default function ChatBox(props) {
   const [lock, setLock] = useState(false); // HACK: 防止键盘弹起动画过程中点击表情从而出现键盘遮挡bug
   const [type, setType] = useState('keyboard'); // voice 语音 keyboard键盘
   const options = useSelector(state => state.Options);
+  const setting = useSelector(state => state.Setting.setting);
+  const placeholder = _get(setting, 'placeHolder');
   const dispatch = useDispatch();
 
   const corpStatus = useSelector(state => state.CorpStatus);
@@ -154,7 +157,7 @@ export default function ChatBox(props) {
             focus={focus}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            placeholder={corpStatus.chatInputPlaceHolder}
+            placeholder={placeholder || corpStatus.chatInputPlaceHolder}
             disabled={corpStatus.chatInputDisabled}
             className="u-edtior"
             onInput={handleInput}
