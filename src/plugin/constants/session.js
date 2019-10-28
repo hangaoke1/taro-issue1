@@ -31,7 +31,8 @@ export const REASON_MAP = {
 /**
  * 默认客服头像
  */
-export const DEFAULT_KEFU_AVATAR = 'https://qiyukf.nosdn.127.net/sdk/res/default/portrait2x.png';
+// export const DEFAULT_KEFU_AVATAR = 'https://qiyukf.nosdn.127.net/sdk/res/default/portrait2x.png';
+export const DEFAULT_KEFU_AVATAR = 'https://qiyukf.com/sdk/res/skin/default/ico-kefu@2x.png';
 
 
 /**

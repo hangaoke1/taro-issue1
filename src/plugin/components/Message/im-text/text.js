@@ -1,4 +1,5 @@
 import Taro from '@tarojs/taro';
+import { useSelector } from '@tarojs/redux';
 import PropTypes from 'prop-types';
 import { View, Image } from '@tarojs/components';
 import _get from 'lodash/get';
@@ -14,6 +15,8 @@ export default function TextView(props) {
   const status = _get(item, 'status', 0);
   const { content, type } = item;
   const isRich = type === 'rich';
+  const setting = useSelector(state => state.Setting.setting);
+  const themeColor = item.fromUser ? _get(setting, 'dialogColor') : '#fff';
 
   function handleLinkpress(event) {
     const { detail } = event;
@@ -32,8 +35,8 @@ export default function TextView(props) {
       }
     >
       <Avatar fromUser={item.fromUser} staff={item.staff} />
-      <View className="u-text-arrow" />
-      <View className="u-text">
+      <View className="u-text-arrow" style={`${item.fromUser ? 'border-left-color: ' + themeColor : ''}`} />
+      <View className="u-text" style={`background: ${themeColor}`}>
         <ParserRichText
           html={content}
           onLinkpress={handleLinkpress}

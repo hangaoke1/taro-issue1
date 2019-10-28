@@ -1,4 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
+import { connect } from '@tarojs/redux';
+import _get from 'lodash/get';
 import { View } from '@tarojs/components';
 import eventbus from '../../../lib/eventbus';
 import Avatar from '../u-avatar';
@@ -19,6 +21,13 @@ import './index.less';
 //   time: "1565752835763",
 //   type: "audio"
 // }
+
+@connect(
+  ({ Setting }) => ({
+    Setting
+  }),
+  dispatch => ({})
+)
 export default class ImAudio extends Component {
 
   state = {
@@ -82,7 +91,6 @@ export default class ImAudio extends Component {
     })
     audioCtx.onError((error) => {
       console.error(error)
-      // Taro.showToast({title: '报错啦'})
     })
 
     this.audioCtx = audioCtx
@@ -95,9 +103,10 @@ export default class ImAudio extends Component {
   }
 
   render () {
-    const { item } = this.props;
+    const { item, Setting } = this.props;
     const { playing } = this.state;
     const audioInfo = item ? item.content : {};
+    const themeColor = item && item.fromUser ? _get(Setting, 'setting.dialogColor') : '';
 
     return item ? (
       <View
@@ -106,8 +115,8 @@ export default class ImAudio extends Component {
         }
       >
         <Avatar fromUser={item.fromUser} staff={item.staff} />
-        <View className='u-text-arrow' />
-        <View className='u-text' onClick={this.handleClick}>
+        <View className='u-text-arrow' style={`${item.fromUser ? 'border-left-color: ' + themeColor : ''}`} />
+        <View className='u-text' style={`${item.fromUser ? 'background-color: ' + themeColor : ''}`} onClick={this.handleClick}>
           { item.fromUser ? null : <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View>}
           {Math.round(audioInfo.dur / 1000)}&quot;
           { item.fromUser ? <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View> : null}

@@ -1,6 +1,8 @@
+import { useSelector } from '@tarojs/redux';
 import { View, Image } from '@tarojs/components';
 import { DEFAULT_KEFU_AVATAR, DEFAULT_ROBOT_AVATAR } from '../../../constants/session';
 import { get } from '../../../global_config';
+import _get from 'lodash/get';
 
 import './index.less';
 
@@ -30,11 +32,15 @@ export default function Avatar(props) {
         avatarSrc = userImg || DEFAULT_KEFU_AVATAR
     }
 
+    const setting = useSelector(state => state.Setting.setting);
+    const themeColor = props.fromUser ? _get(setting, 'dialogColor') : '';
+
     return (
         <View>
             <Image
                 className='u-avatar'
                 src={avatarSrc}
+                style={`${themeColor ? 'background-color: ' + themeColor : ''}`}
             />
         </View>
     )

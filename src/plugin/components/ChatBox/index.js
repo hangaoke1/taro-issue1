@@ -176,7 +176,7 @@ export default function ChatBox(props) {
         className={`u-plus-icon ${options.showFunc ? 'u-show' : ''}`}
         onTouchStart={handlePlusClick}
       >
-        <Iconfont type="icon-chat-more-plusx" color="#fff" size="22" />
+        <Iconfont type="icon-chat-more" color="#666" size="28" />
       </View>
     </View>
   );
