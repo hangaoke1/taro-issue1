@@ -48,7 +48,7 @@ export default class ImVideo extends Component {
   
     return item ? (
       <View className={item.fromUser ? 'm-video m-video-right' : 'm-video m-video-left'}>
-        <Avatar fromUser={item.fromUser} />
+        <Avatar fromUser={item.fromUser} staff={item.staff} />
         <View className='u-space' />
         <View className='u-content' onClick={this.handleClick}>
           <View

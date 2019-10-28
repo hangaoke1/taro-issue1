@@ -9,6 +9,7 @@ import VideoView from './im-video/index';
 import RobotView from './im-robot/index';
 import BotView from './im-bot/index';
 import CardView from './im-card';
+import FileView from './im-file';
 
 import './index.less';
 
@@ -39,6 +40,7 @@ export default function MessageView(props) {
         <RobotView item={it}></RobotView>
       ) : null}
       {it.type === 'bot' ? <BotView item={it}></BotView> : null}
+      {it.type === 'file' ? <FileView item={it}></FileView> : null}
       {['product', 'order-card'].includes(it.type) ? (
         <CardView item={it}></CardView>
       ) : null}
