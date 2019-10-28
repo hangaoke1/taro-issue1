@@ -237,6 +237,8 @@ export default class IMSERVICE {
         level: get('level'),
         bundleid: get('bundleid') || Taro.getAccountInfoSync().miniProgram.appId,
         version: 64,
+        staffid: get('staffid'),
+        groupid: get('groupid'),
         ...extraParams
       };
 

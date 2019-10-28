@@ -25,7 +25,7 @@ export const initDeviceid = (isReset) => {
 
 const globalConfig = {
   appKey: '',
-  domain: 'https://qytest.netease.com',
+  domain: 'https://qiyukf.com',
   account: '',
   bid: '-1',
   token: '',
@@ -33,11 +33,13 @@ const globalConfig = {
   foreignid: '',
   userInfo: null,
   product: null,
+  staffid: '',
+  groupid: '',
   level: 0,
   bundleid: Taro.getAccountInfoSync().miniProgram.appId,
   heartbeatCycle: 8000,
   store: null,
-  NIM: NIM_TEST
+  NIM: NIM
 };
 
 export const get = (key) => globalConfig[key];

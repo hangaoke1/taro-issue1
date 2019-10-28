@@ -3,6 +3,13 @@ import { exitSession } from './actions/chat';
 import eventbus from '@/lib/eventbus';
 
 
+class DataFormatError extends Error{
+  constructor(info){
+    super(`${info} Data format parsing error`);
+    this.name = 'DataFormatError'
+  }
+}
+
 /**
  * 配饰企业的appKey
  * @param {str} key
@@ -11,7 +18,7 @@ export const _$configAppKeySync = (key) => {
   if (Object.prototype.toString.call(key) === "[object String]") {
     set('appKey', key);
   } else {
-    console.log('appkey数据格式不符合要求');
+    throw new DataFormatError('appkey');
   }
 }
 
@@ -23,7 +30,7 @@ export const _$configAppKey = (key) => {
           set('appKey', key);
           resolve(key);
         } else {
-          reject('appkey数据格式不符合要求');
+          reject(new DataFormatError('appkey'));
         }
       } catch (err) {
         reject(err);
@@ -61,7 +68,7 @@ export const _$setUserInfoSync = (userInfo) => {
 
     set('userInfo', userInfo);
   } else {
-    console.log('userInfo数据格式不符合要求');
+    throw new DataFormatError('userInfo');
   }
 }
 
@@ -86,7 +93,7 @@ export const _$setUserInfo = (userInfo) => {
             reject(err);
           }
         } else {
-          reject('userInfo数据格式不符合要求');
+          reject(new DataFormatError('userInfo'));
         }
     }, 0)
   }).catch((err) => {
@@ -133,7 +140,7 @@ export const _$setVipLevelSync = (level = 0) => {
   if (Object.prototype.toString.call(level) === "[object String]" || Object.prototype.toString.call(level) === "[object Number]") {
     set('level', level);
   }else{
-    reject('userInfo数据格式不符合要求');
+    throw new DataFormatError('level');
   }
 }
 
@@ -149,7 +156,7 @@ export const _$setVipLevel = (level = 0) => {
         }
       }, 0)
     }else{
-      reject('level数据格式不符合要求');
+      reject(new DataFormatError('level'));
     }
   }).catch((err) => {
     console.error(err);
@@ -171,7 +178,7 @@ export const _$configProductSync = (product) => {
   if (Object.prototype.toString.call(product) === "[object Object]") {
     set('product', product);
   }else{
-    console.log('product数据格式不符合要求');
+    throw new DataFormatError('product');
   }
 }
 
@@ -187,7 +194,7 @@ export const _$configProduct = (product) => {
         }
       }, 0)
     }else{
-      reject('product数据格式不符合要求');
+      reject(new DataFormatError('product'));
     }
   }).catch((err) => {
     console.error(err);
@@ -257,4 +264,66 @@ export const _$onClickAction = (cb) => {
  */
 export const __configAppId = (appId) => {
   set('bundleid', appId);
+}
+
+/**
+ * 自定义分流设置客服id
+ * @param {*} staffid
+ */
+export const _$configStaffId = (staffid) => {
+  return new Promise((resolve, reject) => {
+    if (Object.prototype.toString.call(staffid) === "[object String]" || Object.prototype.toString.call(staffid) === "[object Number]") {
+      setTimeout(() => {
+        try{
+          set('staffid', staffid);
+          resolve({staffid});
+        }catch(err){
+          reject(err);
+        }
+      }, 0)
+    }else{
+      reject(new DataFormatError('staffid'));
+    }
+  }).catch((err) => {
+    console.error(err);
+  })
+}
+
+export const _$configStaffIdSync = (staffid) => {
+  if (Object.prototype.toString.call(staffid) === "[object String]" || Object.prototype.toString.call(staffid) === "[object Number]") {
+    set('staffid', staffid);
+  }else{
+    throw new DataFormatError('staffid');
+  }
+}
+
+/**
+ * 自定义分流设置客服组id
+ * @param {*} groupid
+ */
+export const _$configGroupId = (groupid) => {
+  return new Promise((resolve, reject) => {
+    if (Object.prototype.toString.call(groupid) === "[object String]" || Object.prototype.toString.call(groupid) === "[object Number]") {
+      setTimeout(() => {
+        try{
+          set('groupid', groupid);
+          resolve({groupid});
+        }catch(err){
+          reject(err);
+        }
+      }, 0)
+    }else{
+      reject(new DataFormatError('groupid'));
+    }
+  }).catch((err) => {
+    console.error(err);
+  })
+}
+
+export const _$configGroupIdSync = (groupid) => {
+  if (Object.prototype.toString.call(groupid) === "[object String]" || Object.prototype.toString.call(groupid) === "[object Number]") {
+    set('groupid', groupid);
+  }else{
+    throw new DataFormatError('groupid');
+  }
 }
