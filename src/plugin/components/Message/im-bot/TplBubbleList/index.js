@@ -6,7 +6,7 @@ import eventbus from '@/lib/eventbus';
 import { setClipboardData } from '@/utils/extendTaro';
 import MCard from '@/components/Bot/m-card';
 import MGroup from '@/components/Bot/m-group';
-
+import { get } from '@/plugin/global_config';
 import './index.less';
 
 export default function TplBubbleList(props) {
@@ -24,6 +24,10 @@ export default function TplBubbleList(props) {
       setClipboardData(target);
     }
     if (type === 'block') {
+      // 判断是否是机器人
+      if (!get('isRobot')) {
+        return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+      }
       eventbus.trigger('bot_show_bubble_list', props.item.uuid);
     }
   }

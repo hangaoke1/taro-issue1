@@ -3,8 +3,8 @@ import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import { sendTemplateText } from '@/actions/chat'
-
 import { setClipboardData } from '@/utils/extendTaro';
+import { get } from '@/plugin/global_config';
 
 import './index.less';
 
@@ -25,6 +25,10 @@ class OrderLogistic extends Component {
     const params = _get(this, 'props.tpl.action.params', '');
     const label = _get(this, 'props.tpl.action.p_name', '');
     if (type === 'url' || type === 'block') {
+      // 判断是否是机器人
+      if (!get('isRobot')) {
+        return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+      }
       setClipboardData(target);
     }
     // http://jira.netease.com/browse/YSF-30788

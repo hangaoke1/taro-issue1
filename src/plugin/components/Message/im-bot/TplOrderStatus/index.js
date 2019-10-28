@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import { setClipboardData } from '@/utils/extendTaro';
 import { sendTemplateText } from '@/actions/chat';
-
+import { get } from '@/plugin/global_config';
 import './index.less';
 
 export default function Index(props) {
@@ -16,6 +16,10 @@ export default function Index(props) {
     if (item.type === 'url') {
       setClipboardData(target)
     } else {
+      // 判断是否是机器人
+      if (!get('isRobot')) {
+        return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+      }
       sendTemplateText({
         target,
         params,

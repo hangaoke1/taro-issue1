@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import { setClipboardData } from '@/utils/extendTaro';
 import { sendTemplateText } from '@/actions/chat';
+import { get } from '@/plugin/global_config';
 
 import './index.less'
 
@@ -12,6 +13,10 @@ class ActionList extends Component {
   static propTypes = {
     item: PropTypes.object,
     tpl: PropTypes.object
+  }
+
+  state = {
+    disableList: []
   }
 
   componentWillMount () { }
@@ -23,6 +28,15 @@ class ActionList extends Component {
     if (action.type === 'url') {
       setClipboardData(action.target)
     } else {
+      if (this.state.disableList.includes(p_name)) { return }
+      // 判断是否是机器人
+      if (!get('isRobot')) {
+        this.setState((state) => ({
+          disableList: [...state.disableList, p_name]
+        }))
+        return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+      }
+
       sendTemplateText({
         target,
         params,
@@ -32,6 +46,7 @@ class ActionList extends Component {
   }
 
   render () {
+    const { disableList } = this.state;
     const { item, tpl } = this.props;
     const list = _get(tpl, 'list', []);
     return item ? (
@@ -39,7 +54,7 @@ class ActionList extends Component {
         <View className="u-label">{tpl.label}</View>
         <View className="u-list">
           {list.map(action => {
-            return <View className="u-list-item" onClick={this.handleActionClick.bind(this, action)}>{action.p_name}</View>
+            return <View className={`u-list-item ${disableList.includes(action.p_name) ? 'z-disabled' : ''}`} onClick={this.handleActionClick.bind(this, action)}>{action.p_name}</View>
           })}
         </View>
       </View>

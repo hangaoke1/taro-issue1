@@ -6,6 +6,7 @@ import ParserRichText from '@/components/ParserRichText/parserRichText';
 import { sendTemplateText, parseUrlAction } from '@/actions/chat';
 import { setClipboardData } from '@/utils/extendTaro';
 import GImg from '@/components/GImg';
+import { get } from '@/plugin/global_config';
 
 import './index.less';
 
@@ -14,6 +15,10 @@ class StaticUnion extends Component {
     item: PropTypes.object,
     tpl: PropTypes.object
   };
+  
+  state = {
+    disableList: []
+  }
 
   componentWillMount() {}
 
@@ -29,7 +34,17 @@ class StaticUnion extends Component {
     if (type === 'url') {
       setClipboardData(target);
     }
+    // TODO: 人工判断
     if (type === 'block') {
+      if (this.state.disableList.includes(label)) { return }
+      // 判断是否是机器人
+      if (!get('isRobot')) {
+        this.setState((state) => ({
+          disableList: [...state.disableList, label]
+        }))
+        return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+      }
+
       sendTemplateText({
         target,
         params,
@@ -47,6 +62,7 @@ class StaticUnion extends Component {
 
   render() {
     // image、text、richText、link
+    const { disableList } = this.state;
     const { item, tpl } = this.props;
     const list = _get(tpl, 'unions', []);
     return item ? (
@@ -59,7 +75,7 @@ class StaticUnion extends Component {
                   'image': <GImg maxWidth={220} src={union.detail.url} onClick={this.previewImage.bind(this, union.detail.url)}></GImg>,
                   'text': <View className="u-text">{union.detail.label}</View>,
                   'richText': <View className="u-richText"><ParserRichText html={union.detail.label} onLinkpress={this.handleLinkpress}></ParserRichText></View>,
-                  'link': <View className="u-link" onClick={this.handleLinkClick.bind(this, union.detail)}>{union.detail.label}</View>
+                  'link': <View className={`u-link ${disableList.includes(union.detail.label)? 'z-disabled' : ''}`} onClick={this.handleLinkClick.bind(this, union.detail)}>{union.detail.label}</View>
                 }[
                   union.type
                 ]

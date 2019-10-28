@@ -6,6 +6,7 @@ import Avatar from '../u-avatar';
 import ParserRichText from '@/components/ParserRichText/parserRichText';
 import Iconfont from '@/components/Iconfont';
 import Modal from '@/components/Modal';
+import { get } from '@/plugin/global_config';
 
 import {
   sendRelateText,
@@ -23,6 +24,7 @@ import './index.less';
 export default function RobotView(props) {
   const [isOpened, setIsOpened] = useState(false);
   const [reason, setReason] = useState('');
+  const [disableList, setDisableList] = useState([])
   // 0: 不显示 1: 未评价 2: 有用 3: 没用
   const { item, index } = props;
   let {
@@ -72,15 +74,11 @@ export default function RobotView(props) {
       index
     );
 
-    evalRobotAnswer(idClient, userEvaluation).then(() => {
-      // console.log('-----🙏success 评价完成🙏----');
-    });
+    evalRobotAnswer(idClient, userEvaluation).then(() => {});
 
     // 用户差评且无需评价原因
     if (userEvaluation === 3 && evaluation_reason === 0) {
-      evaluationContent(idClient, '').then(() => {
-        // console.log('-----🙏success 差评原因提交完成🙏----');
-      });
+      evaluationContent(idClient, '').then(() => {});
     }
 
     // 用户差评且需要评价原因
@@ -97,13 +95,19 @@ export default function RobotView(props) {
       index
     );
 
-    evaluationContent(idClient, reason).then(() => {
-      // console.log('-----🙏success 差评原因提交完成🙏----');
-    });
+    evaluationContent(idClient, reason).then(() => {});
   }
 
   // 点击关联问题
   function handleQuestionClick(q) {
+    if (disableList.includes(q)) { return }
+
+    // 判断是否是机器人
+    if (!get('isRobot')) {
+      setDisableList([...disableList, q])
+      return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+    }
+
     const { question, id } = q;
 
     dispatch(
@@ -147,11 +151,11 @@ export default function RobotView(props) {
           <View className="u-qalist">
             {item.list.map(q => (
               <View
-                className="u-qaitem"
+                className={`u-qaitem ${disableList.includes(q) ? 'z-disabled' : '' }`}
                 key={q.id}
                 onClick={() => handleQuestionClick(q)}
               >
-                <View className="u-dot" />
+                <View className={`u-dot ${disableList.includes(q) ? 'z-disabled' : '' }`} />
                 {q.question}
               </View>
             ))}

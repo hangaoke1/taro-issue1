@@ -2,6 +2,7 @@ import Taro, { useState } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
+import { get } from '@/plugin/global_config';
 
 import './index.less';
 
@@ -14,6 +15,10 @@ export default function TplBubbleNodeList(props) {
     : _get(tpl, 'list', []).slice(0, 4);
 
   function handleClick() {
+    // 判断是否是机器人
+    if (!get('isRobot')) {
+      return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+    }
     setShow(true);
   }
 
