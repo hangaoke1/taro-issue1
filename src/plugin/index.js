@@ -253,6 +253,17 @@ export const _$onClickAction = (cb) => {
 }
 
 /**
+ * 监听文件打开事件
+ * @param {fun} cb
+ */
+export const _$onFileOpenAction = (cb) => {
+  set('file_open_action', true)
+  eventbus.on('file_open_action', (fileObj) => {
+    cb(fileObj);
+  })
+}
+
+/**
  * 内部api，虚拟appId
  */
 export const __configAppId = (appId) => {

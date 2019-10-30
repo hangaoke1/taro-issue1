@@ -30,6 +30,22 @@ export default class Index extends Component {
       })
     })
 
+    myPluginInterface._$onFileOpenAction((fileObj) => {
+      const name = fileObj.name || '';
+      const nameArr = name.split('.');
+      const ext = (nameArr[nameArr.length - 1] || '').toLocaleLowerCase();
+      if (['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf'].includes(ext)) {
+        Taro.openDocument({
+          filePath: fileObj.tempFilePath,
+          success: function (res) {}
+        })
+      } else {
+        Taro.showToast({
+          title: '暂不支持该文件类型预览'
+        })
+      }
+    })
+
     if(Taro.getStorageSync('YSF-APPKEY') && Taro.getStorageSync('YSF-DOMAIN')){
       myPluginInterface._$configAppKey(Taro.getStorageSync('YSF-APPKEY'));
       myPluginInterface.__configDomain( Taro.getStorageSync('YSF-DOMAIN'));
@@ -172,11 +188,11 @@ export default class Index extends Component {
           <View>
             <Button onClick={this.handleAppId}>{Taro.getAccountInfoSync().miniProgram.appId}</Button>
           </View>
-          {/* <View>
+          <View>
             <Navigator url='/pages/test/index'>
-              <Button>测试</Button>
+              <Button>测试页面</Button>
             </Navigator>
-          </View> */}
+          </View>
           <View style='text-align: center;margin: 10px 0;'>消息未读数: {unReadCount}</View>
           <View><Button type="warn" onClick={this.emptyUnread}>清空消息未读数</Button></View>
           <View>

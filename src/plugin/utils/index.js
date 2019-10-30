@@ -70,3 +70,16 @@ export const clickAction = (extralParams = {}) => {
     eventbus.trigger('click_action', extralParams);
   })
 }
+
+/**
+ * 文件大小计算
+ * @param {number} size 单位byte
+ */
+export const size2String = (size = 0) => {
+  const kb = size / 1024
+  const mb = kb / 1024
+  if (mb > 1) {
+    return mb.toFixed(1) + 'MB'
+  }
+  return kb.toFixed(1) + 'KB'
+}
