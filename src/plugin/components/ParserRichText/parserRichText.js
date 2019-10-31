@@ -14,14 +14,63 @@ class ParserRichText extends Taro.Component {
     }
   };
 
+  // 长按事件
+  handleLinklongpress = event => {
+    let url = unescape(event.detail)
+    event.preventDefault();
+    event.stopPropagation();
+    if (url.startsWith('tel://')) {
+      const tel = url.split('tel://')[1];
+      Taro.showActionSheet({
+        itemList: ['呼叫', '复制号码', '添加到手机通讯录'],
+        success (res) {
+          if (res.tapIndex === 0) {
+            Taro.makePhoneCall({
+              phoneNumber: tel
+            })
+          }
+          if (res.tapIndex === 1) {
+            Taro.setClipboardData({
+              data: tel,
+              success() {
+                Taro.showToast({
+                  title: '号码已复制',
+                })
+              }
+            })
+          }
+          if (res.tapIndex === 2) {
+            Taro.addPhoneContact({
+              // firstName: tel,
+              mobilePhoneNumber: tel
+            })
+          }
+        },
+        fail (res) {
+          console.log(res.errMsg)
+        }
+      })
+      return false;
+    }
+  }
+
   handleLinkpress = event => {
     let url = unescape(event.detail)
+    if (url.startsWith('tel://')) {
+      const tel = url.split('tel://')[1];
+      Taro.makePhoneCall({
+        phoneNumber: tel
+      })
+      console.log('处理电话号码短按')
+      return;
+    }
+
     if (this.props.autocopy && event.detail) {
       if (url !== 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
-        wx.setClipboardData({
+        Taro.setClipboardData({
           data: url,
           success() {
-            wx.showToast({
+            Taro.showToast({
               title: '链接已复制',
             })
           }
@@ -70,6 +119,7 @@ class ParserRichText extends Taro.Component {
         show-with-animation={showWithAnimation}
         animation-duration={animationDuration}
         onLinkpress={this.handleLinkpress}
+        onLinklongpress={this.handleLinklongpress}
         onError={this.handleError}
       />
     )
