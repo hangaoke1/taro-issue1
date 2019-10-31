@@ -231,3 +231,38 @@ const myPluginInterface = Taro.requirePlugin('myPlugin');
 myPluginInterface._$clearUnreadCount(); // 会触发_$onunread 回调
 console.log('未读消息清空完成!');
 ```
+
+## 文件消息处理
+`默认情况下sdk自行处理包括图片、音频、视频类型的文件打开操作，但是由于小程序对于插件api调用的限制，sdk无法直接打开文档及其他类型的问题，此时需要用户自行监听事件进行处理`
+
+#### `_$onFileOpenAction(cb: function)` 处理用户打开文件操作
+回调函数中参数格式：
+
+| 字段    | 类型   | 描述  |
+| :----: | :----: | :---- |
+| name | String | 文件名称 |
+| url | String | 文件下载地址 |
+| tempFilePath | String | 文件本地临时地址 |
+| size | Number | 文件大小 |
+| md5   | String | 文件md5 |
+
+`调用该函数后，对于sdk无法处理的文件打开操作会通过回调事件，由用户自行处理`
+```js
+// 简单示例
+myPluginInterface._$onFileOpenAction((fileObj) => {
+  const name = fileObj.name || '';
+  const nameArr = name.split('.');
+  const ext = (nameArr[nameArr.length - 1] || '').toLocaleLowerCase();
+  // 针对文档类型，直接调用微信api进行打开
+  if (['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf'].includes(ext)) {
+    wx.openDocument({
+      filePath: fileObj.tempFilePath,
+      success: function (res) {}
+    })
+  } else {
+    wx.showToast({
+      title: '暂不支持该文件类型预览'
+    })
+  }
+})
+```
