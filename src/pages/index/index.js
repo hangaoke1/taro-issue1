@@ -15,7 +15,8 @@ export default class Index extends Component {
     unReadCount: 0,
     appId: '',
     staffid: '',
-    groupid: ''
+    groupid: '',
+    title: ''
   }
 
   componentWillMount () {
@@ -43,6 +44,13 @@ export default class Index extends Component {
         appId: Taro.getStorageSync('YSF-APPID')
       })
       myPluginInterface.__configAppId(Taro.getStorageSync('YSF-APPID'));
+    }
+
+    if(Taro.getStorageSync('YSF-TITLE')){
+      this.setState({
+        title: Taro.getStorageSync('YSF-TITLE')
+      })
+      myPluginInterface._$configTitle(Taro.getStorageSync('YSF-TITLE'));
     }
   }
 
@@ -156,7 +164,20 @@ export default class Index extends Component {
         icon: 'none',
         duration: 1000
       })
-    }else{
+    }else if(type == 'title'){
+
+      Taro.setStorageSync(
+        'YSF-TITLE', value
+      )
+
+      Taro.showToast({
+        title: 'title填写成功',
+        icon: 'none',
+        duration: 1000
+      })
+      myPluginInterface._$configTitle(value);
+    }
+    else{
       Taro.showToast({
         title: 'groupid填写成功',
         icon: 'none',
@@ -216,6 +237,12 @@ export default class Index extends Component {
             <Input placeholder="输入客服组Id"
               className="m-input-item_input"
               value={this.state.groupid} onBlur={this.handleBlur.bind(this, 'groupid')}></Input>
+          </View>
+          <View className="m-input-item">
+            <Text className="m-input-item_label">title自定义:</Text>
+            <Input placeholder="输入聊天界面title"
+              className="m-input-item_input"
+              value={this.state.title} onBlur={this.handleBlur.bind(this, 'title')}></Input>
           </View>
       </View>
     )

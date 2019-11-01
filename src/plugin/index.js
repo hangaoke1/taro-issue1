@@ -327,3 +327,35 @@ export const _$configGroupIdSync = (groupid) => {
     throw new DataFormatError('groupid');
   }
 }
+
+
+/**
+ * 设置聊天窗口的title
+ * @param {*} title 
+ */
+export const _$configTitle = (title) => {
+  return new Promise((resolve, reject) => {
+    if (Object.prototype.toString.call(title) === "[object String]") {
+      setTimeout(() => {
+        try{
+          set('title', title);
+          resolve(title);
+        }catch(err){
+          reject(err);
+        }
+      }, 0)
+    }else{
+      reject(new DataFormatError('title'))
+    }
+  }).catch(err => {
+    console.error(err);
+  })
+}
+
+export const _$configTitleSync = title => {
+  if (Object.prototype.toString.call(title) === "[object String]") {
+    set('title', title);
+  }else{
+    throw new DataFormatError('title');
+  }
+}

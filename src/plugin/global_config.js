@@ -36,6 +36,7 @@ const globalConfig = {
   staffid: '',
   groupid: '',
   level: 0,
+  title: '在线客服',
   bundleid: Taro.getAccountInfoSync().miniProgram.appId,
   heartbeatCycle: 8000,
   store: null,

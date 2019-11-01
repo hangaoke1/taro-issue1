@@ -433,7 +433,7 @@ export default class IMSERVICE {
           // 申请客服成功后的导航栏控制
           Taro.hideNavigationBarLoading();
           Taro.setNavigationBarTitle({
-            title: NAVIGATIONBAR_TITLE
+            title: get('title')
           });
           console.log('assign staff', content);
           assignKefu(content);
@@ -459,7 +459,7 @@ export default class IMSERVICE {
           // 申请客服成功后的导航栏控制
           Taro.hideNavigationBarLoading();
           Taro.setNavigationBarTitle({
-            title: NAVIGATIONBAR_TITLE
+            title: get('title')
           });
           receiveShuntEntries(content);
           break;
