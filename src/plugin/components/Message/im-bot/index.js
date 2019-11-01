@@ -29,8 +29,9 @@ import './index.less';
 import eventbus from '@/lib/eventbus';
 
 @connect(
-  ({ Session }) => ({
-    Session
+  ({ Session, Setting }) => ({
+    Session,
+    Setting
   }),
   dispatch => ({})
 )
@@ -64,7 +65,7 @@ export default class Bot extends Component {
   };
 
   render() {
-    const { item } = this.props;
+    const { item, Setting } = this.props;
     const tpl = _get(item, 'content.template', {});
     let layout = null;
     let showFormAction = false;
@@ -153,7 +154,7 @@ export default class Bot extends Component {
 
     let className = 'm-bot';
     className += item.fromUser ? ' m-bot-right' : ' m-bot-left';
-    className += tpl.id === 'qiyu_template_text' ? ' z-blue-style' : '';
+    const themeColor = item && item.fromUser ? _get(Setting, 'setting.dialogColor') : '';
     if ([
       'qiyu_template_goods',
       'bubble_list',
@@ -166,9 +167,9 @@ export default class Bot extends Component {
     return (
       <View className={className}>
         <Avatar fromUser={item.fromUser} staff={item.staff} />
-        <View className="u-text-arrow" />
+        <View className="u-text-arrow" style={`${item.fromUser ? 'border-left-color: ' + themeColor : ''}`} />
         <View className="u-content">
-          <View className="u-text">{layout}</View>
+          <View className="u-text" style={`${item.fromUser ? 'background-color: ' + themeColor : ''}`}>{layout}</View>
           {showFormAction ? (
             <View className="u-action" onClick={this.showForm}>
               填写表单
