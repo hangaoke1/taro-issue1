@@ -5,7 +5,7 @@ import _get from 'lodash/get';
 import { genClassAndStyle } from '@/utils';
 import { setClipboardData } from '@/utils/extendTaro';
 import { sendTemplateText } from '@/actions/chat';
-
+import { get } from '@/plugin/global_config';
 import FloatLayout from '@/components/FloatLayout';
 import CardLayoutList from '@/components/Bot/m-card-layout-list';
 import MDetailViewList from '@/components/Bot/m-detail-view-list';
@@ -31,6 +31,11 @@ class DetailView extends Component {
   };
 
   handleActionClick = action => {
+    // 判断是否是机器人
+    if (!get('isRobot')) {
+      return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+    }
+
     if (action.type === 'url') {
       setClipboardData(action.target);
     }

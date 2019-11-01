@@ -28,7 +28,7 @@ class ActionList extends Component {
     if (action.type === 'url') {
       setClipboardData(action.target)
     } else {
-      if (this.state.disableList.includes(p_name)) { return }
+      // if (this.state.disableList.includes(p_name)) { return }
       // 判断是否是机器人
       if (!get('isRobot')) {
         this.setState((state) => ({
@@ -54,7 +54,7 @@ class ActionList extends Component {
         <View className="u-label">{tpl.label}</View>
         <View className="u-list">
           {list.map(action => {
-            return <View className={`u-list-item ${disableList.includes(action.p_name) ? 'z-disabled' : ''}`} onClick={this.handleActionClick.bind(this, action)}>{action.p_name}</View>
+            return <View className={`u-list-item`} onClick={this.handleActionClick.bind(this, action)}>{action.p_name}</View>
           })}
         </View>
       </View>

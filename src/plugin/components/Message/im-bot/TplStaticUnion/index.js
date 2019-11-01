@@ -36,7 +36,7 @@ class StaticUnion extends Component {
     }
     // TODO: 人工判断
     if (type === 'block') {
-      if (this.state.disableList.includes(label)) { return }
+      // if (this.state.disableList.includes(label)) { return }
       // 判断是否是机器人
       if (!get('isRobot')) {
         this.setState((state) => ({
@@ -75,7 +75,7 @@ class StaticUnion extends Component {
                   'image': <GImg maxWidth={220} src={union.detail.url} onClick={this.previewImage.bind(this, union.detail.url)}></GImg>,
                   'text': <View className="u-text">{union.detail.label}</View>,
                   'richText': <View className="u-richText"><ParserRichText html={union.detail.label} onLinkpress={this.handleLinkpress}></ParserRichText></View>,
-                  'link': <View className={`u-link ${disableList.includes(union.detail.label)? 'z-disabled' : ''}`} onClick={this.handleLinkClick.bind(this, union.detail)}>{union.detail.label}</View>
+                  'link': <View className={`u-link`} onClick={this.handleLinkClick.bind(this, union.detail)}>{union.detail.label}</View>
                 }[
                   union.type
                 ]

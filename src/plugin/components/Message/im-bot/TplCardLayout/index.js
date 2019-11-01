@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
-
+import { get } from '@/plugin/global_config';
 import { setClipboardData } from '@/utils/extendTaro';
 import { sendTemplateText } from '@/actions/chat';
 
@@ -32,6 +32,11 @@ class CardLayout extends Component {
 
   // 外层action点击
   handleActionClick = () => {
+    // 判断是否是机器人
+    if (!get('isRobot')) {
+      return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+    }
+
     const action = _get(this, 'props.tpl.action', {});
     if (action.type === 'url') {
       setClipboardData(action.target);
@@ -55,6 +60,11 @@ class CardLayout extends Component {
 
   // 内层action点击
   handleCardClick = action => {
+    // 判断是否是机器人
+    if (!get('isRobot')) {
+      return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+    }
+
     if (action.type === 'url') {
       setClipboardData(action.target);
     }

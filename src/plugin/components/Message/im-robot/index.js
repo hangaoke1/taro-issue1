@@ -100,7 +100,7 @@ export default function RobotView(props) {
 
   // 点击关联问题
   function handleQuestionClick(q) {
-    if (disableList.includes(q)) { return }
+    // if (disableList.includes(q)) { return }
 
     // 判断是否是机器人
     if (!get('isRobot')) {
@@ -151,11 +151,11 @@ export default function RobotView(props) {
           <View className="u-qalist">
             {item.list.map(q => (
               <View
-                className={`u-qaitem ${disableList.includes(q) ? 'z-disabled' : '' }`}
+                className={`u-qaitem`}
                 key={q.id}
                 onClick={() => handleQuestionClick(q)}
               >
-                <View className={`u-dot ${disableList.includes(q) ? 'z-disabled' : '' }`} />
+                <View className={`u-dot`} />
                 {q.question}
               </View>
             ))}

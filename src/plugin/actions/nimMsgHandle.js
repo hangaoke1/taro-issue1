@@ -40,6 +40,8 @@ export const assignKefu = (content) => {
   const oldSession = get('store').getState().Session;
 
   const isSameSession = _get(oldSession, 'sessionid') === content.sessionid;
+  // clear botlist
+  dispatch({ type: SET_BOT_LIST, value: [], len: 0 });
 
   // init session
   dispatch({ type: INIT_SESSION, session: content });
