@@ -12,6 +12,8 @@
 
 2. 七鱼对外提供名字为chat的页面插件，请确保在配置企业appKey后再跳转到chat页面申请客服。
 
+3. 七鱼插件大小约为1.2M，微信目前闲置单个包的大小最大为2M，如遇到引入插件后包大小超过2m的情况，建议您采用插件分包记载。[微信使用插件文档](https://developers.weixin.qq.com/miniprogram/dev/framework/plugin/using.html)-在分包内引入插件代码包
+
 ### 接入代码示例
 
 引入插件代码包:使用插件前，使用者要在 app.json 中声明需要使用的插件
@@ -118,7 +120,7 @@ myPluginInterface._$setUserInfo(userInfo);
 
 #### _$setUserInfoSync(userInfo)
 
-_$setUserInfo的同步接口
+_$setUserInfo的同步方法。
 
 ### 用户VIP等级
 
@@ -142,7 +144,7 @@ myPluginInterface._$setVipLevel(10);
 
 ####  _$setVipLevelSync(level)
 
-_$setVipLevel的同步接口
+_$setVipLevel的同步方法。
 
 ### 功能配置
 
@@ -185,7 +187,60 @@ myPluginInterface._$configProduct(product);
 
 ##### _$configProductSync(product)
 
-_$configProduct的同步接口
+_$configProduct的同步方法。
+
+#### 自定义分配客服
+
+若企业有多个咨询入口，为提高咨询效率，可在不同咨询入口设置对应的人工客服接待。
+
+##### _$configStaffId(staffid)
+
+```js
+var myPluginInterface = requirePlugin('myPlugin');
+
+myPluginInterface._$configStaffId(30010);
+```
+
+指定ID后，进入聊天页面时，会直接以此ID去请求对应的人工客服。
+
+人工客服ID查询：管理端-应用-在线系统-设置-会话流程-会话分配-ID查询-客服及客服组ID查询
+
+##### _$configStaffIdSync(staffid)
+
+ _$configStaffId的同步方法。
+
+#### 自定义分配客服组
+
+若企业有多个咨询入口，为提高咨询效率，可在不同咨询入口设置对应的人工客服组接待。
+
+##### _$configGroupId(groupid)
+
+```js
+var myPluginInterface = requirePlugin('myPlugin');
+
+myPluginInterface. _$configGroupId(30330);
+```
+
+指定ID后，进入聊天页面时，会直接以此ID去请求对应的客服组，服务组会随机分配客服组中可用客服接待。
+
+客服组ID查询：管理端-应用-在线系统-设置-会话流程-会话分配-ID查询-客服及客服组ID查询
+
+#### 设置聊天窗口的标题
+
+七鱼插件提供自定义聊天窗口chat页面的标题（即微信小程序的navigationBarTitleText值）的功能。（默认值为在线客服）
+
+##### _$configTitle(title)
+
+```js
+var myPluginInterface = requirePlugin('myPlugin');
+
+myPluginInterface._$configTitle('七鱼客服');
+```
+
+##### _$configTitleSync(title)
+
+_$configTitle的同步方法。
+
 
 ### 自定义事件
 
