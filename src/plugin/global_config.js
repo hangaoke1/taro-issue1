@@ -46,13 +46,15 @@ const globalConfig = {
 export const get = (key) => globalConfig[key];
 
 export const set = (key, value) => {
-  if (key == 'domain') {
-    if (value == 'https://qytest.netease.com') {
-      globalConfig['NIM'] = NIM_TEST;
-      console.log(NIM_TEST);
-    } else {
-      globalConfig['NIM'] = NIM;
-      console.log(NIM);
+  if (process.env.NODE_ENV === 'development') {
+    if (key == 'domain') {
+      if (value == 'https://qytest.netease.com') {
+        globalConfig['NIM'] = NIM_TEST;
+        console.log(NIM_TEST);
+      } else {
+        globalConfig['NIM'] = NIM;
+        console.log(NIM);
+      }
     }
   }
   globalConfig[key] = value;
