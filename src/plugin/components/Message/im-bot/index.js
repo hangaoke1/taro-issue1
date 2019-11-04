@@ -155,7 +155,11 @@ export default class Bot extends Component {
     let className = 'm-bot';
     className += item.fromUser ? ' m-bot-right' : ' m-bot-left';
     let themeColor = item && item.fromUser ? _get(Setting, 'setting.dialogColor') : '';
-    if (tpl.id && tpl.id.indexOf('qiyu_template') > -1) {
+    if ([
+      'qiyu_template_goods',
+      'qiyu_template_item',
+      'qiyu_template_botForm'
+    ].includes(tpl.id)) {
       themeColor = '#fff';
     }
 
