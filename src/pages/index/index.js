@@ -21,8 +21,8 @@ export default class Index extends Component {
 
   componentWillMount () {
     // myPluginInterface._$configAppKey('6dff3dbbe41efc598f74eac5d547355c');
-    myPluginInterface._$configAppKey('f13509f5e8b8e1fbb388b3ddbee238c2');
-    myPluginInterface.__configDomain('https://qytest.netease.com');
+    myPluginInterface._$configAppKey('ba5e6e832ae0cf651df1540eaabc62eb');
+    // myPluginInterface.__configDomain('https://qytest.netease.com');
     myPluginInterface.__configAppId('f13509f5e8b8e1fbb388b3ddbee238c2');
   }
 
