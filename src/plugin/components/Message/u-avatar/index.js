@@ -40,7 +40,7 @@ export default function Avatar(props) {
             <Image
                 className='u-avatar'
                 src={avatarSrc}
-                style={`${themeColor ? 'background-color: ' + themeColor : ''}`}
+                style={`background-color: ${ themeColor || '#ccc'}`}
             />
         </View>
     )

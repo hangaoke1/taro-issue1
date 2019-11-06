@@ -1,4 +1,5 @@
 import Taro from '@tarojs/taro';
+import { useSelector } from '@tarojs/redux';
 import TextView from '../im-text/text';
 import { View } from '@tarojs/components';
 import { anctionHandle } from '../../../actions/actionHandle';
@@ -7,6 +8,7 @@ import './action.less';
 
 export default function ActionView(props) {
   const item = props.item;
+  const Setting = useSelector(state => state.Setting);
 
   const actionFun = (data) => {
     if(item.disabled)
@@ -41,7 +43,9 @@ export default function ActionView(props) {
       {
         item.type == 'action' ?
           (<View className='m-action'>
-            <View className={`${item.disabled ? 'u-action-btn-disabled' : ''} ${item.colorful ? 'u-action-btn-colorful' : 'u-action-btn'}`}
+            <View 
+              className={`${item.disabled ? 'u-action-btn-disabled' : ''} ${item.colorful ? 'u-action-btn-colorful' : 'u-action-btn'}`}
+              style={`${!item.disabled && item.colorful ? Setting.themeButton: ''}`}
               onClick={(ev) => { actionFun({sessionid: item.sessionid}) }}>{item.actionText}
             </View>
           </View>) : null

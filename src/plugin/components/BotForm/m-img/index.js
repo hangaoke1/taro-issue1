@@ -1,4 +1,5 @@
 import Taro from '@tarojs/taro';
+import { useSelector } from '@tarojs/redux';
 import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
@@ -9,6 +10,7 @@ import Iconfont from '@/components/Iconfont';
 import './index.less';
 
 export default function MImg(props) {
+  const Setting = useSelector(state => state.Setting);
   const value = _get(props, 'value');
 
   function handleUpload() {
@@ -53,7 +55,7 @@ export default function MImg(props) {
           </View>
         </View>
       ) : (
-        <View className="u-action" onClick={handleUpload}>
+        <View className="u-action" onClick={handleUpload} style={Setting.themeTextButton}>
           上传图片
         </View>
       )}

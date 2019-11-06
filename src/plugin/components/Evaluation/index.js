@@ -16,6 +16,7 @@ import './index.less';
 export default function Evaluation(props) {
 
   const Evaluation = useSelector(state => state.Evaluation);
+  const Setting = useSelector(state => state.Setting);
 
   const { currentEvaluation, evaluationSetting } = Evaluation;
   const { tagList, name, value, remarks, evaluation_resolved, selectTagList } = currentEvaluation;
@@ -147,7 +148,7 @@ export default function Evaluation(props) {
           : null
       }
       <View className="m-evaluation_submit">
-        <Button className="u-submit" onClick={handleSubmit}>提交评价</Button>
+        <Button className="u-submit" onClick={handleSubmit} style={Setting.themeButton}>提交评价</Button>
       </View>
     </View>
   )

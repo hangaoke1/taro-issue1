@@ -38,6 +38,7 @@ export default function RobotView(props) {
   } = item;
   const dispatch = useDispatch();
   const Session = useSelector(state => state.Session);
+  const Setting = useSelector(state => state.Setting);
 
   // 根据index修改消息内容
   function changeMessage(message) {
@@ -100,7 +101,6 @@ export default function RobotView(props) {
 
   // 点击关联问题
   function handleQuestionClick(q) {
-    // if (disableList.includes(q)) { return }
 
     // 判断是否是机器人
     if (!get('isRobot')) {
@@ -151,11 +151,12 @@ export default function RobotView(props) {
           <View className="u-qalist">
             {item.list.map(q => (
               <View
-                className={`u-qaitem`}
+                className="u-qaitem"
+                style={Setting.themeText}
                 key={q.id}
                 onClick={() => handleQuestionClick(q)}
               >
-                <View className={`u-dot`} />
+                <View className={`u-dot`} style={Setting.themeBg}/>
                 {q.question}
               </View>
             ))}
@@ -166,14 +167,14 @@ export default function RobotView(props) {
             <View className="u-button" onClick={() => handleAction(2)}>
               <Iconfont
                 type="icon-dianzanx"
-                color={evaluation === 2 ? '#5092e1' : '#ccc'}
+                color={evaluation === 2 ? Setting.themeColor : '#ccc'}
                 size="16"
               />
             </View>
             <View className="u-button" onClick={() => handleAction(3)}>
               <Iconfont
                 type="icon-dianchapingx"
-                color={evaluation === 3 ? '#5092e1' : '#ccc'}
+                color={evaluation === 3 ? Setting.themeColor : '#ccc'}
                 size="16"
               />
             </View>

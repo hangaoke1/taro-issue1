@@ -1,4 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
+import { connect } from '@tarojs/redux';
 import { View, CoverView } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
@@ -11,7 +12,12 @@ import CardLayoutList from '@/components/Bot/m-card-layout-list';
 import MDetailViewList from '@/components/Bot/m-detail-view-list';
 
 import './index.less';
-
+@connect(
+  ({ Setting }) => ({
+    Setting
+  }),
+  dispatch => ({})
+)
 class DetailView extends Component {
   static propTypes = {
     item: PropTypes.object,
@@ -29,6 +35,12 @@ class DetailView extends Component {
   handleClose = () => {
     this.setState({ visible: false });
   };
+
+  handleLinklongpress = (action) => {
+    if (action.type === 'url') {
+      setClipboardData(action.target);
+    }
+  }
 
   handleActionClick = action => {
     // 判断是否是机器人
@@ -59,7 +71,7 @@ class DetailView extends Component {
   };
 
   render() {
-    const { item, tpl } = this.props;
+    const { item, tpl, Setting } = this.props;
     const { visible } = this.state;
     return item ? (
       <View className="m-detail-view">
@@ -78,6 +90,8 @@ class DetailView extends Component {
           <View
             className="u-action"
             onClick={this.handleActionClick.bind(this, tpl.thumbnail.action)}
+            onLongPress={this.handleLinklongpress.bind(this, tpl.thumbnail.action)}
+            style={`color: ${Setting.themeColor}`}
           >
             {tpl.thumbnail.action.label}
           </View>

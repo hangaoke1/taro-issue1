@@ -147,14 +147,14 @@ export default class Bot extends Component {
         break;
       }
       default: {
-        // layout = <View className="u-tip">暂不支持该bot类型{tpl.id}</View>;
         layout = <View className="u-tip">微信小程序不支持展示该消息类型</View>;
       }
     }
 
-    let className = 'm-bot';
-    className += item.fromUser ? ' m-bot-right' : ' m-bot-left';
+    let className = item.fromUser ? 'm-bot m-bot-right' : 'm-bot m-bot-left';
     let themeColor = item && item.fromUser ? _get(Setting, 'setting.dialogColor') : '';
+
+    // 下列模版特殊处理聊天内容却与b背景颜色
     if ([
       'qiyu_template_goods',
       'qiyu_template_item',
@@ -163,10 +163,11 @@ export default class Bot extends Component {
       themeColor = '#fff';
     }
 
+    // 下列模版特殊处理聊天内容区域宽度
     if ([
-      'qiyu_template_goods',
       'bubble_list',
       'bubble_node_list',
+      'qiyu_template_goods',
       'qiyu_template_item'
     ].includes(tpl.id)) {
       className += ' z-large';
@@ -179,7 +180,7 @@ export default class Bot extends Component {
         <View className="u-content">
           <View className="u-text" style={`${item.fromUser ? 'background-color: ' + themeColor : ''}`}>{layout}</View>
           {showFormAction ? (
-            <View className="u-action" onClick={this.showForm}>
+            <View className="u-action" onClick={this.showForm} style={Setting.themeText}>
               填写表单
             </View>
           ) : null}

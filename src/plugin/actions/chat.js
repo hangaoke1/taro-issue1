@@ -334,14 +334,10 @@ export const evalRobotAnswer = (msgidClient, evaluation) => {
  * @param {string} url 链接地址
  */
 export const parseUrlAction = url => {
-  // console.log('----点击富文本a标签----', url);
-
   // 处理转人工请求
   if (url === 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
     const isRobot = get('isRobot');
-    if (!isRobot) {
-      // console.log('----非机器人情况下无法转人工----');
-    } else {
+    if (isRobot) {
       NIM.applyKefu({
         stafftype: 1
       });

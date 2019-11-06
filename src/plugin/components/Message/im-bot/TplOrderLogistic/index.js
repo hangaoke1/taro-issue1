@@ -3,7 +3,7 @@ import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import { sendTemplateText } from '@/actions/chat'
-import { setClipboardData } from '@/utils/extendTaro';
+import { setClipboardData, showActionTel, showWakeTel } from '@/utils/extendTaro';
 import { get } from '@/plugin/global_config';
 
 import './index.less';
@@ -18,6 +18,14 @@ class OrderLogistic extends Component {
 
   componentDidMount() {}
 
+  handleLinklongpress = () => {
+    const type =  _get(this, 'props.tpl.action.type', '');
+    const target = _get(this, 'props.tpl.action.target', '');
+    if (type === 'tel') {
+      showActionTel(target)
+    }
+  }
+
   // 查看完整物流
   handleMoreClick = () => {
     const type =  _get(this, 'props.tpl.action.type', '');
@@ -30,6 +38,9 @@ class OrderLogistic extends Component {
         return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
       }
       setClipboardData(target);
+    }
+    if (type === 'tel') {
+      showWakeTel(target)
     }
     // http://jira.netease.com/browse/YSF-30788
     // if (type === 'block') {
@@ -63,7 +74,7 @@ class OrderLogistic extends Component {
           })}
         </View>
         {tpl.action ? (
-          <View className="u-action" onClick={this.handleMoreClick}>
+          <View className="u-action" onClick={this.handleMoreClick} onLongPress={this.handleLinklongpress}>
             {tpl.action.p_name}
           </View>
         ) : null}

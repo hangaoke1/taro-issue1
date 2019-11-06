@@ -22,8 +22,8 @@ export default function ChatBox(props) {
   const [lock, setLock] = useState(false); // HACK: 防止键盘弹起动画过程中点击表情从而出现键盘遮挡bug
   const [type, setType] = useState('keyboard'); // voice 语音 keyboard键盘
   const options = useSelector(state => state.Options);
-  const setting = useSelector(state => state.Setting.setting);
-  const placeholder = _get(setting, 'placeHolder');
+  const Setting = useSelector(state => state.Setting);
+  const placeholder = _get(Setting, 'setting.placeHolder');
   const dispatch = useDispatch();
 
   const corpStatus = useSelector(state => state.CorpStatus);
@@ -176,7 +176,7 @@ export default function ChatBox(props) {
         className={`u-plus-icon ${options.showFunc ? 'u-show' : ''}`}
         onTouchStart={handlePlusClick}
       >
-        <Iconfont type="icon-chat-more" color="#666" size="28" />
+        <Iconfont type="icon-plus-circlex" color={Setting.themeColor} size="28" />
       </View>
     </View>
   );

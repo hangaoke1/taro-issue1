@@ -16,52 +16,52 @@ class ParserRichText extends Taro.Component {
 
   // 长按事件
   handleLinklongpress = event => {
-    let url = unescape(event.detail)
+    let url = unescape(event.detail);
     event.preventDefault();
     event.stopPropagation();
-    if (url.startsWith('tel://')) {
-      const tel = url.split('tel://')[1];
+    if (url.startsWith('tel:')) {
+      const tel = url.split('tel:')[1];
       Taro.showActionSheet({
         itemList: ['呼叫', '复制号码', '添加到手机通讯录'],
-        success (res) {
+        success(res) {
           if (res.tapIndex === 0) {
             Taro.makePhoneCall({
               phoneNumber: tel
-            })
+            });
           }
           if (res.tapIndex === 1) {
             Taro.setClipboardData({
               data: tel,
               success() {
                 Taro.showToast({
-                  title: '号码已复制',
-                })
+                  title: '号码已复制'
+                });
               }
-            })
+            });
           }
           if (res.tapIndex === 2) {
             Taro.addPhoneContact({
               // firstName: tel,
               mobilePhoneNumber: tel
-            })
+            });
           }
         },
-        fail (res) {
-          console.log(res.errMsg)
+        fail(res) {
+          console.log(res.errMsg);
         }
-      })
+      });
       return false;
     }
-  }
+  };
 
   handleLinkpress = event => {
-    let url = unescape(event.detail)
-    if (url.startsWith('tel://')) {
-      const tel = url.split('tel://')[1];
+    let url = unescape(event.detail);
+    if (url.startsWith('tel:')) {
+      const tel = url.split('tel:')[1];
       Taro.makePhoneCall({
         phoneNumber: tel
-      })
-      console.log('处理电话号码短按')
+      });
+      console.log('处理电话号码短按');
       return;
     }
 
@@ -71,18 +71,19 @@ class ParserRichText extends Taro.Component {
           data: url,
           success() {
             Taro.showToast({
-              title: '链接已复制',
-            })
+              title: '链接已复制'
+            });
           }
-        })
+        });
       }
     }
-    this.props.onLinkpress && this.props.onLinkpress({ type: event.type, detail: url });
+    this.props.onLinkpress &&
+      this.props.onLinkpress({ type: event.type, detail: url });
   };
 
   handleError = error => {
-    console.log('error:', error)
-  }
+    console.log('error:', error);
+  };
 
   render() {
     let {
@@ -105,7 +106,7 @@ class ParserRichText extends Taro.Component {
 
     html = text2emoji(html);
 
-    const style = Object.assign({}, tagStyle, customerTagStyle)
+    const style = Object.assign({}, tagStyle, customerTagStyle);
 
     return (
       <parser
@@ -122,7 +123,7 @@ class ParserRichText extends Taro.Component {
         onLinklongpress={this.handleLinklongpress}
         onError={this.handleError}
       />
-    )
+    );
   }
 }
 

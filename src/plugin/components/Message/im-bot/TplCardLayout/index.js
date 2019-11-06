@@ -1,9 +1,10 @@
 import Taro, { Component } from '@tarojs/taro';
+import { connect } from '@tarojs/redux';
 import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import { get } from '@/plugin/global_config';
-import { setClipboardData } from '@/utils/extendTaro';
+import { setClipboardData, showActionTel, showWakeTel } from '@/utils/extendTaro';
 import { sendTemplateText } from '@/actions/chat';
 
 import FloatLayout from '@/components/FloatLayout';
@@ -12,6 +13,12 @@ import CardLayoutListLoad from '@/components/Bot/m-card-layout-list-load';
 
 import './index.less';
 
+@connect(
+  ({ Setting }) => ({
+    Setting
+  }),
+  dispatch => ({})
+)
 class CardLayout extends Component {
   static propTypes = {
     item: PropTypes.object,
@@ -30,6 +37,13 @@ class CardLayout extends Component {
     this.setState({ visible: false });
   };
 
+  handleLinklongpress = () => {
+    const action = _get(this, 'props.tpl.action', {});
+    if (action.type === 'tel') {
+      showActionTel(action.target);
+    }
+  }
+
   // 外层action点击
   handleActionClick = () => {
     // 判断是否是机器人
@@ -40,6 +54,9 @@ class CardLayout extends Component {
     const action = _get(this, 'props.tpl.action', {});
     if (action.type === 'url') {
       setClipboardData(action.target);
+    }
+    if (action.type === 'tel') {
+      ishowWakeTel(action.target)
     }
     if (action.type === 'block') {
       sendTemplateText({
@@ -85,7 +102,7 @@ class CardLayout extends Component {
   };
 
   render() {
-    const { item, tpl } = this.props;
+    const { item, tpl, Setting } = this.props;
     const { visible } = this.state;
 
     return item ? (
@@ -112,7 +129,7 @@ class CardLayout extends Component {
           list={tpl.list}
           onItemClick={this.handleCardClick.bind(this)}
         ></CardLayoutList>
-        <View className="u-action" onClick={this.handleActionClick}>
+        <View className="u-action" style={Setting.themeText} onClick={this.handleActionClick} onLongPress={this.handleLinklongpress}>
           {tpl.action.label}
         </View>
       </View>
