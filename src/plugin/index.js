@@ -59,7 +59,7 @@ export const _$setUserInfoSync = (userInfo) => {
   if (Object.prototype.toString.call(userInfo) === "[object Object]" || Object.prototype.toString.call(userInfo) === "[object Null]") {
     // vip
     if (userInfo && userInfo.level) {
-      _$setVipLevel(userInfo.level);
+      _$setVipLevelSync(userInfo.level);
     }
 
     if (userInfo && userInfo.userId) {
@@ -80,7 +80,7 @@ export const _$setUserInfo = (userInfo) => {
           try {
             // vip
             if (userInfo && userInfo.level) {
-              _$setVipLevel(userInfo.level);
+              _$setVipLevelSync(userInfo.level);
             }
 
             if (userInfo && userInfo.userId) {
@@ -107,7 +107,7 @@ export const _$setUserInfo = (userInfo) => {
 export const _$logoutSync = () => {
   set('foreignid', '');
   set('deviceid', initDeviceid(true));
-  _$setUserInfo(null);
+  _$setUserInfoSync(null);
   // 注销后yunxin账户都会变化，需要断掉当前会话
   exitSession();
 }
@@ -119,7 +119,7 @@ export const _$logout = () => {
       try{
         set('foreignid', '');
         set('deviceid', initDeviceid(true));
-        _$setUserInfo(null);
+        _$setUserInfoSync(null);
         // 注销后yunxin账户都会变化，需要断掉当前会话
         exitSession();
         resolve('logout success');
