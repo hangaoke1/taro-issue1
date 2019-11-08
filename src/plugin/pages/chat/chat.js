@@ -21,6 +21,8 @@ import BotBubbleList from '../../components/BotBubbleList';
 import BotCard from '../../components/BotCard';
 import FloatButton from '../../components/FloatButton';
 
+import {get} from '../../global_config';
+
 import { NAVIGATIONBAR_TITLE } from '../../constants';
 
 import {
@@ -156,7 +158,11 @@ class Chat extends Component {
     eventbus.off('push_message', this.scrollToBottom);
   }
 
-  componentDidShow() {}
+  componentDidShow() {
+    Taro.setNavigationBarTitle({
+      title: get('title')
+    });
+  }
 
   componentDidHide() {}
 
