@@ -12,6 +12,8 @@
 
 2. 七鱼对外提供名字为chat的页面插件，请确保在配置企业appKey后再跳转到chat页面申请客服。
 
+3. 七鱼插件大小约为1.2M，微信目前闲置单个包的大小最大为2M，如遇到引入插件后包大小超过2m的情况，建议您采用插件分包记载。[微信使用插件文档](https://developers.weixin.qq.com/miniprogram/dev/framework/plugin/using.html)-在分包内引入插件代码包
+
 ### 接入代码示例
 
 引入插件代码包:使用插件前，使用者要在 app.json 中声明需要使用的插件
@@ -20,7 +22,7 @@
 {
   "plugins": {
     "myPlugin": {
-      "version": "1.1.0",
+      "version": "1.1.1", //推荐使用最新版本
       "provider": "wxae5e29812005203f"
     }
   }
@@ -42,7 +44,8 @@
 ```js
 var myPluginInterface = requirePlugin('myPlugin');
 
-myPluginInterface_$configAppKey('3858be3c20ceb6298575736cf27858a7');
+myPluginInterface._$configAppKey('3858be3c20ceb6298575736cf27858a7');
+myPluginInterface.__configDomain("https://qiyukf.com"); // 1.1.1版本以前需要手动配置下七鱼服务器域名
 ```
 
 #### _$configAppKeySync(appKey)
@@ -117,7 +120,7 @@ myPluginInterface._$setUserInfo(userInfo);
 
 #### _$setUserInfoSync(userInfo)
 
-_$setUserInfo的同步接口
+_$setUserInfo的同步方法。
 
 ### 用户VIP等级
 
@@ -141,7 +144,7 @@ myPluginInterface._$setVipLevel(10);
 
 ####  _$setVipLevelSync(level)
 
-_$setVipLevel的同步接口
+_$setVipLevel的同步方法。
 
 ### 功能配置
 
@@ -160,7 +163,7 @@ product的内容如下：
 | note   | 商品备注信息（价格，套餐等） | 长度限制为 100 字符，超过自动截断。 |
 | picture   | 缩略图图片的 url。 | 该 url 需要没有跨域访问限制，否则在客服端会无法显示。 |
 | url   | 商品信息详情页 url。 | 长度限制为 1000 字符，超长不会自动截断，但会发送失败。 |
-| show   | 是否在访客端显示商品消息。 | 默认为0，即客服能看到此消息，但访客看不到，也不知道该消息已发送给客服。 |
+| isShow   | 是否在访客端显示商品消息。 | 默认为0，即客服能看到此消息，但访客看不到，也不知道该消息已发送给客服。 |
 | tags   | 展示在客服端的一些可操作入口 | 默认为空，每个 tag 在客服端将展示为一个按钮. |
 | sendByUser   | 是否需要用户手动发送 | 默认为false，当为 true 的时候，商品的下面讲出现一个按钮，用户可以点击该按钮发送商品 |
 | actionText   |手动发送按钮的文本 | 默认文本为发送链接 |
@@ -175,7 +178,7 @@ var product = {
     note: '$2330',
     picture: 'https://img10.360buyimg.com/n5/s75x75_jfs/t4030/290/29851193/293745/d5e2b731/58ac3506Nbb57b5f6.jpg',
     url: 'https://www.qi.163.com/',
-    show: 1,
+    isShow: 1,
     sendByUser: 1
   };
 
@@ -184,7 +187,60 @@ myPluginInterface._$configProduct(product);
 
 ##### _$configProductSync(product)
 
-_$configProduct的同步接口
+_$configProduct的同步方法。
+
+#### 自定义分配客服
+
+若企业有多个咨询入口，为提高咨询效率，可在不同咨询入口设置对应的人工客服接待。
+
+##### _$configStaffId(staffid)
+
+```js
+var myPluginInterface = requirePlugin('myPlugin');
+
+myPluginInterface._$configStaffId(30010);
+```
+
+指定ID后，进入聊天页面时，会直接以此ID去请求对应的人工客服。
+
+人工客服ID查询：管理端-应用-在线系统-设置-会话流程-会话分配-ID查询-客服及客服组ID查询
+
+##### _$configStaffIdSync(staffid)
+
+ _$configStaffId的同步方法。
+
+#### 自定义分配客服组
+
+若企业有多个咨询入口，为提高咨询效率，可在不同咨询入口设置对应的人工客服组接待。
+
+##### _$configGroupId(groupid)
+
+```js
+var myPluginInterface = requirePlugin('myPlugin');
+
+myPluginInterface. _$configGroupId(30330);
+```
+
+指定ID后，进入聊天页面时，会直接以此ID去请求对应的客服组，服务组会随机分配客服组中可用客服接待。
+
+客服组ID查询：管理端-应用-在线系统-设置-会话流程-会话分配-ID查询-客服及客服组ID查询
+
+#### 设置聊天窗口的标题
+
+七鱼插件提供自定义聊天窗口chat页面的标题（即微信小程序的navigationBarTitleText值）的功能。（默认值为在线客服）
+
+##### _$configTitle(title)
+
+```js
+var myPluginInterface = requirePlugin('myPlugin');
+
+myPluginInterface._$configTitle('七鱼客服');
+```
+
+##### _$configTitleSync(title)
+
+_$configTitle的同步方法。
+
 
 ### 自定义事件
 
@@ -210,14 +266,14 @@ _$configProduct的同步接口
 
 #### `_$getAllUnreadCount()` 获取当前未读消息数量
 ```js
-const myPluginInterface = Taro.requirePlugin('myPlugin');
+const myPluginInterface = requirePlugin('myPlugin');
 const total = myPluginInterface._$getAllUnreadCount();
 console.log('当前未读消息总数: ', total)
 ```
 
 #### `_$onunread(cb: function)` 监听未读消息
 ```js
-const myPluginInterface = Taro.requirePlugin('myPlugin');
+const myPluginInterface = requirePlugin('myPlugin');
 myPluginInterface._$onunread(res => {
   const { total, message } = res;
   console.log('当前未读消息总数: ', total)
@@ -227,7 +283,7 @@ myPluginInterface._$onunread(res => {
 
 #### `_$clearUnreadCount()` 清空所有未读消息
 ```js
-const myPluginInterface = Taro.requirePlugin('myPlugin');
+const myPluginInterface = requirePlugin('myPlugin');
 myPluginInterface._$clearUnreadCount(); // 会触发_$onunread 回调
 console.log('未读消息清空完成!');
 ```
