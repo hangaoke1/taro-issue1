@@ -13,12 +13,17 @@ export default class Index extends Component {
 
   state = {
     unReadCount: 0,
-    appId: null
+    appId: '',
+    staffid: '',
+    groupid: '',
+    title: ''
   }
 
   componentWillMount () {
     // myPluginInterface._$configAppKey('6dff3dbbe41efc598f74eac5d547355c');
-    myPluginInterface._$configAppKey('f13509f5e8b8e1fbb388b3ddbee238c2');
+    myPluginInterface._$configAppKey('ba5e6e832ae0cf651df1540eaabc62eb');
+    // myPluginInterface.__configDomain('https://qytest.netease.com');
+    myPluginInterface.__configAppId('f13509f5e8b8e1fbb388b3ddbee238c2');
   }
 
   componentDidMount () {
@@ -56,6 +61,13 @@ export default class Index extends Component {
         appId: Taro.getStorageSync('YSF-APPID')
       })
       myPluginInterface.__configAppId(Taro.getStorageSync('YSF-APPID'));
+    }
+
+    if(Taro.getStorageSync('YSF-TITLE')){
+      this.setState({
+        title: Taro.getStorageSync('YSF-TITLE')
+      })
+      myPluginInterface._$configTitle(Taro.getStorageSync('YSF-TITLE'));
     }
   }
 
@@ -148,18 +160,48 @@ export default class Index extends Component {
     })
   }
 
-  handleBlur = (event) => {
+  handleBlur = (type ,event) => {
     let {value} = event.detail;
-    myPluginInterface.__configAppId(value);
-    Taro.setStorageSync(
-      'YSF-APPID', value
-    )
 
-    Taro.showToast({
-      title: 'appId填写成功',
-      icon: 'none',
-      duration: 1000
-    })
+    if(type == 'appId'){
+      myPluginInterface.__configAppId(value);
+      Taro.setStorageSync(
+        'YSF-APPID', value
+      )
+
+      Taro.showToast({
+        title: 'appId填写成功',
+        icon: 'none',
+        duration: 1000
+      })
+    }else if(type == 'staffid'){
+      myPluginInterface._$configStaffId(value);
+      Taro.showToast({
+        title: 'staffid填写成功',
+        icon: 'none',
+        duration: 1000
+      })
+    }else if(type == 'title'){
+
+      Taro.setStorageSync(
+        'YSF-TITLE', value
+      )
+
+      Taro.showToast({
+        title: 'title填写成功',
+        icon: 'none',
+        duration: 1000
+      })
+      myPluginInterface._$configTitle(value);
+    }
+    else{
+      Taro.showToast({
+        title: 'groupid填写成功',
+        icon: 'none',
+        duration: 1000
+      })
+      myPluginInterface._$configGroupId(value);
+    }
   }
 
   emptyUnread = () => {
@@ -195,9 +237,29 @@ export default class Index extends Component {
           </View>
           <View style='text-align: center;margin: 10px 0;'>消息未读数: {unReadCount}</View>
           <View><Button type="warn" onClick={this.emptyUnread}>清空消息未读数</Button></View>
-          <View>
-            自定义appId:
-            <Input placeholder="null" value={this.state.appId} onBlur={this.handleBlur}></Input>
+          <View className="m-input-item">
+            <Text className="m-input-item_label">自定义appId:</Text>
+            <Input placeholder="输入appId"
+              className="m-input-item_input"
+              value={this.state.appId} onBlur={this.handleBlur.bind(this, 'appId')}></Input>
+          </View>
+          <View className="m-input-item">
+            <Text className="m-input-item_label">客服Id:</Text>
+            <Input placeholder="输入客服Id"
+              className="m-input-item_input"
+              value={this.state.staffid} onBlur={this.handleBlur.bind(this, 'staffid')}></Input>
+          </View>
+          <View className="m-input-item">
+            <Text className="m-input-item_label">客服组Id:</Text>
+            <Input placeholder="输入客服组Id"
+              className="m-input-item_input"
+              value={this.state.groupid} onBlur={this.handleBlur.bind(this, 'groupid')}></Input>
+          </View>
+          <View className="m-input-item">
+            <Text className="m-input-item_label">title自定义:</Text>
+            <Input placeholder="输入聊天界面title"
+              className="m-input-item_input"
+              value={this.state.title} onBlur={this.handleBlur.bind(this, 'title')}></Input>
           </View>
       </View>
     )
