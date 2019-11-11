@@ -697,12 +697,21 @@ export const isShuntEntriesStatus = () => {
 // 访客主动退出会话
 export const exitSession = () => {
   const session = get('store').getState().Session;
+  const dispatch = get('store').dispatch;
 
   let extraParms = {
     sessionid: session.sessionid
   }
 
   NIM && NIM.exitSession(extraParms)
+
+  let message = {
+    type: 'systip',
+    content: '您退出了咨询',
+    time: new Date().getTime()
+  };
+
+  dispatch({ type: PUSH_MESSAGE, message });
 }
 
 // 发送商品链接

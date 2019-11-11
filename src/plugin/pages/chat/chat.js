@@ -6,6 +6,7 @@ import _get from 'lodash/get';
 import { clearUnreadHome } from '@/lib/unread';
 import Index from '../../app';
 import getSystemInfo from '@/lib/systemInfo';
+import { setClipboardData } from '@/utils/extendTaro';
 
 import MessageView from '../../components/Message';
 import ChatBox from '../../components/ChatBox';
@@ -34,7 +35,8 @@ import {
   canSendMessage,
   getSdkSetting,
   unshiftMessage,
-  initMessage
+  initMessage,
+  exitSession
 } from '../../actions/chat';
 import {
   toggleShowFun,
@@ -43,7 +45,8 @@ import {
 } from '../../actions/options';
 import {
   closeEvaluationModal,
-  openEvaluationModal
+  openEvaluationModal,
+  anctionHandle
 } from '../../actions/actionHandle';
 import eventbus from '../../lib/eventbus';
 import { text2em } from '../../utils';
@@ -103,6 +106,7 @@ class Chat extends Component {
     super(props);
     this.createAction();
     getSdkSetting();
+    this.lockEntrance = []; // 锁定输入框上方人工会话快捷入口
     this.state = {
       scrollIntoView: '',
       scrollWithAnimation: true,
@@ -120,12 +124,12 @@ class Chat extends Component {
       // 优化体验
       showLoading: true
     };
-  };
+  }
 
   createAction() {
     const { createAccount: _createAccount } = this.props;
     _createAccount();
-  };
+  }
 
   componentDidMount() {
     setTimeout(() => {
@@ -155,48 +159,53 @@ class Chat extends Component {
 
     this.scrollToBottom(false, 500, true);
     this.handleOffsetCalc();
-  };
+  }
 
   componentWillUnmount() {
     eventbus.off('unshift_message', this.handleUnshiftMessage);
     eventbus.off('push_message', this.handlePushMessage);
     eventbus.off('reset_scrollIntoView', this.handleResetScrollIntoView);
     eventbus.off('video_click', this.handlePlay);
-  };
+  }
 
   handleResetScrollIntoView = () => {
     this.setState({
       scrollIntoView: ''
-    })
+    });
   };
 
   handleUnshiftMessage = (id, finished) => {
     this.state.finished = finished;
     this.setState({
       showLoading: true
-    })
+    });
     setTimeout(() => {
       Taro.hideLoading();
       this.state.loading = false;
       this.setState({
         showLoading: false
-      })
-    }, 1000)
+      });
+    }, 1000);
     setTimeout(() => {
       this.setState({
         scrollIntoView: id,
-        scrollWithAnimation: false,
+        scrollWithAnimation: false
       });
-    }, 500)
+    }, 500);
   };
 
   handlePushMessage = () => {
-    this.scrollToBottom(true, 300, false)
-  }
+    this.scrollToBottom(true, 300, false);
+  };
   // 重置底部区域
   scrollToBottom = (scrollWithAnimation = true, delay = 300, force = true) => {
-
-    if (this.state.scrollIntoView !== '' && this.state.scrollIntoView !== 'm-bottom' && !force) { return; }
+    if (
+      this.state.scrollIntoView !== '' &&
+      this.state.scrollIntoView !== 'm-bottom' &&
+      !force
+    ) {
+      return;
+    }
 
     if (this.timer) {
       this.handleOffsetCalc();
@@ -365,7 +374,44 @@ class Chat extends Component {
       direction: 0
     });
   };
+  // 点击人工会话下快捷入口
+  handleQuickEntryClick = entry => {
+    if (this.lockEntrance.includes(entry.label)) { return }
+    this.lockEntrance.push(entry.label)
+    setTimeout(() => { this.lockEntrance = this.lockEntrance.filter(item => item !== entry.label )}, 1000)
 
+    switch(entry.action) {
+      // 链接外跳
+      case 'open_link':
+        setClipboardData(entry.data);
+        break;
+      // 评价
+      case 'evaluate':
+        anctionHandle('evaluation', {
+          entryid: '',
+          stafftype: 0
+        })
+        break;
+      // 关闭会话
+      case 'close_session':
+        Taro.showModal({
+          title: '',
+          content: '确认退出对话?',
+        })
+          .then(res => {
+            if (res.confirm) {
+              exitSession();
+            }
+          })
+        break;
+      // 自定义事件
+      case 'custom':
+        eventbus.trigger('on_entrance_click', entry)
+        break;
+      default:
+        console.warn('暂不支持该类型快捷入口', entry)
+    }
+  }
   // 点击bot快捷入口
   handleBotClick = bot => {
     const label = bot.label;
@@ -515,8 +561,10 @@ class Chat extends Component {
   };
 
   handleOnScrollToUpper = () => {
-    if (!canSendMessage()) { return; }
-    const uuid = _get(this.props, 'Message[0].uuid')
+    if (!canSendMessage()) {
+      return;
+    }
+    const uuid = _get(this.props, 'Message[0].uuid');
     if (!uuid) {
       return;
     }
@@ -527,10 +575,10 @@ class Chat extends Component {
     Taro.showLoading();
     setTimeout(() => {
       unshiftMessage(uuid);
-    }, 500)
+    }, 500);
   };
 
-  handleOnScrollToLower = () => {} 
+  handleOnScrollToLower = () => {};
 
   render() {
     const {
@@ -559,6 +607,8 @@ class Chat extends Component {
     const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
 
     const hasBot = isRobot && Bot.len;
+
+    const hasQuickEntry = _get(Setting, 'setting.entranceSetting.length') && Session.code === 200 && Session.stafftype === 0;
 
     const isOpen = Options.showFunc || Options.showPortrait;
 
@@ -607,11 +657,16 @@ class Chat extends Component {
             {Message.map(it => (
               <View key={it.uuid} id={it.uuid}>
                 <MessageView
-                it={it}
-                onImgClick={this.handleImgClick}></MessageView>
+                  it={it}
+                  onImgClick={this.handleImgClick}
+                ></MessageView>
               </View>
             ))}
-            <View style={`height: ${hasBot ? Taro.pxTransform(76) : 0}`}></View>
+            <View
+              style={`height: ${
+                hasBot || hasQuickEntry ? Taro.pxTransform(76) : 0
+              }`}
+            ></View>
             <View id="m-bottom"></View>
           </ScrollView>
         </View>
@@ -656,6 +711,21 @@ class Chat extends Component {
                   onClick={e => this.handleBotClick(bot, e)}
                 >
                   {bot.label}
+                </View>
+              ))}
+            </ScrollView>
+          ) : null}
+          {hasQuickEntry ? (
+            <ScrollView scrollX className="m-bot">
+              {Setting.setting.entranceSetting.map((entry, index) => (
+                <View
+                  className={`m-bot-item`}
+                  style={`border-color: ${Setting.setting.dialogColor ||
+                    '#e1e3e6'};animation-delay: ${index * 200}ms;`}
+                  key={entry.label}
+                  onClick={this.handleQuickEntryClick.bind(this, entry)}
+                >
+                  {entry.label}
                 </View>
               ))}
             </ScrollView>

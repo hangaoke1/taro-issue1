@@ -27,6 +27,17 @@ export default class Index extends Component {
   }
 
   componentDidMount () {
+    // 人工会话下，输入框上方自定义事件类型快捷入口点击回调demo
+    myPluginInterface._$onEntranceClick((data) => {
+      // {
+      //   label: "链接外跳",
+      //   action: "open_link",
+      //   data: "https://www.baidu.com"
+      // }
+      console.log('自定义事件触发', data);
+    })
+
+    // 未读消息监听demo
     myPluginInterface._$onunread((obj) => {
       const { total, msg } = obj;
       console.log('监听到未读消息: ', total, msg)
@@ -35,6 +46,7 @@ export default class Index extends Component {
       })
     })
 
+    // doc、pdf等文档打开demo
     myPluginInterface._$onFileOpenAction((fileObj) => {
       const name = fileObj.name || '';
       const nameArr = name.split('.');

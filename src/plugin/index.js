@@ -370,3 +370,13 @@ export const _$configTitleSync = title => {
     throw new DataFormatError('title');
   }
 }
+
+/**
+ * 人工会话下，输入框上方自定义事件类型快捷入口点击
+ * @param {fun} cb
+ */
+export const _$onEntranceClick = (cb) => {
+  eventbus.on('on_entrance_click', (data) => {
+    cb(data);
+  })
+}

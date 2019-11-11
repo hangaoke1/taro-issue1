@@ -257,6 +257,19 @@ _$configTitle的同步方法。
 | url | String | 访问的链接地址 |
 | from   | String | 链接访问的来源模块 |
 
+#### 输入框上方快捷入口点击响应
+
+`人工会话`下输入框上方快捷入口`自定义类型 action = custom`点击响应
+
+##### _$onEntranceClick(cb: function) 监听响应操作
+
+回调函数中参数格式：
+
+| 字段    | 类型   | 描述  |
+| :----: | :----: | :---- |
+| action | String | 事件类型[custom] |
+| label   | String | 快捷入口名称 |
+| data   | String | 快捷入口自定义数据 |
 
 ### 用户注销
 
