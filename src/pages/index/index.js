@@ -65,7 +65,7 @@ export default class Index extends Component {
 
     if(Taro.getStorageSync('YSF-APPKEY') && Taro.getStorageSync('YSF-DOMAIN')){
       myPluginInterface._$configAppKey(Taro.getStorageSync('YSF-APPKEY'));
-      myPluginInterface.__configDomain( Taro.getStorageSync('YSF-DOMAIN'));
+      myPluginInterface.__configDomain(Taro.getStorageSync('YSF-DOMAIN'));
     }
 
     if(Taro.getStorageSync('YSF-APPID')){

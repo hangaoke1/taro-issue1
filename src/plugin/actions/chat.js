@@ -35,7 +35,7 @@ export const getSdkSetting = () => {
   if (!appKey) return;
   return querySdkSetting({
     appKey,
-    fromType: 'ios'
+    fromType: 'wx_sdk'
   }).then(res => {
     console.log('获取访客端配置', res)
     dispatch({ type: SET_SETTING, value: res.result });
