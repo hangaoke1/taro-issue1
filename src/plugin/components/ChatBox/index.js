@@ -12,7 +12,7 @@ import {
 } from '@/actions/chat';
 
 import Iconfont from '../Iconfont';
-import UVoice from './u-voice'
+import UVoice from './u-voice';
 
 import './index.less';
 
@@ -24,6 +24,7 @@ export default function ChatBox(props) {
   const options = useSelector(state => state.Options);
   const Setting = useSelector(state => state.Setting);
   const placeholder = _get(Setting, 'setting.placeHolder');
+  const Session = useSelector(state => state.Session);
   const dispatch = useDispatch();
 
   const corpStatus = useSelector(state => state.CorpStatus);
@@ -125,31 +126,41 @@ export default function ChatBox(props) {
     };
   }, []);
 
-  function preventTouchMove (e) {
-    e.stopPropagation()
-    return
+  function preventTouchMove(e) {
+    e.stopPropagation();
+    return;
   }
+
+  const isKefuOnline = Session.stafftype === 0 && Session.code === 200; // 客服在线状态
 
   return (
     <View className="m-ChatBox" onTouchMove={preventTouchMove}>
       {this.props.children}
-      <View className="u-voice-icon" onClick={handleLeftClick}>
-        {type === 'keyboard' ? (
-          <Iconfont
-            type="icon-chat-voice-btn"
-            className="u-voice-icon"
-            color="#666"
-          />
-        ) : null}
-        {type === 'voice' ? (
-          <Iconfont
-            type="icon-chat-keyboard"
-            className="u-voice-icon"
-            color="#666"
-          />
-        ) : null}
-      </View>
-      {type === 'keyboard' ? (
+      {isKefuOnline ? (
+        <View className="u-voice-icon" onClick={handleLeftClick}>
+          {type === 'keyboard' ? (
+            <Iconfont
+              type="icon-chat-voice-btn"
+              className="u-voice-icon"
+              color="#666"
+            />
+          ) : null}
+          {type === 'voice' ? (
+            <Iconfont
+              type="icon-chat-keyboard"
+              className="u-voice-icon"
+              color="#666"
+            />
+          ) : null}
+        </View>
+      ) : (
+        <View style="width: 10px;"></View>
+      )}
+      {type === 'voice' && isKefuOnline ? (
+        <View style="flex: 1;">
+          <UVoice></UVoice>
+        </View>
+      ) : (
         <Block>
           <Input
             type="text"
@@ -170,13 +181,16 @@ export default function ChatBox(props) {
             <Iconfont type="icon-chat-portraitmobile" color="#666" size="28" />
           </View>
         </Block>
-      ) : null}
-      {type === 'voice' ? <View style="flex: 1;"><UVoice></UVoice></View> : null}
+      )}
       <View
         className={`u-plus-icon ${options.showFunc ? 'u-show' : ''}`}
         onTouchStart={handlePlusClick}
       >
-        <Iconfont type="icon-plus-circlex" color={Setting.themeColor} size="28" />
+        <Iconfont
+          type="icon-plus-circlex"
+          color={Setting.themeColor}
+          size="28"
+        />
       </View>
     </View>
   );

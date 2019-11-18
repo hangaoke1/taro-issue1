@@ -427,6 +427,8 @@ export const receiveMsg = (msg) => {
  * 收到会话结束的指令
  */
 export const onfinish = (content) => {
+  console.log('----结束会话----', content)
+
   const dispatch = get('store').dispatch;
   let session = get('store').getState().Session;
   const extralMessage = genExtralMessage(session);
@@ -458,9 +460,9 @@ export const onfinish = (content) => {
   })
 
   // 7为用户主动关闭会话，不用提示文案
-  if (close_reason == 7) {
-    return;
-  }
+  // if (close_reason == 7) {
+  //   return;
+  // }
 
   if (close_reason == 0 || close_reason == 2) {
     tip = richmessage || message || REASON_MAP[close_reason];
@@ -471,7 +473,7 @@ export const onfinish = (content) => {
   }
 
   // 是否显示关闭文案的开关
-  if (session.shop.setting.session_end_switch) {
+  if (session.shop.setting.session_end_switch && close_reason != 7) {
     let msg = {
       type: 'action',
       content: tip,

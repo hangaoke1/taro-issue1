@@ -387,10 +387,43 @@ class Chat extends Component {
         break;
       // 评价
       case 'evaluate':
-        anctionHandle('evaluation', {
-          entryid: '',
-          stafftype: 0
-        })
+        // 判断是否已评价或者超时
+        const { openEvaluationModal, Session, CorpStatus } = this.props;
+        const entryItem = _get(CorpStatus, 'entryConfig', []).filter(item => item.key === 'evaluation')[0];
+        const hasEvaluate = entryItem ? entryItem.disabled : true;
+
+        // 已经评价完毕
+        if (hasEvaluate) {
+          Taro.showToast({
+            title: '您已经评价过啦',
+            icon: 'none'
+          })
+          return
+        }
+
+        let sessionCloseTime = Session.closeTime;
+        let curTime = new Date().getTime();
+
+        let evaluation_timeout =
+          (Session.shop.setting &&
+            Session.shop.setting.evaluation_timeout * 60 * 1000) ||
+          10 * 60 * 1000;
+        if (
+          sessionCloseTime &&
+          curTime - sessionCloseTime > evaluation_timeout
+        ) {
+          Taro.showToast({
+            title: '评价已超时，无法进行评价',
+            icon: 'none',
+            duration: 2000
+          });
+          return;
+        }
+        openEvaluationModal();
+        // anctionHandle('evaluation', {
+        //   entryid: '',
+        //   stafftype: 0
+        // })
         break;
       // 关闭会话
       case 'close_session':
@@ -604,11 +637,54 @@ class Chat extends Component {
       scrollIntoView
     } = this.state;
 
-    const isRobot = Session.stafftype === 1 || Session.robotInQueue === 1;
+    const isRobot = (Session.stafftype === 1 || Session.robotInQueue === 1) && Session.code === 200; // 机器人状态
 
     const hasBot = isRobot && Bot.len;
+    
+    const isKefuOnline = Session.stafftype === 0 && Session.code === 200; // 客服在线状态
 
-    const hasQuickEntry = _get(Setting, 'setting.entranceSetting.length') && Session.code === 200 && Session.stafftype === 0;
+    const isKefuOffline = Session.stafftype === 0 && Session.code === 201; // 客服离线状态
+
+    const isKefuQueue = Session.stafftype === 0 && Session.code === 203; // 客服排队状态
+
+    const isSessionOffline = Session.stafftype === 0 && Session.code === 206; // 会话结束状态
+
+    const isKefuQuiet = isKefuOnline && Session.realStaffid === -1; // 访客未说话静默状态
+
+    let quickEntryList = _get(Setting, 'setting.entranceSetting', []); // 人工会话快捷入口列表
+
+    let showEvaluation = _get(CorpStatus, 'entryConfig', []).map(item => item.key === 'evaluation').length; // 是否存在评价入口
+
+    // 人工快捷入口-隐藏评价
+    if (!showEvaluation) {
+      quickEntryList = quickEntryList.filter(item => item.action !== 'evaluate');
+    }
+
+    // 人工快捷入口-隐藏结束会话
+    if (!isKefuOnline) {
+      quickEntryList = quickEntryList.filter(item => item.action !== 'close_session');
+    }
+
+    // 人工快捷入口-隐藏评价/结束会话
+    if (isKefuOffline || isKefuQuiet) {
+      quickEntryList = quickEntryList.filter(item => item.action !== 'evaluate');
+      quickEntryList = quickEntryList.filter(item => item.action !== 'close_session');
+    }
+
+    // 人工快捷入口-排队中&有机器人
+    if (isKefuQueue && Session.robotInQueue) {
+      quickEntryList = []
+    }
+
+    // 人工快捷入口-排队中&无机器人
+    if (isKefuQueue && !Session.robotInQueue) {
+      quickEntryList = quickEntryList.filter(item => item.action !== 'evaluate');
+      quickEntryList = quickEntryList.filter(item => item.action !== 'close_session');
+    }
+
+    
+
+    const hasQuickEntry = !isRobot && quickEntryList && quickEntryList.length && Session.code;
 
     const isOpen = Options.showFunc || Options.showPortrait;
 
@@ -673,9 +749,6 @@ class Chat extends Component {
 
         <View
           className={`u-chatbox`}
-          // style={`transform: translateY(-${
-          //   height ? height + 'px' : isOpen ? Taro.pxTransform(544) : '0'
-          // });`}
           style={`bottom: ${
             height ? height + 'px' : isOpen ? Taro.pxTransform(544) : '0'
           };`}
@@ -715,9 +788,9 @@ class Chat extends Component {
               ))}
             </ScrollView>
           ) : null}
-          {hasQuickEntry ? (
+          { hasQuickEntry ? (
             <ScrollView scrollX className="m-bot">
-              {Setting.setting.entranceSetting.map((entry, index) => (
+              {quickEntryList.map((entry, index) => (
                 <View
                   className={`m-bot-item`}
                   style={`border-color: ${Setting.setting.dialogColor ||
