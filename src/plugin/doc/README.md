@@ -301,6 +301,15 @@ myPluginInterface._$clearUnreadCount(); // 会触发_$onunread 回调
 console.log('未读消息清空完成!');
 ```
 
+## 历史消息处理
+`鉴于小程序性能问题，不建议设置过长历史消息条数`
+
+#### `_$setHistoryLimit(number)` 设置历史消息保留条数，默认100条
+```js
+const myPluginInterface = requirePlugin('myPlugin');
+myPluginInterface._$setHistoryLimit(200); // 保留200条历史消息
+```
+
 ## 文件消息处理
 `默认情况下sdk自行处理包括图片、音频、视频类型的文件打开操作，但是由于小程序对于插件api调用的限制，sdk无法直接打开文档及其他类型的问题，此时需要用户自行监听事件进行处理`
 

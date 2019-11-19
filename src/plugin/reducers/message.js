@@ -6,6 +6,7 @@ import { genUUID16 } from '../lib/uuid';
 import { addUnread } from '@/lib/unread';
 import { timestamp2date } from '../utils';
 import { add, remove, update } from '@/lib/history';
+import { get } from '../global_config';
 
 const initMessages = [];
 
@@ -25,7 +26,7 @@ const Message = (state = initMessages, action) => {
             }
             const noMoreTip = {
               type: 'systip',
-              content: '历史消息已经全部加载完毕，默认保留50条',
+              content: `历史消息已经全部加载完毕，默认保留${get('history_limit') || 100}条`,
               uuid: genUUID16()
             }
             eventbus.trigger('unshift_message', historyTip.uuid, action.finished); // 触发事件

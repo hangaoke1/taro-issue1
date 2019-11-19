@@ -27,6 +27,9 @@ export default class Index extends Component {
   }
 
   componentDidMount () {
+    // 设置历史消息记录保留条数
+    myPluginInterface._$setHistoryLimit(30);
+
     // 人工会话下，输入框上方自定义事件类型快捷入口点击回调demo
     myPluginInterface._$onEntranceClick((data) => {
       // {

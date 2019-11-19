@@ -2,16 +2,18 @@
  * 存储历史消息
  */
 import Taro from '@tarojs/taro';
-
-const LIMIT = 50; // 默认存储50条，FIFO原则
+import { get } from '../global_config';
+ 
+const LIMIT = 100; // 默认存储100条，FIFO原则
 const KEY = 'HISTORY_MESSAGE'; // 存储历史消息的键名
 
 // 添加消息
 export function add (message) {
+  const limit = get('history_limit') || LIMIT;
   const data = Taro.getStorageSync(KEY);
   const oldList = data ? JSON.parse(data) : [];
   const tmp = Array.isArray(message) ? message : [message]
-  const newList = [...oldList, ...tmp].slice(-LIMIT);
+  const newList = [...oldList, ...tmp].slice(-limit);
   Taro.setStorageSync(KEY, JSON.stringify(newList));
 }
 

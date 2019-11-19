@@ -17,6 +17,15 @@ export const anctionHandle = (type, data) => {
         let sessionCloseTime = session.closeTime;
         let curTime = new Date().getTime();
         let evaluation_timeout = session.shop.setting && session.shop.setting.evaluation_timeout*60*1000 || 10*60*1000;
+
+        if (!evaluation.evaluationSetting.list) {
+          Taro.showToast({
+            title: '评价已失效',
+            icon: 'none',
+            duration: 2000
+          })
+          return;
+        }
         if (sessionCloseTime && curTime - sessionCloseTime > evaluation_timeout) {
           Taro.showToast({
             title: '评价已超时，无法进行评价',

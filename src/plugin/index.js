@@ -380,3 +380,13 @@ export const _$onEntranceClick = (cb) => {
     cb(data);
   })
 }
+
+/**
+ * 配置历史消息保存条数量
+ * @param {Number} limit 
+ */
+export const _$setHistoryLimit = (limit) => {
+  limit = Number(limit);
+  if (!Number.isInteger(limit)) return;
+  set('history_limit', limit)
+}
