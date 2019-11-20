@@ -17,6 +17,7 @@ export const anctionHandle = (type, data) => {
         let sessionCloseTime = session.closeTime;
         let curTime = new Date().getTime();
         let evaluation_timeout = session.shop.setting && session.shop.setting.evaluation_timeout*60*1000 || 10*60*1000;
+        const isKefuOnline = Session.stafftype === 0 && Session.code === 200; // 客服在线状态
 
         if (!evaluation.evaluationSetting.list) {
           Taro.showToast({
@@ -26,7 +27,7 @@ export const anctionHandle = (type, data) => {
           })
           return;
         }
-        if (sessionCloseTime && curTime - sessionCloseTime > evaluation_timeout) {
+        if (sessionCloseTime && curTime - sessionCloseTime > evaluation_timeout && !isKefuOnline) {
           Taro.showToast({
             title: '评价已超时，无法进行评价',
             icon: 'none',

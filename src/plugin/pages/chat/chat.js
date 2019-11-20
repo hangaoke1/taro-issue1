@@ -508,6 +508,7 @@ class Chat extends Component {
     switch (key) {
       case 'evaluation':
         const { openEvaluationModal, Session } = this.props;
+        const isKefuOnline = Session.stafftype === 0 && Session.code === 200; // 客服在线状态
 
         let sessionCloseTime = Session.closeTime;
         let curTime = new Date().getTime();
@@ -517,7 +518,7 @@ class Chat extends Component {
           10 * 60 * 1000;
         if (
           sessionCloseTime &&
-          curTime - sessionCloseTime > evaluation_timeout
+          curTime - sessionCloseTime > evaluation_timeout && !isKefuOnline
         ) {
           Taro.showToast({
             title: '评价已超时，无法进行评价',
@@ -778,7 +779,7 @@ class Chat extends Component {
                   className={`m-bot-item ${
                     lockBot.includes(bot.label) ? 'z-bot-disable' : ''
                   }`}
-                  style={`border-color: ${Setting.setting.dialogColor ||
+                  style={`border-color: ${Setting.themeColor ||
                     '#e1e3e6'};animation-delay: ${index * 200}ms;`}
                   key={bot.id}
                   onClick={e => this.handleBotClick(bot, e)}
@@ -793,7 +794,7 @@ class Chat extends Component {
               {quickEntryList.map((entry, index) => (
                 <View
                   className={`m-bot-item`}
-                  style={`border-color: ${Setting.setting.dialogColor ||
+                  style={`border-color: ${Setting.themeColor ||
                     '#e1e3e6'};animation-delay: ${index * 200}ms;`}
                   key={entry.label}
                   onClick={this.handleQuickEntryClick.bind(this, entry)}
