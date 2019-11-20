@@ -380,6 +380,7 @@ class Chat extends Component {
     this.lockEntrance.push(entry.label)
     setTimeout(() => { this.lockEntrance = this.lockEntrance.filter(item => item !== entry.label )}, 1000)
 
+    const { openEvaluationModal, Session, CorpStatus } = this.props;
     switch(entry.action) {
       // 链接外跳
       case 'open_link':
@@ -388,7 +389,6 @@ class Chat extends Component {
       // 评价
       case 'evaluate':
         // 判断是否已评价或者超时
-        const { openEvaluationModal, Session, CorpStatus } = this.props;
         const entryItem = _get(CorpStatus, 'entryConfig', []).filter(item => item.key === 'evaluation')[0];
         const hasEvaluate = entryItem ? entryItem.disabled : true;
 
@@ -427,15 +427,23 @@ class Chat extends Component {
         break;
       // 关闭会话
       case 'close_session':
-        Taro.showModal({
-          title: '',
-          content: '确认退出对话?',
-        })
-          .then(res => {
-            if (res.confirm) {
-              exitSession();
-            }
+        const isSessionOffline = Session.stafftype === 0 && Session.code === 206; // 会话结束状态
+        if (isSessionOffline) {
+          Taro.showToast({
+            title: '您已退出咨询',
+            icon: 'none'
           })
+        } else {
+          Taro.showModal({
+            title: '',
+            content: '确认退出对话?',
+          })
+            .then(res => {
+              if (res.confirm) {
+                exitSession();
+              }
+            })
+        }
         break;
       // 自定义事件
       case 'custom':
@@ -662,9 +670,9 @@ class Chat extends Component {
     }
 
     // 人工快捷入口-隐藏结束会话
-    if (!isKefuOnline) {
-      quickEntryList = quickEntryList.filter(item => item.action !== 'close_session');
-    }
+    // if (!isKefuOnline) {
+    //   quickEntryList = quickEntryList.filter(item => item.action !== 'close_session');
+    // }
 
     // 人工快捷入口-隐藏评价/结束会话
     if (isKefuOffline || isKefuQuiet) {
