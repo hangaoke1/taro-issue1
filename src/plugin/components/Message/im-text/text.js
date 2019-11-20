@@ -15,8 +15,8 @@ export default function TextView(props) {
   const status = _get(item, 'status', 0);
   const { content, type } = item;
   const isRich = type === 'rich';
-  const setting = useSelector(state => state.Setting.setting);
-  const themeColor = item.fromUser ? _get(setting, 'dialogColor') : '#fff';
+  const Setting = useSelector(state => state.Setting);
+  const themeColor = item.fromUser ? _get(Setting, 'themeColor') : '#fff';
 
   function handleLinkpress(event) {
     const { detail } = event;

@@ -26,7 +26,7 @@ class ImFile extends Component {
 
   render() {
     const { item, Setting } = this.props;
-    const themeColor = item && item.fromUser ? _get(Setting, 'setting.dialogColor') : '';
+    const themeColor = item && item.fromUser ? _get(Setting, 'themeColor') : '';
     const size = _get(item, 'content.size') || 0;
     const name = _get(item, 'content.name') || '';
     const nameArr = name.split('.');

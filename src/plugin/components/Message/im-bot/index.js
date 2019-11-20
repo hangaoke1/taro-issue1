@@ -152,7 +152,7 @@ export default class Bot extends Component {
     }
 
     let className = item.fromUser ? 'm-bot m-bot-right' : 'm-bot m-bot-left';
-    let themeColor = item && item.fromUser ? _get(Setting, 'setting.dialogColor') : '';
+    let themeColor = item && item.fromUser ? _get(Setting, 'themeColor') : '';
 
     // 下列模版特殊处理聊天内容却与b背景颜色
     if ([

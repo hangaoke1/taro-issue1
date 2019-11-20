@@ -58,8 +58,8 @@ export default function ActionView(props) {
               item.entries.map(it => {
                 return (
                   <View className="u-entry">
-                    <View className="u-dot"></View>
-                    <View className="u-label" onClick={(ev) => { actionFun({entryid: it.entryid, type: it.type, id: it.id}) }}>{it.label}</View>
+                    <View className="u-dot" style={Setting.themeBg}></View>
+                    <View className="u-label" style={Setting.themeText} onClick={(ev) => { actionFun({entryid: it.entryid, type: it.type, id: it.id}) }}>{it.label}</View>
                   </View>
                 )
               })

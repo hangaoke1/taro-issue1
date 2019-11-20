@@ -106,7 +106,7 @@ export default class ImAudio extends Component {
     const { item, Setting } = this.props;
     const { playing } = this.state;
     const audioInfo = item ? item.content : {};
-    const themeColor = item && item.fromUser ? _get(Setting, 'setting.dialogColor') : '';
+    const themeColor = item && item.fromUser ? _get(Setting, 'themeColor') : '';
 
     return item ? (
       <View
