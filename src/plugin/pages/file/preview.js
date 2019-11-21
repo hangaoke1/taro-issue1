@@ -6,7 +6,6 @@ import _cloneDeep from 'lodash/cloneDeep';
 import eventbus from '@/lib/eventbus';
 import { changeMessageByUUID } from '@/plugin//actions/chat';
 import extIconMap from '@/plugin/constants/extIcon';
-import { setClipboardData } from '@/utils/extendTaro';
 import { size2String } from '@/utils/index';
 import { get } from '@/plugin/global_config';
 import './preview.less';
@@ -53,7 +52,16 @@ class FilePreview extends Component {
   handleCopy = () => {
     const message = _cloneDeep(this.state.item);
     const url = _get(message, 'content.url');
-    setClipboardData(url);
+    Taro.setClipboardData({
+      data: url,
+      success: () => {
+        Taro.hideToast();
+        Taro.showToast({
+          title: '链接已复制',
+          icon: 'success'
+        });
+      }
+    });
   };
 
   handleAbort = () => {
