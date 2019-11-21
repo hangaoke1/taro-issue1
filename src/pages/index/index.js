@@ -31,13 +31,17 @@ export default class Index extends Component {
     myPluginInterface._$setHistoryLimit(30);
 
     // 人工会话下，输入框上方自定义事件类型快捷入口点击回调demo
-    myPluginInterface._$onEntranceClick((data) => {
+    myPluginInterface._$onEntranceClick((info) => {
       // {
       //   label: "链接外跳",
       //   action: "open_link",
       //   data: "https://www.baidu.com"
       // }
-      console.log('自定义事件触发', data);
+      console.log('自定义事件触发', info);
+      Taro.showToast({
+        title: '触发自定义事件:' + info.data,
+        icon: 'none'
+      })
     })
 
     // 未读消息监听demo
