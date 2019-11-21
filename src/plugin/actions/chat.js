@@ -261,7 +261,8 @@ export const sendVoice = res => dispatch => {
     type: 'audio',
     idClient: '',
     content: {
-      dur: res.duration
+      dur: res.duration,
+      url: tempFilePath
     },
     time: Date.now(),
     status: 1,

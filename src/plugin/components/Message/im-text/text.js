@@ -50,7 +50,6 @@ export default function TextView(props) {
             <Image
               style="width: 25px;height:25px;"
               src="https://qiyukf.nosdn.127.net/sdk/res/default/loading_3782900ab9d04a1465e574a7d50af408.gif"
-              // src="http://veralsp.qytest.netease.com/prd/res/img/loading_03ce3dcc84af110e9da8699a841e5200.gif"
             />
           </View>
         ) : null}

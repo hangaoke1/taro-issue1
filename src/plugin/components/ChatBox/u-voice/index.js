@@ -54,6 +54,12 @@ class UVoice extends Component {
   };
 
   handleTouchStart = event => {
+    if (this.RecorderManager) {
+      this.cancel = true;
+      this.RecorderManager.stop();
+      this.RecorderManager = null;
+    }
+
     this.startTimer = setTimeout(() => {
       this.startTimeDown();
       this.startPos = event.touches[0].clientY;
@@ -90,6 +96,7 @@ class UVoice extends Component {
   };
 
   handleTouchEnd = event => {
+    console.log('触摸结束');
     clearTimeout(this.startTimer);
     this.stopTimeDown();
     this.startTimer = null;
@@ -100,9 +107,9 @@ class UVoice extends Component {
     const diff = this.startPos - this.endPos;
     if (diff > 100) {
       this.cancel = true;
-      this.RecorderManager.stop();
+      this.RecorderManager && this.RecorderManager.stop();
     } else {
-      this.RecorderManager.stop();
+      this.RecorderManager && this.RecorderManager.stop();
     }
   };
 

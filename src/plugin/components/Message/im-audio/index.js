@@ -1,10 +1,11 @@
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
+import { View, Image } from '@tarojs/components';
 import _get from 'lodash/get';
-import { View } from '@tarojs/components';
 import eventbus from '../../../lib/eventbus';
 import Avatar from '../u-avatar';
-
+import Iconfont from '@/components/Iconfont';
+import { resendMessage } from '@/actions/chat';
 import './index.less';
 
 // const mock = {
@@ -39,7 +40,6 @@ export default class ImAudio extends Component {
 
     if (!this.state.playing) {
       eventbus.trigger('audio_stop');
-      // Taro.showToast({title: '播放'})
       this.audioCtx.play();
     } else {
       this.audioCtx.stop();
@@ -56,6 +56,11 @@ export default class ImAudio extends Component {
     if (this.audioCtx) {
       this.audioCtx.stop();
     }
+  }
+
+  handleResend = (item, e) => {
+    e.stopPropagation();
+    resendMessage(item);
   }
 
   componentWillMount () { }
@@ -107,6 +112,7 @@ export default class ImAudio extends Component {
     const { playing } = this.state;
     const audioInfo = item ? item.content : {};
     const themeColor = item && item.fromUser ? _get(Setting, 'themeColor') : '';
+    const status = _get(item, 'status', 0);
 
     return item ? (
       <View
@@ -120,6 +126,20 @@ export default class ImAudio extends Component {
           { item.fromUser ? null : <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View>}
           {Math.round(audioInfo.dur / 1000) || 1}&quot;
           { item.fromUser ? <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View> : null}
+
+          {status === 1 && item.fromUser ? (
+            <View className="u-status">
+              <Image
+                style="width: 25px;height:25px;"
+                src="https://qiyukf.nosdn.127.net/sdk/res/default/loading_3782900ab9d04a1465e574a7d50af408.gif"
+              />
+            </View>
+          ) : null}
+          {status === -1 && item.fromUser ? (
+            <View className="u-status" onClick={this.handleResend.bind(this, item)}>
+              <Iconfont type="icon-tishixinxi" color="red" size="25" />
+            </View>
+          ) : null}
         </View>
       </View>
     ) : null;
