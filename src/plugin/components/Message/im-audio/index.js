@@ -118,7 +118,7 @@ export default class ImAudio extends Component {
         <View className='u-text-arrow' style={`${item.fromUser ? 'border-left-color: ' + themeColor : ''}`} />
         <View className='u-text' style={`${item.fromUser ? 'background-color: ' + themeColor : ''}`} onClick={this.handleClick}>
           { item.fromUser ? null : <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View>}
-          {Math.round(audioInfo.dur / 1000)}&quot;
+          {Math.round(audioInfo.dur / 1000) || 1}&quot;
           { item.fromUser ? <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View> : null}
         </View>
       </View>

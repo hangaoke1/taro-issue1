@@ -61,7 +61,8 @@ export default class Index extends Component {
         })
       } else {
         Taro.showToast({
-          title: '暂不支持该文件类型预览'
+          title: '暂不支持该文件类型预览',
+          icon: 'none'
         })
       }
     })
