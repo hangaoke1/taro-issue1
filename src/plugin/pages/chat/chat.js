@@ -122,7 +122,8 @@ class Chat extends Component {
       showTopPlaceHolder: false,
       chatViewScrollY: true,
       // 优化体验
-      showLoading: true
+      showLoading: true,
+      firstLoading: true
     };
   }
 
@@ -134,7 +135,8 @@ class Chat extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({
-        showLoading: false
+        showLoading: false,
+        firstLoading: false
       });
     }, 1000);
     // 清空未读消息
@@ -643,12 +645,13 @@ class Chat extends Component {
       constOffset,
       showLoading,
       scrollWithAnimation,
-      scrollIntoView
+      scrollIntoView,
+      firstLoading
     } = this.state;
 
     const isRobot = (Session.stafftype === 1 || Session.robotInQueue === 1) && Session.code === 200; // 机器人状态
 
-    const hasBot = isRobot && Bot.len;
+    let hasBot = isRobot && Bot.len;
     
     const isKefuOnline = Session.stafftype === 0 && Session.code === 200; // 客服在线状态
 
@@ -691,15 +694,19 @@ class Chat extends Component {
       quickEntryList = quickEntryList.filter(item => item.action !== 'close_session');
     }
 
-    
-
-    const hasQuickEntry = !isRobot && quickEntryList && quickEntryList.length && Session.code;
-
-    const isOpen = Options.showFunc || Options.showPortrait;
+    let hasQuickEntry = !isRobot && quickEntryList && quickEntryList.length && Session.code;
 
     let offset = scrollViewOffset + 'px';
 
+    const isOpen = Options.showFunc || Options.showPortrait;
+
     const gHeight = `calc(100vh)`;
+
+    // 首次加载隐藏快捷入口
+    if (firstLoading) {
+      hasQuickEntry = false;
+      hasBot = false;
+    }
 
     return (
       <Index className="m-page-wrapper">
