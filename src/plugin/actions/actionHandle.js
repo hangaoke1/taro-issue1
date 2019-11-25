@@ -17,7 +17,7 @@ export const anctionHandle = (type, data) => {
         let sessionCloseTime = session.closeTime;
         let curTime = new Date().getTime();
         let evaluation_timeout = session.shop.setting && session.shop.setting.evaluation_timeout*60*1000 || 10*60*1000;
-        const isKefuOnline = Session.stafftype === 0 && Session.code === 200; // 客服在线状态
+        const isKefuOnline = session.stafftype === 0 && session.code === 200; // 客服在线状态
 
         if (!evaluation.evaluationSetting.list) {
           Taro.showToast({
