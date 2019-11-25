@@ -37,15 +37,13 @@ npm run build
 
 ## 开发模式
 
-打开微信开发者工具将项目跟目录导入。可以看到调试插件demo和插件页面。
+打开微信开发者工具将项目跟目录导入。可以看到调试插件demo和插件页面。appId 可以填wxae5e29812005203f（需要申请七鱼demo的权限）。也可以用自己的，但要修改两处，确保project.conf.json 的 appid 字段和 src/app.js 的 prodiver 字段为同一 appid。
 
 ## Links
 
-[taro文档](https://nervjs.github.io/taro/docs/README.html)
-
-[react](https://www.reactjscn.com/)
-
-[Less](https://less.bootcss.com/)
+> [taro文档](https://nervjs.github.io/taro/docs/README.html)
+> [react](https://www.reactjscn.com/)
+> [Less](https://less.bootcss.com/)
 
 
 
