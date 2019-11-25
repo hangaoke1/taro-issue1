@@ -770,6 +770,16 @@ export const receiveTransfer = (content) => {
   const dispatch = get('store').dispatch;
   const session = get('store').getState().Session;
 
+  // 转接后重置评价
+  dispatch({
+    type: UPDATE_ENTRY_BYKEY,
+    value: {
+      icon: 'icon-star-linex',
+      text: '评价',
+      key: 'evaluation'
+    }
+  })
+
   // 如果转接显示提示的开关关掉，不显示转接提示
   if (!session.shop.setting.session_transfer_switch) return;
 
