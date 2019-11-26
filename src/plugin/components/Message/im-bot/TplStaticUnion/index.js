@@ -21,7 +21,8 @@ class StaticUnion extends Component {
 
   handleLinkpress = (event) => {
     const { detail } = event;
-    parseUrlAction(detail);
+    const { transferRgType } = item;
+    parseUrlAction(detail, transferRgType);
   }
 
   handleLinkClick = (item) => {
