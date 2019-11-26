@@ -12,12 +12,12 @@ import './text.less';
 export default function TextView(props) {
   const item = props.item;
   const status = _get(item, 'status', 0);
-  const { content, type } = item;
+  const { content, type, transferRgType } = item;
   const isRich = type === 'rich';
 
   function handleLinkpress(event) {
     const { detail } = event;
-    parseUrlAction(detail);
+    parseUrlAction(detail, transferRgType);
   }
 
   // 重新发送消息
