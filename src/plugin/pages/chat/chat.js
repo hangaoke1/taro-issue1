@@ -159,6 +159,7 @@ class Chat extends Component {
   }
 
   componentDidShow() {
+    Taro.hideNavigationBarLoading();
     Taro.setNavigationBarTitle({
       title: get('title')
     });

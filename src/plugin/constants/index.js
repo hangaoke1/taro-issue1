@@ -86,6 +86,8 @@ export const RECEIVE_SHOW_EVALUATION_ENTRY = 108;
 // 连接中标题
 export const NAVIGATIONBAR_TITLE_CONNECTING = '正在连接';
 
+export const WILL_RECONNECT_TITLE = '恢复连接中';
+
 // 询问排队状态的轮询时间间隔
 export const QUEUE_TIMER = 10000;
 

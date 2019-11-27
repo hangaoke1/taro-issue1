@@ -57,7 +57,7 @@ export const applyKefu = (
 
   const session = get('store').getState().Session;
 
-  if(!extraParms.entryid && session && (session.code == 200 || session.code == 203)){
+  if(!extraParms.entryid && session && (session.code == 200 || session.code == 203) && STATUS.status == 'connecting'){
     NIM.updateCrmInfo();
     return;
   }
