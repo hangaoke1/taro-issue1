@@ -413,7 +413,8 @@ class Chat extends Component {
         break;
       case 'applyHumanStaff':
         const { delApplyHumanStaffEntry } = this.props;
-        applyHumanStaff();
+        const transferRgType = 30;
+        applyHumanStaff(transferRgType);
         delApplyHumanStaffEntry();
         break;
     }

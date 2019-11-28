@@ -254,6 +254,12 @@ export default class IMSERVICE {
     }
   ) {
     return new Promise((resolve, reject) => {
+
+      // 如果转人工参数不存在，则清除
+      if (extraParams.transferRgType === '' || extraParams.transferRgType === undefined) {
+        delete extraParams.transferRgType
+      }
+
       // 申请客服的时候导航栏控制
       Taro.showNavigationBarLoading();
       Taro.setNavigationBarTitle({

@@ -25,18 +25,31 @@ const Message = (state = initMessages, action) => {
               return state;
             }
 
+            // 分配uuid
             if (!_get(action, 'message.uuid')) {
                 action.message.uuid = genUUID16();
             }
+
             if (_get(action, 'message.msg.idClient')) {
-                action.message.idClient = _get(action, 'message.msg.idClient')
+                action.message.idClient = _get(action, 'message.msg.idClient');
             }
+
+            // 统一处理转人工附带参数
+            if (_get(action, 'message.msg.content')) {
+                try {
+                    const { transferRgType } = JSON.parse(_get(action, 'message.msg.content'));
+                    action.message.transferRgType = transferRgType || '';
+                } catch (err) {}
+            }
+
+            // 删除消息原，优化性能
             delete action.message.msg;
-            eventbus.trigger('push_message'); // 触发事件
+
+            // 触发事件
+            eventbus.trigger('push_message');
 
             // 未读消息设置
             addUnread(action.message);
-
 
             // 时间的提示按TIME_TIP_DURATION时间段展示
             let prevMessage = [...state], currentMessage = {...action.message};

@@ -32,7 +32,8 @@ export default function RobotView(props) {
     evaluation_content,
     evaluation_guide,
     type,
-    idClient
+    idClient,
+    transferRgType
   } = item;
   const dispatch = useDispatch();
   const Session = useSelector(state => state.Session);
@@ -45,7 +46,7 @@ export default function RobotView(props) {
   // 点击富文本链接
   function handleLinkpress(event) {
     const { detail } = event;
-    parseUrlAction(detail);
+    parseUrlAction(detail, transferRgType);
   }
 
   // 评价机器人答案
