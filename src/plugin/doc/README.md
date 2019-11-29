@@ -12,7 +12,7 @@
 
 2. 七鱼对外提供名字为chat的页面插件，请确保在配置企业appKey后再跳转到chat页面申请客服。
 
-3. 七鱼插件大小约为1.2M，微信目前闲置单个包的大小最大为2M，如遇到引入插件后包大小超过2m的情况，建议您采用插件分包记载。[微信使用插件文档](https://developers.weixin.qq.com/miniprogram/dev/framework/plugin/using.html)-在分包内引入插件代码包
+3. 七鱼插件大小约为1.1M，微信目前闲置单个包的大小最大为2M，如遇到引入插件后包大小超过2m的情况，建议您采用插件分包记载。[微信使用插件文档](https://developers.weixin.qq.com/miniprogram/dev/framework/plugin/using.html)-在分包内引入插件代码包
 
 ### 接入代码示例
 
@@ -22,7 +22,7 @@
 {
   "plugins": {
     "myPlugin": {
-      "version": "1.1.1", //推荐使用最新版本
+      "version": "1.1.4", //推荐使用最新版本
       "provider": "wxae5e29812005203f"
     }
   }
@@ -43,7 +43,8 @@
 
 ```js
 var myPluginInterface = requirePlugin('myPlugin');
-
+var appId = '由七鱼后台-微信小程序接入绑定后自动生成,请确认appId在您的绑定列表中。';
+myPluginInterface.__configAppId(appId);
 myPluginInterface._$configAppKey('3858be3c20ceb6298575736cf27858a7');
 myPluginInterface.__configDomain("https://qiyukf.com"); // 1.1.1版本以前需要手动配置下七鱼服务器域名
 ```
@@ -256,6 +257,11 @@ _$configTitle的同步方法。
 | :----: | :----: | :---- |
 | url | String | 访问的链接地址 |
 | from   | String | 链接访问的来源模块 |
+
+
+##### _$configAutoCopy(autoCopy)  关闭默认链接的复制操作
+
+接受一个布尔值boolean，可以在自定义点击事件的同时，关掉系统本身的复制操作。
 
 
 ### 用户注销
