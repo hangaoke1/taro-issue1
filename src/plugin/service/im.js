@@ -41,13 +41,16 @@ import {
   UPDATE_CRM_CMD,
   EXIT_SESSION_CMD,
   SEND_PRODUCT_CARD_CMD,
-  RECEIVE_SHOW_EVALUATION_ENTRY
+  RECEIVE_SHOW_EVALUATION_ENTRY,
+  WILL_RECONNECT_TITLE
 } from '../constants';
 import { getCurrentUrl } from '@/lib/unread';
 
 export const STATUS = {
   status: 'init'
 };
+
+let heartbeatTimer = null, nimInstance = null;
 
 export default class IMSERVICE {
   constructor(initer) {
@@ -85,20 +88,31 @@ export default class IMSERVICE {
     return new Promise(resolve => {
       // 获取最新的云信包
       const NIM = get('NIM');
+      let timer = null;
 
       const onConnect = msg => {
-        resolve(nim);
+        timer && clearTimeout(timer);
         this.onConnect(msg);
+        Taro.hideNavigationBarLoading();
+        Taro.setNavigationBarTitle({
+          title: get('title')
+        });
+        resolve(nimInstance);
       };
 
-      const nim = (this.nim = NIM.getInstance({
+      if (STATUS.status == 'connecting') {
+        timer && clearTimeout(timer);
+        resolve(nimInstance);
+      }
+
+      nimInstance = NIM.getInstance({
         appKey: get('appKey'),
         account: get('account'),
-        promise: true,
         token: get('token'),
         onconnect: onConnect,
-        ondisconnect: this.onDisconnect,
-        onerror: this.onError,
+        ondisconnect: this.onDisconnect.bind(this),
+        onerror: this.onError.bind(this),
+        onwillreconnect: this.onWillreconnect.bind(this),
         onmsg: this.onMsg.bind(this),
         oncustomsysmsg: this.onCustomSysMsg.bind(this),
         onofflinefiltermsgs: this.onofflinefiltermsgs.bind(this),
@@ -107,14 +121,14 @@ export default class IMSERVICE {
         // onroamingmsgs: this.onRoamingMsgs.bind(this),
         // onroamingsysmsgs: this.onRoamingSysMsgs.bind(this),
         syncFilter: true,
-        syncRoamingMsgs: true
-      }));
+        syncRoamingMsgs: true,
+        // needReconnect: false
+      });
 
-      if (STATUS.status == 'connecting') {
-        resolve(nim);
-      }
-
-      return nim;
+      // 5秒后自动resolve
+      timer = setTimeout(function () {
+        resolve(nimInstance);
+      }, 5000)
     });
   }
 
@@ -135,14 +149,19 @@ export default class IMSERVICE {
           content: JSON.stringify(content),
           done: (error, msg) => {
             if (error) {
+              STATUS.status = 'error';
+              console.log('sendCustomSysMsg error', error);
+              // setTimeout(this.sendCustomSysMsg.bind(this, content), 1000);
               reject(error);
             } else {
+              STATUS.status = 'connecting';
+              console.log('sendCustomSysMsg success', content);
               resolve(error, msg);
             }
           }
         });
       }).catch(error => {
-        console.log('getNim 错了', error)
+        console.log('getNim error', error)
       });
     });
   }
@@ -154,22 +173,34 @@ export default class IMSERVICE {
    */
   sendTextMsg(value, to = -1) {
     return new Promise((resolve, reject) => {
-      this.getNim()
-        .then(nim => {
-          nim.sendText({
-            scene: 'p2p',
-            to: to,
-            text: value,
-            done: (error, msg) => {
-              if (error) {
-                reject(error);
-              } else {
-                resolve(msg);
+      let sendAction = () => {
+        this.getNim()
+          .then(nim => {
+            nim.sendText({
+              scene: 'p2p',
+              to: to,
+              text: value,
+              done: (error, msg) => {
+                if (error) {
+                  STATUS.status = 'error';
+                  console.log('sendTextMsg error', error);
+                  // setTimeout(sendAction.bind(this, value), 1000);
+                  // reject(error);
+                } else {
+                  STATUS.status = 'connecting';
+                  console.log('sendTextMsg success', error);
+                  resolve(msg);
+                }
               }
-            }
-          });
-        })
-        .catch(reject);
+            });
+          })
+          .catch(reject);
+      }
+
+      sendAction();
+      setTimeout(() => {
+        reject('发送超时');
+      }, 5000)
     });
   }
 
@@ -188,16 +219,16 @@ export default class IMSERVICE {
             scene: 'p2p',
             to: to,
             wxFilePath: tempFilePath,
-            beforesend: function(msg) {
+            beforesend: function (msg) {
               // console.log('正在发送p2p image消息, id=' + msg.idClient);
             },
-            uploadprogress: function(obj) {
+            uploadprogress: function (obj) {
               // console.log('文件总大小: ' + obj.total + 'bytes');
               // console.log('已经上传的大小: ' + obj.loaded + 'bytes');
               // console.log('上传进度: ' + obj.percentage);
               // console.log('上传进度文本: ' + obj.percentageText);
             },
-            uploaddone: function(error, file) {
+            uploaddone: function (error, file) {
               console.log('上传' + (!error ? '成功' : '失败'), error, file);
             },
             done: (error, msg) => {
@@ -223,6 +254,12 @@ export default class IMSERVICE {
     }
   ) {
     return new Promise((resolve, reject) => {
+
+      // 如果转人工参数不存在，则清除
+      if (extraParams.transferRgType === '' || extraParams.transferRgType === undefined) {
+        delete extraParams.transferRgType
+      }
+
       // 申请客服的时候导航栏控制
       Taro.showNavigationBarLoading();
       Taro.setNavigationBarTitle({
@@ -242,15 +279,15 @@ export default class IMSERVICE {
         ...extraParams
       };
 
-      console.log('apply staff', content);
+      console.log('start apply staff', content);
       this.sendCustomSysMsg(content)
         .then(msg => {
-          console.log('apply staff success', msg);
+          console.log('start apply staff success', msg);
           this.updateCrmInfo();
           resolve(msg);
         })
         .catch(error => {
-          console.log('apply staff error', error);
+          console.log('start apply staff error', error);
           reject(error);
         });
     });
@@ -435,7 +472,7 @@ export default class IMSERVICE {
           Taro.setNavigationBarTitle({
             title: get('title')
           });
-          console.log('assign staff', content);
+          console.log('apply staff success', content);
           assignKefu(content);
           this.clearQueueTimer();
           if (content.code == 203) {
@@ -490,7 +527,7 @@ export default class IMSERVICE {
           }
           break;
         case RECEIVE_SHOW_EVALUATION_ENTRY:
-            receiveEvaluationShowEntry(content);
+          receiveEvaluationShowEntry(content);
           break;
         default:
           console.log('oncustomsysmsg 未知指令' + JSON.stringify(msg));
@@ -499,7 +536,7 @@ export default class IMSERVICE {
 
       // 清空未读消息
       this.clearUnreadMsg();
-    } catch (e) {}
+    } catch (e) { }
   }
 
   // 七鱼定制离线消息处理
@@ -517,9 +554,12 @@ export default class IMSERVICE {
       cmd: HEART_BEAT_CMD,
       deviceid: get('deviceid')
     };
-    this.sendCustomSysMsg(content);
 
-    setTimeout(this.sendHeartbeat.bind(this), get('heartbeatCycle'));
+    if (heartbeatTimer) {
+      clearInterval(heartbeatTimer);
+    }
+
+    heartbeatTimer = setInterval(this.sendCustomSysMsg.bind(this, content), get('heartbeatCycle'));
   };
 
   /**
@@ -530,8 +570,8 @@ export default class IMSERVICE {
       deviceid: get('deviceid')
     }
   ) => {
-    if(this.queueTimer)
-    clearInterval(this.queueTimer);
+    if (this.queueTimer)
+      clearInterval(this.queueTimer);
 
     this.queueTimer = setInterval(() => {
       return new Promise((resolve, reject) => {
@@ -563,13 +603,30 @@ export default class IMSERVICE {
     this.sendHeartbeat();
   }
 
+  onWillreconnect(options) {
+    console.log('onWillreconnect', options);
+    STATUS.status = 'disconnect';
+    Taro.showNavigationBarLoading();
+    Taro.setNavigationBarTitle({
+      title: WILL_RECONNECT_TITLE
+    });
+    if (heartbeatTimer) {
+      clearInterval(heartbeatTimer);
+    }
+  }
+
   onError(data) {
     STATUS.status = 'error';
+    nimInstance.disconnect()
+    nimInstance.connect()
     console.log('----onError----，data:' + data);
   }
 
   onDisconnect(data) {
     STATUS.status = 'disconnect';
+    if (heartbeatTimer) {
+      clearInterval(heartbeatTimer);
+    }
     console.log('----onDisconnect----，data:' + data);
   }
 }

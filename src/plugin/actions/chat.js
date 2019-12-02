@@ -57,7 +57,7 @@ export const applyKefu = (
 
   const session = get('store').getState().Session;
 
-  if(!extraParms.entryid && session && (session.code == 200 || session.code == 203)){
+  if(!extraParms.entryid && session && (session.code == 200 || session.code == 203) && STATUS.status == 'connecting'){
     NIM.updateCrmInfo();
     return;
   }
@@ -272,25 +272,23 @@ export const evalRobotAnswer = (msgidClient, evaluation) => {
     msgidClient,
     evaluation
   };
-  // console.log('----机器人评价----', msg);
   return NIM.sendCustomSysMsg(msg);
 };
 
 /**
  * 处理文本链接点击
  * @param {string} url 链接地址
+ * @param {number} transferRgType 转人工入口标记
  */
-export const parseUrlAction = url => {
-  // console.log('----点击富文本a标签----', url);
+export const parseUrlAction = (url, transferRgType = '') => {
 
   // 处理转人工请求
   if (url === 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
     const isRobot = get('isRobot');
-    if (!isRobot) {
-      // console.log('----非机器人情况下无法转人工----');
-    } else {
+    if (isRobot) {
       NIM.applyKefu({
-        stafftype: 1
+        stafftype: 1,
+        transferRgType
       });
     }
   }
@@ -616,9 +614,10 @@ export const emptyAssociate = () => {
   dispatch({ type: SET_ASSOCIATE_RES, value: {} });
 };
 
-export const applyHumanStaff = () => {
+export const applyHumanStaff = (transferRgType) => {
   NIM.applyKefu({
-    stafftype: 1
+    stafftype: 1,
+    transferRgType
   });
 };
 

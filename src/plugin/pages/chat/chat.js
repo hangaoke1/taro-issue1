@@ -21,6 +21,8 @@ import BotBubbleList from '../../components/BotBubbleList';
 import BotCard from '../../components/BotCard';
 import FloatButton from '../../components/FloatButton';
 
+import {get} from '../../global_config';
+
 import { NAVIGATIONBAR_TITLE } from '../../constants';
 
 import {
@@ -156,7 +158,12 @@ class Chat extends Component {
     eventbus.off('push_message', this.scrollToBottom);
   }
 
-  componentDidShow() {}
+  componentDidShow() {
+    Taro.hideNavigationBarLoading();
+    Taro.setNavigationBarTitle({
+      title: get('title')
+    });
+  }
 
   componentDidHide() {}
 
@@ -406,7 +413,8 @@ class Chat extends Component {
         break;
       case 'applyHumanStaff':
         const { delApplyHumanStaffEntry } = this.props;
-        applyHumanStaff();
+        const transferRgType = 30;
+        applyHumanStaff(transferRgType);
         delApplyHumanStaffEntry();
         break;
     }
