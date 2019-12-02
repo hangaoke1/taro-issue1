@@ -22,6 +22,8 @@ import BotBubbleList from '../../components/BotBubbleList';
 import BotCard from '../../components/BotCard';
 import FloatButton from '../../components/FloatButton';
 
+import {get} from '../../global_config';
+
 import { NAVIGATIONBAR_TITLE } from '../../constants';
 
 import {
@@ -175,6 +177,15 @@ class Chat extends Component {
       scrollIntoView: ''
     });
   };
+  
+  componentDidShow() {
+    Taro.hideNavigationBarLoading();
+    Taro.setNavigationBarTitle({
+      title: get('title')
+    });
+  }
+
+  componentDidHide() {}
 
   handleUnshiftMessage = (id, finished) => {
     this.state.finished = finished;
@@ -541,7 +552,8 @@ class Chat extends Component {
         break;
       case 'applyHumanStaff':
         const { delApplyHumanStaffEntry } = this.props;
-        applyHumanStaff();
+        const transferRgType = 30;
+        applyHumanStaff(transferRgType);
         delApplyHumanStaffEntry();
         break;
     }

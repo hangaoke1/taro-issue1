@@ -390,3 +390,11 @@ export const _$setHistoryLimit = (limit) => {
   if (!Number.isInteger(limit)) return;
   set('history_limit', limit)
 }
+
+/*
+ * 配置链接点击行为
+ * @param {boolean} autoCopy 是否自动处理链接点击复制行为
+ */
+export const _$configAutoCopy = autoCopy => {
+  set('autoCopy', !!autoCopy)
+}

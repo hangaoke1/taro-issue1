@@ -15,7 +15,7 @@ class App extends Component {
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: '网易七鱼',
+      navigationBarTitleText: '在线客服',
       navigationBarTextStyle: 'black'
     },
     "plugins": {

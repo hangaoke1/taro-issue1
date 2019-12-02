@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro';
 import eventbus from '@/lib/eventbus';
-
+import { get } from '../global_config';
 import _get from 'lodash/get';
 export * from './date';
 export * from './ajax';
@@ -57,18 +57,19 @@ export const genClassAndStyle = (row, len) => {
  * @param {*} extralParams
  */
 export const clickAction = (extralParams = {}) => {
-  Taro.setClipboardData(
-    {
-      data: extralParams.url
-    }
-  ).then(json => {
-    Taro.showToast({
-      title: '链接已复制',
-      duration: 1000
+  if (get('autoCopy')) {
+    Taro.setClipboardData(
+      {
+        data: extralParams.url
+      }
+    ).then(json => {
+      Taro.showToast({
+        title: '链接已复制',
+        duration: 1000
+      })
     })
-
-    eventbus.trigger('click_action', extralParams);
-  })
+  }
+  eventbus.trigger('click_action', extralParams);
 }
 
 /**

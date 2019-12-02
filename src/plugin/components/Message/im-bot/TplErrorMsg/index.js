@@ -7,10 +7,11 @@ import './index.less';
 
 export default function TplErrorMsg(props) {
   const label = _get(props, 'tpl.label');
+  const { transferRgType } = props.item || {};
 
   function handleLinkpress(event) {
     const { detail } = event;
-    parseUrlAction(detail);
+    parseUrlAction(detail, transferRgType);
   }
 
   return (

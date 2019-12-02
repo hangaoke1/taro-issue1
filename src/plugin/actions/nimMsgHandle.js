@@ -303,8 +303,9 @@ export const receiveMsg = (msg) => {
     extralMessage = genExtralMessage(session);
   }
 
-  if (msg.type == 'text') {
+    console.log('msg-----', msg)
 
+  if (msg.type == 'text') {
     message = {
       type: 'text',
       content: msg.text,

@@ -89,11 +89,15 @@ export default class Index extends Component {
       })
       myPluginInterface._$configTitle(Taro.getStorageSync('YSF-TITLE'));
     }
+
+    myPluginInterface._$configAutoCopy(false)
+
+    myPluginInterface._$onClickAction((v) => { console.log('点击事件', v) })
   }
 
   componentWillUnmount () { }
 
-  componentDidShow () { }
+  componentDidShow () {}
 
   componentDidHide () { }
 

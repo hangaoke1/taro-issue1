@@ -40,7 +40,8 @@ const globalConfig = {
   bundleid: Taro.getAccountInfoSync().miniProgram.appId,
   heartbeatCycle: 8000,
   store: null,
-  NIM: NIM
+  NIM: NIM,
+  autoCopy: true // 处理链接点击时，是否进行复制
 };
 
 export const get = (key) => globalConfig[key];
