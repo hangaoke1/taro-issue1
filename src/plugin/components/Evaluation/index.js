@@ -17,6 +17,7 @@ export default function Evaluation(props) {
 
   const Evaluation = useSelector(state => state.Evaluation);
   const Setting = useSelector(state => state.Setting);
+  const Session = useSelector(state => state.Session);
 
   const { currentEvaluation, evaluationSetting } = Evaluation;
   const { tagList, name, value, remarks, evaluation_resolved, selectTagList } = currentEvaluation;
@@ -81,7 +82,9 @@ export default function Evaluation(props) {
 
   const handleSubmit = () => {
     const params = { ...currentEvaluation };
-    const { sessionid } = Evaluation;
+    // const { sessionid } = Evaluation;
+    // TODO: 会话转接情况下，存在Evaluation中sessionid未更新问题，导致评价超时，暂时修改成从Session中获取
+    const { sessionid } = Session;
     const { evaluation = value, evaluation_resolved,
       selectTagList, remarks } = params;
 
