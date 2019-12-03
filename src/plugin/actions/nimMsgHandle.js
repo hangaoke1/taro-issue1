@@ -303,9 +303,8 @@ export const receiveMsg = (msg) => {
     extralMessage = genExtralMessage(session);
   }
 
-    console.log('msg-----', msg)
-
   if (msg.type == 'text') {
+
     message = {
       type: 'text',
       content: msg.text,
@@ -360,7 +359,6 @@ export const receiveMsg = (msg) => {
   if (msg.type === 'custom') {
     const fmtContent = JSON.parse(msg.content);
     const { cmd, content } = fmtContent;
-    // console.log('格式化: ', fmtContent);
 
     switch (cmd) {
       case 60:
@@ -770,6 +768,21 @@ export const receiveTransfer = (content) => {
   // 会话id有变化，需要更新新的会话id
   const dispatch = get('store').dispatch;
   const session = get('store').getState().Session;
+  const { old_sessionid, sessionid, staffid, staffname, iconurl } = content;
+  // console.log('---- 会话转接 ----', content)
+  // 更新会话id
+  dispatch({
+    type: UPDATE_SESSION,
+    value: Object.assign({
+      closeTime: null
+    }, {
+      old_sessionid,  //原会话id
+      sessionid,  //会话id
+      staffid, //转接客服id
+      staffname,  //转接客服名字
+      iconurl    //客服头像
+    })
+  })
 
   // 转接后重置评价
   dispatch({
