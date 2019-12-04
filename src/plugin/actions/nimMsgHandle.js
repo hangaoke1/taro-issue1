@@ -3,7 +3,7 @@ import _get from 'lodash/get';
 import { get, set } from '../global_config';
 import { PUSH_MESSAGE, UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
 import { INIT_SESSION, REASON_MAP, SET_SESSION_CODE, UPDATE_SESSION } from '../constants/session';
-import { INIT_EVALUATION_SETTING, INIT_CURRENT_EVALUATION, INIT_LAST_EVALUATION } from '../constants/evaluation';
+import { INIT_EVALUATION_SETTING, INIT_CURRENT_EVALUATION, INIT_LAST_EVALUATION, UPDATE_EVALUATION_SESSIONID } from '../constants/evaluation';
 import {
   SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG, DEL_ENTRY_BYKEY, SET_CHAT_INPUT_DISABLED,
   SET_CHAT_INPUT_PLACEHOLDER, RESET_CHAT_INPUT, UPDATE_ENTRY_BYTEXT, UPDATE_ENTRY_BYKEY, SET_SHUNT_ENTRIES_STATUS
@@ -358,7 +358,7 @@ export const receiveMsg = (msg) => {
   // 自定义消息解析
   if (msg.type === 'custom') {
     const fmtContent = JSON.parse(msg.content);
-    const { cmd, content } = fmtContent;
+    const { cmd, content, sessionid } = fmtContent;
 
     switch (cmd) {
       case 60:
@@ -496,6 +496,7 @@ export const onfinish = (content) => {
       actionText: '评价',
       action: 'evaluation',
       key: `evaluation-${sessionid}`,
+      sessionid,
       colorful: true,
       ...extralMessage
     }
@@ -531,7 +532,8 @@ export const onevaluation = (content) => {
     actionText: content.evaluationTimes ? '再次评价' : '评价',
     action: 'evaluation',
     colorful: content.evaluationTimes ? false : true,
-    key: `evaluation-${content.sessionid}`
+    key: `evaluation-${content.sessionid}`,
+    sessionid: content.sessionid
   }
 
   // pattern==2是新页面的模式，没做，不弹窗了
@@ -542,6 +544,12 @@ export const onevaluation = (content) => {
       value: true
     })
   }
+
+  // 更新评价绑定的sessionid
+  dispatch({
+    type: UPDATE_EVALUATION_SESSIONID,
+    value: session.sessionid
+  })
 
   if (content.evaluationTimes) {
     // init evaluation
@@ -599,16 +607,19 @@ export const onevaluationresult = (content) => {
     value: false
   });
 
-  // 如果会话已经评价过
-  dispatch({
-    type: UPDATE_ENTRY_BYKEY,
-    value: {
-      icon: 'icon-star-line-hookx',
-      text: '已评价',
-      key: 'evaluation',
-      disabled: true
-    }
-  })
+  // 1. 如果评价的是上一通会话则不改变状态
+  // 2. 如果会话已经评价过
+  if (content.sessionid === session.sessionid) {
+    dispatch({
+      type: UPDATE_ENTRY_BYKEY,
+      value: {
+        icon: 'icon-star-line-hookx',
+        text: '已评价',
+        key: 'evaluation',
+        disabled: true
+      }
+    })
+  }
 
   // 存储上次评价内容
   dispatch({

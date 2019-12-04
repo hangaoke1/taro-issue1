@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro';
 import { get } from '../global_config'
 import { SET_EVALUATION_VISIBLE, SET_SHUNT_ENTRIES_STATUS } from '../constants/chat';
-import { applyKefu, cancelQueue } from '../actions/chat';
+import { applyKefu, cancelQueue, setEvaluationSessionId } from '../actions/chat';
 import { INIT_CURRENT_EVALUATION } from '../constants/evaluation';
 import { UPDATE_MESSAGE_BYACTION } from '../constants/message';
 
@@ -14,27 +14,31 @@ export const anctionHandle = (type, data) => {
 
   switch (type) {
     case 'evaluation':
-        let sessionCloseTime = session.closeTime;
-        let curTime = new Date().getTime();
-        let evaluation_timeout = session.shop.setting && session.shop.setting.evaluation_timeout*60*1000 || 10*60*1000;
-        const isKefuOnline = session.stafftype === 0 && session.code === 200; // 客服在线状态
+      let sessionCloseTime = session.closeTime;
+      let curTime = new Date().getTime();
+      let evaluation_timeout = session.shop.setting && session.shop.setting.evaluation_timeout*60*1000 || 10*60*1000;
+      const isKefuOnline = session.stafftype === 0 && session.code === 200; // 客服在线状态
 
-        if (!evaluation.evaluationSetting.list) {
-          Taro.showToast({
-            title: '评价已失效',
-            icon: 'none',
-            duration: 2000
-          })
-          return;
-        }
-        if (sessionCloseTime && curTime - sessionCloseTime > evaluation_timeout && !isKefuOnline) {
-          Taro.showToast({
-            title: '评价已超时，无法进行评价',
-            icon: 'none',
-            duration: 2000
-          })
-          return;
-        }
+      if (!evaluation.evaluationSetting.list) {
+        Taro.showToast({
+          title: '评价已失效',
+          icon: 'none',
+          duration: 2000
+        })
+        return;
+      }
+      if (sessionCloseTime && curTime - sessionCloseTime > evaluation_timeout && !isKefuOnline) {
+        Taro.showToast({
+          title: '评价已超时，无法进行评价',
+          icon: 'none',
+          duration: 2000
+        })
+        return;
+      }
+
+      // 更新评价的会话id
+      setEvaluationSessionId(data.sessionid);
+      // 打开评价窗口
       dispatch(setEvaluationVisible(true));
       break;
     case 'reApplyKefu':

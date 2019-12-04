@@ -38,7 +38,8 @@ import {
   getSdkSetting,
   unshiftMessage,
   initMessage,
-  exitSession
+  exitSession,
+  setEvaluationSessionId
 } from '../../actions/chat';
 import {
   toggleShowFun,
@@ -48,7 +49,6 @@ import {
 import {
   closeEvaluationModal,
   openEvaluationModal,
-  anctionHandle
 } from '../../actions/actionHandle';
 import eventbus from '../../lib/eventbus';
 import { text2em } from '../../utils';
@@ -432,11 +432,9 @@ class Chat extends Component {
           });
           return;
         }
+        // 重置评价sessionid为当前会话id
+        setEvaluationSessionId()
         openEvaluationModal();
-        // anctionHandle('evaluation', {
-        //   entryid: '',
-        //   stafftype: 0
-        // })
         break;
       // 关闭会话
       case 'close_session':
@@ -548,6 +546,8 @@ class Chat extends Component {
           });
           return;
         }
+        // 重置评价sessionid为当前会话id
+        setEvaluationSessionId()
         openEvaluationModal();
         break;
       case 'applyHumanStaff':

@@ -82,9 +82,9 @@ export default function Evaluation(props) {
 
   const handleSubmit = () => {
     const params = { ...currentEvaluation };
-    // const { sessionid } = Evaluation;
     // TODO: 会话转接情况下，存在Evaluation中sessionid未更新问题，导致评价超时，暂时修改成从Session中获取
-    const { sessionid } = Session;
+    let { sessionid } = Evaluation;
+    sessionid = sessionid || Session.sessionid
     const { evaluation = value, evaluation_resolved,
       selectTagList, remarks } = params;
 

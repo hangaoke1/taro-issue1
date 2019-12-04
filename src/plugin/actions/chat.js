@@ -8,6 +8,7 @@ import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID, REMOVE_MESSAGE_BYUUID,UPDATE_MESSA
 import { DEL_ENTRY_BYKEY } from '../constants/chat';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import { SET_SETTING } from '../constants/setting';
+import { UPDATE_EVALUATION_SESSIONID } from '../constants/evaluation';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '@/lib/uuid';
 import { loadHistroy } from '@/lib/history';
@@ -628,14 +629,7 @@ export const previewFile = (wxFilePath, type = 'image') => {
       nim.previewFile({
         type,
         wxFilePath,
-        // uploadprogress: function(obj) {
-        //     console.log('文件总大小: ' + obj.total + 'bytes');
-        //     console.log('已经上传的大小: ' + obj.loaded + 'bytes');
-        //     console.log('上传进度: ' + obj.percentage);
-        //     console.log('上传进度文本: ' + obj.percentageText);
-        // },
         done: function(error, file) {
-          // console.log('上传image' + (!error ? '成功' : '失败'));
           if (!error) {
             resolve(file);
           } else {
@@ -802,7 +796,7 @@ export const delApplyHumanStaffEntry = () => dispatch => {
   })
 }
 
-// TODO: 加载历史消息
+// 加载历史消息
 export const unshiftMessage =  (uuid, pageSize = 10) => {
   const dispatch = get('store').dispatch;
   const messages = loadHistroy(uuid, pageSize) || [];
@@ -815,4 +809,11 @@ export const initMessage =  (uuid, pageSize = 10) => {
   const messages = loadHistroy(uuid, pageSize) || [];
   console.log('加载消息长度: ', messages.length, pageSize)
   dispatch({ type: INIT_MESSAGE, messages, finished: messages.length < pageSize });
+}
+
+// 设置评价sessionid
+export const setEvaluationSessionId = (sessionid) => {
+  const dispatch = get('store').dispatch;
+  const Session = get('store').getState().Session;
+  dispatch({ type: UPDATE_EVALUATION_SESSIONID, value: sessionid || Session.sessionid});
 }
