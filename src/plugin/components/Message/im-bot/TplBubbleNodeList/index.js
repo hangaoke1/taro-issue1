@@ -1,5 +1,5 @@
 import Taro, { useState } from '@tarojs/taro';
-import { View } from '@tarojs/components';
+import { View, Block } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import { get } from '@/plugin/global_config';
@@ -24,10 +24,11 @@ export default function TplBubbleNodeList(props) {
 
   return (
     <View className="m-bubble-node">
-      <View className="u-label">{_get(tpl, 'label')}</View>
-      <View className="u-title">{_get(tpl, 'title.label')}</View>
       {nodeList.length ? (
-        <View className="u-list">
+        <Block>
+          <View className="u-label">{_get(tpl, 'label')}</View>
+          <View className="u-title">{_get(tpl, 'title.label')}</View>
+          <View className="u-list">
           {nodeList.map((node, index) => {
             return (
               <View
@@ -57,6 +58,7 @@ export default function TplBubbleNodeList(props) {
             );
           })}
         </View>
+        </Block>
       ) : (
         <View className="u-empty">{_get(tpl, 'empty_list_hint')}</View>
       )}
