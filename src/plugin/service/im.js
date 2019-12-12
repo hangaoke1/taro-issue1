@@ -345,6 +345,21 @@ export default class IMSERVICE {
   }
 
   /**
+   * 当用户注销时，更换账号时断掉长连接，小程序对长连接数量有限制
+   */
+  closeSocket(){
+    this.getNim().then(nim => {
+      nim.destroy({
+        done: () => {
+          console.log('logout destroy');
+        }
+      })
+    }).catch(error => {
+      console.log('getNim error', error);
+    });
+  }
+
+  /**
    * 同步轻量crm
    * @param {*} extraParams
    */

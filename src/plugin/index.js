@@ -1,5 +1,5 @@
 import { set, get, initDeviceid } from './global_config';
-import { exitSession } from './actions/chat';
+import { exitSession, closeSocket } from './actions/chat';
 import eventbus from '@/lib/eventbus';
 
 
@@ -109,7 +109,7 @@ export const _$logoutSync = () => {
   set('deviceid', initDeviceid(true));
   _$setUserInfoSync(null);
   // 注销后yunxin账户都会变化，需要断掉当前会话
-  exitSession();
+  exitSession(closeSocket);
 }
 
 
@@ -121,7 +121,7 @@ export const _$logout = () => {
         set('deviceid', initDeviceid(true));
         _$setUserInfoSync(null);
         // 注销后yunxin账户都会变化，需要断掉当前会话
-        exitSession();
+        exitSession(closeSocket);
         resolve('logout success');
       }catch(err){
         reject(err);

@@ -694,7 +694,7 @@ export const isShuntEntriesStatus = () => {
 
 
 // 访客主动退出会话
-export const exitSession = () => {
+export const exitSession = (callback) => {
   const session = get('store').getState().Session;
   const dispatch = get('store').dispatch;
 
@@ -702,7 +702,12 @@ export const exitSession = () => {
     sessionid: session.sessionid
   }
 
-  NIM && NIM.exitSession(extraParms)
+  NIM && NIM.exitSession(extraParms).
+    then(msg => {
+      callback(msg);
+    }).catch(error => {
+      callback(error);
+    })
 
   let message = {
     type: 'systip',
@@ -711,6 +716,11 @@ export const exitSession = () => {
   };
 
   dispatch({ type: PUSH_MESSAGE, message });
+}
+
+// 访客切换账号时断掉长连接
+export const closeSocket = () => {
+  NIM && NIM.closeSocket();
 }
 
 // 发送商品链接
