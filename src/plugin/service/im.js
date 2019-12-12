@@ -299,7 +299,7 @@ export default class IMSERVICE {
         fromType: FROM_TYPE,
         level: get('level'),
         bundleid: get('bundleid') || Taro.getAccountInfoSync().miniProgram.appId,
-        version: 64,
+        version: 65,
         staffid: get('staffid'),
         groupid: get('groupid'),
         ...extraParams
