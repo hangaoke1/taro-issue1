@@ -255,8 +255,18 @@ _$configTitle的同步方法。
 
 | 字段    | 类型   | 描述  |
 | :----: | :----: | :---- |
-| url | String | 访问的链接地址 |
-| from   | String | 链接访问的来源模块 |
+| data | Object | url: 访问的链接地址, from: 链接访问的来源模块 |
+| navigateTo | Function | 插件跳转函数 |
+`因小程序插件回调中，主程序无法直接调用自身的navigateTo函数进行跳转，所以额外提供参数供使用方进行页面跳转`
+```js
+myPluginInterface._$onClickAction((data, navigateTo) => {
+  console.log('点击事件参数', data)
+  // 注意此处必须使用navigateTo
+  navigateTo({
+    url: '/pages/test/index'
+  })
+})
+```
 
 #### 输入框上方快捷入口点击响应
 
@@ -349,4 +359,10 @@ myPluginInterface._$onFileOpenAction((fileObj) => {
     })
   }
 })
+```
+
+## 全面屏适配
+由于微信小程序本身的限制，导致用户全局配置`navigationStyle: 'custom'`时，会导致插件页面的导航栏被隐藏从而无法进行页面后退，并且由于微信小程序并没有相关api提供到插件开发者去控制导航栏，目前考虑到部分用户业务场景无法通过配置单独的页面进行导航栏显示/隐藏控制，故七鱼插件为开发者提供了全面屏配置参数
+```js
+myPluginInterface._$configFullScreen(true)
 ```

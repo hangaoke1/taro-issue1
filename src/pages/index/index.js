@@ -92,7 +92,14 @@ export default class Index extends Component {
 
     myPluginInterface._$configAutoCopy(false)
 
-    myPluginInterface._$onClickAction((v) => { console.log('点击事件', v) })
+    // myPluginInterface._$configFullScreen(true)
+
+    myPluginInterface._$onClickAction((v, navigateTo) => {
+      console.log('点击事件', v)
+      navigateTo({
+        url: '/pages/test/index'
+      })
+    })
   }
 
   componentWillUnmount () { }
