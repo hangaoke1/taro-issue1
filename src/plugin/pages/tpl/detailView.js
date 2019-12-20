@@ -2,6 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import _get from 'lodash/get';
+import Back from "@/components/Back";
 
 import MDetailViewList from '@/components/Bot/m-detail-view-list';
 import './detailView.less';
@@ -32,6 +33,7 @@ class DetailView extends Component {
     const tpl = _get(item, 'content.template');
     return item ? (
       <View className="m-detail">
+        <Back />
         <MDetailViewList list={tpl.detail.list}></MDetailViewList>
       </View>
     ) : null;

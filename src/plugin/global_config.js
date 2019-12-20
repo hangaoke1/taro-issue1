@@ -41,7 +41,8 @@ const globalConfig = {
   heartbeatCycle: 8000,
   store: null,
   NIM: NIM,
-  autoCopy: true // 处理链接点击时，是否进行复制
+  autoCopy: true, // 处理链接点击时，是否进行复制
+  fullScreen: false // 是否为全面屏模式
 };
 
 export const get = (key) => globalConfig[key];

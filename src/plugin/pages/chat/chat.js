@@ -1,30 +1,31 @@
-import Taro, { Component } from '@tarojs/taro';
-import { View, ScrollView, Video, RichText } from '@tarojs/components';
-import { connect } from '@tarojs/redux';
-import _get from 'lodash/get';
+import Taro, { Component } from "@tarojs/taro";
+import { View, ScrollView, Video, RichText } from "@tarojs/components";
+import { connect } from "@tarojs/redux";
+import _get from "lodash/get";
 
-import { clearUnreadHome } from '@/lib/unread';
-import Index from '../../app';
-import getSystemInfo from '@/lib/systemInfo';
-import { setClipboardData } from '@/utils/extendTaro';
+import { clearUnreadHome } from "@/lib/unread";
+import Index from "../../app";
+import getSystemInfo from "@/lib/systemInfo";
+import { setClipboardData } from "@/utils/extendTaro";
 
-import MessageView from '../../components/Message';
-import ChatBox from '../../components/ChatBox';
-import FuncBox from '../../components/FuncBox';
-import Portrait from '../../components/Portrait';
-import FloatLayout from '../../components/FloatLayout';
-import Evaluation from '../../components/Evaluation';
+import MessageView from "../../components/Message";
+import ChatBox from "../../components/ChatBox";
+import FuncBox from "../../components/FuncBox";
+import Portrait from "../../components/Portrait";
+import FloatLayout from "../../components/FloatLayout";
+import Evaluation from "../../components/Evaluation";
 
-import BotOrderList from '../../components/BotOrderList';
-import BotForm from '../../components/BotForm';
-import BotDrawerList from '../../components/BotDrawerList';
-import BotBubbleList from '../../components/BotBubbleList';
-import BotCard from '../../components/BotCard';
-import FloatButton from '../../components/FloatButton';
+import BotOrderList from "../../components/BotOrderList";
+import BotForm from "../../components/BotForm";
+import BotDrawerList from "../../components/BotDrawerList";
+import BotBubbleList from "../../components/BotBubbleList";
+import BotCard from "../../components/BotCard";
+import FloatButton from "../../components/FloatButton";
+import Back from "../../components/Back";
 
-import {get} from '../../global_config';
+import { get } from "../../global_config";
 
-import { NAVIGATIONBAR_TITLE } from '../../constants';
+import { NAVIGATIONBAR_TITLE } from "../../constants";
 
 import {
   createAccount,
@@ -40,22 +41,22 @@ import {
   initMessage,
   exitSession,
   setEvaluationSessionId
-} from '../../actions/chat';
+} from "../../actions/chat";
 import {
   toggleShowFun,
   toggleShowPortrait,
   hideAction
-} from '../../actions/options';
+} from "../../actions/options";
 import {
   closeEvaluationModal,
-  openEvaluationModal,
-} from '../../actions/actionHandle';
-import eventbus from '../../lib/eventbus';
-import { text2em } from '../../utils';
-import _debounce from '@/lib/debounce'; // loadsh debounce在小程序下引用存在问题
+  openEvaluationModal
+} from "../../actions/actionHandle";
+import eventbus from "../../lib/eventbus";
+import { text2em } from "../../utils";
+import _debounce from "@/lib/debounce"; // loadsh debounce在小程序下引用存在问题
 
-import functionList from './function.config';
-import './chat.less';
+import functionList from "./function.config";
+import "./chat.less";
 
 const dAssociate = _debounce(associate, 300, false);
 
@@ -110,10 +111,10 @@ class Chat extends Component {
     getSdkSetting();
     this.lockEntrance = []; // 锁定输入框上方人工会话快捷入口
     this.state = {
-      scrollIntoView: '',
+      scrollIntoView: "",
       scrollWithAnimation: true,
       height: 0,
-      videoUrl: '',
+      videoUrl: "",
       wrapHeight: 0,
       showAssociate: false,
       lockBot: [], // 锁定bot入口1s
@@ -125,7 +126,8 @@ class Chat extends Component {
       chatViewScrollY: true,
       // 优化体验
       showLoading: true,
-      firstLoading: true
+      firstLoading: true,
+      statusBarHeight: wx.getSystemInfoSync()["statusBarHeight"]
     };
   }
 
@@ -143,17 +145,17 @@ class Chat extends Component {
     }, 1000);
     // 清空未读消息
     clearUnreadHome();
-    eventbus.on('unshift_message', this.handleUnshiftMessage);
-    eventbus.on('push_message', this.handlePushMessage);
-    eventbus.on('reset_scrollIntoView', this.handleResetScrollIntoView);
+    eventbus.on("unshift_message", this.handleUnshiftMessage);
+    eventbus.on("push_message", this.handlePushMessage);
+    eventbus.on("reset_scrollIntoView", this.handleResetScrollIntoView);
 
-    eventbus.on('video_click', this.handlePlay);
-    eventbus.on('disabled_chat_scrollY', () => {
+    eventbus.on("video_click", this.handlePlay);
+    eventbus.on("disabled_chat_scrollY", () => {
       this.setState({
         chatViewScrollY: false
       });
     });
-    eventbus.on('enable_chat_scrollY', () => {
+    eventbus.on("enable_chat_scrollY", () => {
       this.setState({
         chatViewScrollY: true
       });
@@ -166,22 +168,22 @@ class Chat extends Component {
   }
 
   componentWillUnmount() {
-    eventbus.off('unshift_message', this.handleUnshiftMessage);
-    eventbus.off('push_message', this.handlePushMessage);
-    eventbus.off('reset_scrollIntoView', this.handleResetScrollIntoView);
-    eventbus.off('video_click', this.handlePlay);
+    eventbus.off("unshift_message", this.handleUnshiftMessage);
+    eventbus.off("push_message", this.handlePushMessage);
+    eventbus.off("reset_scrollIntoView", this.handleResetScrollIntoView);
+    eventbus.off("video_click", this.handlePlay);
   }
 
   handleResetScrollIntoView = () => {
     this.setState({
-      scrollIntoView: ''
+      scrollIntoView: ""
     });
   };
-  
+
   componentDidShow() {
     Taro.hideNavigationBarLoading();
     Taro.setNavigationBarTitle({
-      title: get('title')
+      title: get("title")
     });
   }
 
@@ -213,8 +215,8 @@ class Chat extends Component {
   // 重置底部区域
   scrollToBottom = (scrollWithAnimation = true, delay = 300, force = true) => {
     if (
-      this.state.scrollIntoView !== '' &&
-      this.state.scrollIntoView !== 'm-bottom' &&
+      this.state.scrollIntoView !== "" &&
+      this.state.scrollIntoView !== "m-bottom" &&
       !force
     ) {
       return;
@@ -226,13 +228,13 @@ class Chat extends Component {
     }
 
     this.setState({
-      scrollIntoView: '',
+      scrollIntoView: "",
       scrollWithAnimation
     });
 
     this.timer = setTimeout(() => {
       this.setState({
-        scrollIntoView: 'm-bottom'
+        scrollIntoView: "m-bottom"
       });
 
       this.handleOffsetCalc();
@@ -264,7 +266,7 @@ class Chat extends Component {
 
   handleOffsetCalc = cb => {
     const query = Taro.createSelectorQuery().in(this.$scope);
-    const node = query.select('#m-bottom');
+    const node = query.select("#m-bottom");
     const { scrollViewOffset } = this.state;
     node
       .boundingClientRect(rect => {
@@ -322,18 +324,18 @@ class Chat extends Component {
   handleFuncClick = item => {
     const { sendImage: _sendImage } = this.props;
     switch (item.type) {
-      case 'album':
+      case "album":
         // 照片
         Taro.chooseImage({
-          sourceType: ['album']
+          sourceType: ["album"]
         }).then(res => {
           _sendImage(res);
         });
         break;
-      case 'camera':
+      case "camera":
         // 拍摄
         Taro.chooseImage({
-          sourceType: ['camera']
+          sourceType: ["camera"]
         }).then(res => {
           _sendImage(res);
         });
@@ -345,7 +347,7 @@ class Chat extends Component {
 
   // 处理emoji表情点击
   handleEmojiClick = item => {
-    eventbus.trigger('emoji_click', item);
+    eventbus.trigger("emoji_click", item);
   };
 
   handleFocus = event => {
@@ -368,7 +370,7 @@ class Chat extends Component {
   /** 消息体点击事件处理 **/
   handleImgClick = item => {
     const imgMessageList = this.props.Message.filter(
-      msg => msg.type === 'image'
+      msg => msg.type === "image"
     );
     const imgList = imgMessageList.map(msg => msg.content.url);
     Taro.previewImage({
@@ -382,36 +384,44 @@ class Chat extends Component {
     this.setState({
       videoUrl: url
     });
-    const videoCtx = Taro.createVideoContext('j-video');
+    const videoCtx = Taro.createVideoContext("j-video");
     videoCtx.requestFullScreen({
       direction: 0
     });
   };
   // 点击人工会话下快捷入口
   handleQuickEntryClick = entry => {
-    if (this.lockEntrance.includes(entry.label)) { return }
-    this.lockEntrance.push(entry.label)
-    setTimeout(() => { this.lockEntrance = this.lockEntrance.filter(item => item !== entry.label )}, 1000)
+    if (this.lockEntrance.includes(entry.label)) {
+      return;
+    }
+    this.lockEntrance.push(entry.label);
+    setTimeout(() => {
+      this.lockEntrance = this.lockEntrance.filter(
+        item => item !== entry.label
+      );
+    }, 1000);
 
     const { openEvaluationModal, Session, CorpStatus } = this.props;
-    switch(entry.action) {
+    switch (entry.action) {
       // 链接外跳
-      case 'open_link':
+      case "open_link":
         setClipboardData(entry.data);
         break;
       // 评价
-      case 'evaluate':
+      case "evaluate":
         // 判断是否已评价或者超时
-        const entryItem = _get(CorpStatus, 'entryConfig', []).filter(item => item.key === 'evaluation')[0];
+        const entryItem = _get(CorpStatus, "entryConfig", []).filter(
+          item => item.key === "evaluation"
+        )[0];
         const hasEvaluate = entryItem ? entryItem.disabled : true;
 
         // 已经评价完毕
         if (hasEvaluate) {
           Taro.showToast({
-            title: '您已经评价过啦',
-            icon: 'none'
-          })
-          return
+            title: "您已经评价过啦",
+            icon: "none"
+          });
+          return;
         }
 
         let sessionCloseTime = Session.closeTime;
@@ -426,44 +436,44 @@ class Chat extends Component {
           curTime - sessionCloseTime > evaluation_timeout
         ) {
           Taro.showToast({
-            title: '评价已超时，无法进行评价',
-            icon: 'none',
+            title: "评价已超时，无法进行评价",
+            icon: "none",
             duration: 2000
           });
           return;
         }
         // 重置评价sessionid为当前会话id
-        setEvaluationSessionId()
+        setEvaluationSessionId();
         openEvaluationModal();
         break;
       // 关闭会话
-      case 'close_session':
-        const isSessionOffline = Session.stafftype === 0 && Session.code === 206; // 会话结束状态
+      case "close_session":
+        const isSessionOffline =
+          Session.stafftype === 0 && Session.code === 206; // 会话结束状态
         if (isSessionOffline) {
           Taro.showToast({
-            title: '您已退出咨询',
-            icon: 'none'
-          })
+            title: "您已退出咨询",
+            icon: "none"
+          });
         } else {
           Taro.showModal({
-            title: '',
-            content: '确认退出对话?',
-          })
-            .then(res => {
-              if (res.confirm) {
-                exitSession();
-              }
-            })
+            title: "",
+            content: "确认退出对话?"
+          }).then(res => {
+            if (res.confirm) {
+              exitSession();
+            }
+          });
         }
         break;
       // 自定义事件
-      case 'custom':
-        eventbus.trigger('on_entrance_click', entry)
+      case "custom":
+        eventbus.trigger("on_entrance_click", entry);
         break;
       default:
-        console.warn('暂不支持该类型快捷入口', entry)
+        console.warn("暂不支持该类型快捷入口", entry);
     }
-  }
+  };
   // 点击bot快捷入口
   handleBotClick = bot => {
     const label = bot.label;
@@ -475,8 +485,8 @@ class Chat extends Component {
 
     if (!canSendMessage()) {
       return Taro.showToast({
-        title: '请等待连线成功后，再发送消息',
-        icon: 'none',
+        title: "请等待连线成功后，再发送消息",
+        icon: "none",
         duration: 2000
       });
     }
@@ -500,12 +510,12 @@ class Chat extends Component {
   };
 
   handleFullscreenchange = e => {
-    const videoCtx = Taro.createVideoContext('j-video');
+    const videoCtx = Taro.createVideoContext("j-video");
     if (!e.detail.fullScreen) {
       // 退出全屏后停止视频
       videoCtx.stop();
       this.setState({
-        videoUrl: ''
+        videoUrl: ""
       });
     } else {
       // HACK: ios首次打开视时，播放无效问题
@@ -525,7 +535,7 @@ class Chat extends Component {
    */
   handleSelectEntry = key => {
     switch (key) {
-      case 'evaluation':
+      case "evaluation":
         const { openEvaluationModal, Session } = this.props;
         const isKefuOnline = Session.stafftype === 0 && Session.code === 200; // 客服在线状态
 
@@ -537,20 +547,21 @@ class Chat extends Component {
           10 * 60 * 1000;
         if (
           sessionCloseTime &&
-          curTime - sessionCloseTime > evaluation_timeout && !isKefuOnline
+          curTime - sessionCloseTime > evaluation_timeout &&
+          !isKefuOnline
         ) {
           Taro.showToast({
-            title: '评价已超时，无法进行评价',
-            icon: 'none',
+            title: "评价已超时，无法进行评价",
+            icon: "none",
             duration: 2000
           });
           return;
         }
         // 重置评价sessionid为当前会话id
-        setEvaluationSessionId()
+        setEvaluationSessionId();
         openEvaluationModal();
         break;
-      case 'applyHumanStaff':
+      case "applyHumanStaff":
         const { delApplyHumanStaffEntry } = this.props;
         const transferRgType = 30;
         applyHumanStaff(transferRgType);
@@ -573,7 +584,7 @@ class Chat extends Component {
     }
     const { sendText } = this.props;
     sendText(text);
-    eventbus.trigger('reset_input');
+    eventbus.trigger("reset_input");
     this.handleEmptyAssociate();
   };
 
@@ -620,7 +631,7 @@ class Chat extends Component {
     if (!canSendMessage()) {
       return;
     }
-    const uuid = _get(this.props, 'Message[0].uuid');
+    const uuid = _get(this.props, "Message[0].uuid");
     if (!uuid) {
       return;
     }
@@ -635,6 +646,10 @@ class Chat extends Component {
   };
 
   handleOnScrollToLower = () => {};
+
+  handleBack = () => {
+    Taro.navigateBack();
+  };
 
   render() {
     const {
@@ -658,13 +673,16 @@ class Chat extends Component {
       showLoading,
       scrollWithAnimation,
       scrollIntoView,
-      firstLoading
+      firstLoading,
+      statusBarHeight
     } = this.state;
 
-    const isRobot = (Session.stafftype === 1 || Session.robotInQueue === 1) && Session.code === 200; // 机器人状态
+    const isRobot =
+      (Session.stafftype === 1 || Session.robotInQueue === 1) &&
+      Session.code === 200; // 机器人状态
 
     let hasBot = isRobot && Bot.len;
-    
+
     const isKefuOnline = Session.stafftype === 0 && Session.code === 200; // 客服在线状态
 
     const isKefuOffline = Session.stafftype === 0 && Session.code === 201; // 客服离线状态
@@ -675,13 +693,17 @@ class Chat extends Component {
 
     const isKefuQuiet = isKefuOnline && Session.realStaffid === -1; // 访客未说话静默状态
 
-    let quickEntryList = _get(Setting, 'setting.entranceSetting', []); // 人工会话快捷入口列表
+    let quickEntryList = _get(Setting, "setting.entranceSetting", []); // 人工会话快捷入口列表
 
-    let showEvaluation = _get(CorpStatus, 'entryConfig', []).map(item => item.key === 'evaluation').length; // 是否存在评价入口
+    let showEvaluation = _get(CorpStatus, "entryConfig", []).map(
+      item => item.key === "evaluation"
+    ).length; // 是否存在评价入口
 
     // 人工快捷入口-隐藏评价
     if (!showEvaluation) {
-      quickEntryList = quickEntryList.filter(item => item.action !== 'evaluate');
+      quickEntryList = quickEntryList.filter(
+        item => item.action !== "evaluate"
+      );
     }
 
     // 人工快捷入口-隐藏结束会话
@@ -691,24 +713,33 @@ class Chat extends Component {
 
     // 人工快捷入口-隐藏评价/结束会话
     if (isKefuOffline || isKefuQuiet) {
-      quickEntryList = quickEntryList.filter(item => item.action !== 'evaluate');
-      quickEntryList = quickEntryList.filter(item => item.action !== 'close_session');
+      quickEntryList = quickEntryList.filter(
+        item => item.action !== "evaluate"
+      );
+      quickEntryList = quickEntryList.filter(
+        item => item.action !== "close_session"
+      );
     }
 
     // 人工快捷入口-排队中&有机器人
     if (isKefuQueue && Session.robotInQueue) {
-      quickEntryList = []
+      quickEntryList = [];
     }
 
     // 人工快捷入口-排队中&无机器人
     if (isKefuQueue && !Session.robotInQueue) {
-      quickEntryList = quickEntryList.filter(item => item.action !== 'evaluate');
-      quickEntryList = quickEntryList.filter(item => item.action !== 'close_session');
+      quickEntryList = quickEntryList.filter(
+        item => item.action !== "evaluate"
+      );
+      quickEntryList = quickEntryList.filter(
+        item => item.action !== "close_session"
+      );
     }
 
-    let hasQuickEntry = !isRobot && quickEntryList && quickEntryList.length && Session.code;
+    let hasQuickEntry =
+      !isRobot && quickEntryList && quickEntryList.length && Session.code;
 
-    let offset = scrollViewOffset + 'px';
+    let offset = scrollViewOffset + "px";
 
     const isOpen = Options.showFunc || Options.showPortrait;
 
@@ -720,18 +751,21 @@ class Chat extends Component {
       hasBot = false;
     }
 
+    const isFullScreen = get("fullScreen");
+
     return (
       <Index className="m-page-wrapper">
+        <Back></Back>
         <View
           class="u-loading"
-          style={`visibility: ${showLoading ? 'visible' : 'hidden'}`}
+          style={`visibility: ${showLoading ? "visible" : "hidden"}`}
         >
           消息加载中...
         </View>
         {/* 视频全局对象 */}
         <View
           style={`display: ${
-            videoUrl ? 'block' : 'none'
+            videoUrl ? "block" : "none"
           };position:fixed;top:0;bottom:0;right:0;left:0;z-index:999;background-color:#000;`}
         >
           <Video
@@ -758,6 +792,9 @@ class Chat extends Component {
             <View
               style={`height: ${showTopPlaceHolder ? constOffset : 0}px`}
             ></View>
+            { isFullScreen && <View
+              style={`height: ${statusBarHeight}px`}
+            ></View>}
             {Message.map(it => (
               <View key={it.uuid} id={it.uuid}>
                 <MessageView
@@ -778,7 +815,7 @@ class Chat extends Component {
         <View
           className={`u-chatbox`}
           style={`bottom: ${
-            height ? height + 'px' : isOpen ? Taro.pxTransform(544) : '0'
+            height ? height + "px" : isOpen ? Taro.pxTransform(544) : "0"
           };`}
         >
           {showAssociate ? (
@@ -804,10 +841,10 @@ class Chat extends Component {
               {Bot.botList.map((bot, index) => (
                 <View
                   className={`m-bot-item ${
-                    lockBot.includes(bot.label) ? 'z-bot-disable' : ''
+                    lockBot.includes(bot.label) ? "z-bot-disable" : ""
                   }`}
                   style={`border-color: ${Setting.themeColor ||
-                    '#e1e3e6'};animation-delay: ${index * 200}ms;`}
+                    "#e1e3e6"};animation-delay: ${index * 200}ms;`}
                   key={bot.id}
                   onClick={e => this.handleBotClick(bot, e)}
                 >
@@ -816,13 +853,13 @@ class Chat extends Component {
               ))}
             </ScrollView>
           ) : null}
-          { hasQuickEntry ? (
+          {hasQuickEntry ? (
             <ScrollView scrollX className="m-bot">
               {quickEntryList.map((entry, index) => (
                 <View
                   className={`m-bot-item`}
                   style={`border-color: ${Setting.themeColor ||
-                    '#e1e3e6'};animation-delay: ${index * 200}ms;`}
+                    "#e1e3e6"};animation-delay: ${index * 200}ms;`}
                   key={entry.label}
                   onClick={this.handleQuickEntryClick.bind(this, entry)}
                 >
@@ -843,13 +880,13 @@ class Chat extends Component {
           </ChatBox>
         </View>
         <View className="u-mask" style={`height: ${height}px`}></View>
-        <View className={`u-funcbox ${Options.showFunc ? 'open' : ''}`}>
+        <View className={`u-funcbox ${Options.showFunc ? "open" : ""}`}>
           <FuncBox
             list={functionList}
             onFuncClick={this.handleFuncClick}
           ></FuncBox>
         </View>
-        <View className={`u-funcbox ${Options.showPortrait ? 'open' : ''}`}>
+        <View className={`u-funcbox ${Options.showPortrait ? "open" : ""}`}>
           <Portrait onEmojiClick={this.handleEmojiClick}></Portrait>
         </View>
         <FloatLayout

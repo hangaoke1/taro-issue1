@@ -348,6 +348,7 @@ export const parseUrlAction = (url, transferRgType = '') => {
       });
     }
   }
+  eventbus.trigger('click_action', { url });
 };
 
 /**

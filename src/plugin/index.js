@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro'
 import { set, get, initDeviceid } from './global_config';
 import { exitSession, closeSocket } from './actions/chat';
 import eventbus from '@/lib/eventbus';
@@ -255,7 +256,7 @@ export const _$clearUnreadCount = () => {
  */
 export const _$onClickAction = (cb) => {
   eventbus.on('click_action', (extralParams) => {
-    cb(extralParams);
+    cb(extralParams, Taro.navigateTo);
   })
 }
 
@@ -397,4 +398,12 @@ export const _$setHistoryLimit = (limit) => {
  */
 export const _$configAutoCopy = autoCopy => {
   set('autoCopy', !!autoCopy)
+}
+
+/**
+ * 是否为全面屏模式
+ * @param {bool} val 
+ */
+export const _$configFullScreen = val => {
+  set('fullScreen', !!val)
 }

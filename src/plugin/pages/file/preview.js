@@ -13,7 +13,7 @@ import './preview.less';
 import GImg from '@/components/GImg';
 import GAudio from '@/components/GAudio';
 import Iconfont from '@/components/Iconfont';
-
+import Back from "@/components/Back";
 @connect(
   ({ Message }) => ({
     Message
@@ -177,6 +177,7 @@ class FilePreview extends Component {
 
     return item ? (
       <View className="m-file-preview">
+        <Back />
         {tempFilePath && type === 'image' ? (
           <View className="u-wrap">
             <GImg
