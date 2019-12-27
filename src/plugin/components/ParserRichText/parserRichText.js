@@ -66,7 +66,7 @@ class ParserRichText extends Taro.Component {
     }
 
     if (this.props.autocopy && event.detail) {
-      if (url !== 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
+      if (url.indexOf('qiyu://action.qiyukf.com') === -1) {
         Taro.setClipboardData({
           data: url,
           success() {

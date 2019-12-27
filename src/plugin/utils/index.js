@@ -84,3 +84,20 @@ export const size2String = (size = 0) => {
   }
   return kb.toFixed(1) + 'KB'
 }
+
+/**
+ * url查询参数转换成对象
+ * query2Object
+ */
+export const query2Object = (url = '') => {
+  let obj = {}
+  let queryStr = url.split('?')[1] || '';
+  queryStr.split('&').forEach(item => {
+    if (item) {
+      const key = item.split('=')[0]
+      const value = item.split('=')[1]
+      obj[key] = value
+    }
+  })
+  return obj
+}

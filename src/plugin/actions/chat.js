@@ -12,6 +12,7 @@ import { UPDATE_EVALUATION_SESSIONID } from '../constants/evaluation';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '@/lib/uuid';
 import { loadHistroy } from '@/lib/history';
+import { query2Object } from '@/utils/index';
 
 eventbus.on('do_send_product_card', function(extraParms){
   sendProductCard(extraParms);
@@ -339,13 +340,16 @@ export const evalRobotAnswer = (msgidClient, evaluation) => {
  */
 export const parseUrlAction = (url, transferRgType = '') => {
   // 处理转人工请求
-  if (url === 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
+  if (url.indexOf('qiyu://action.qiyukf.com') > -1) {
     const isRobot = get('isRobot');
+    const queryObj = query2Object(url)
+    const applyParams = {
+      stafftype: 1,
+      transferRgType,
+    }
+    queryObj.groupid && (applyParams.groupid = queryObj.groupid)
     if (isRobot) {
-      NIM.applyKefu({
-        stafftype: 1,
-        transferRgType
-      });
+      NIM.applyKefu(applyParams);
     }
   }
   eventbus.trigger('click_action', { url });
