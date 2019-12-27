@@ -1,6 +1,6 @@
 <!--Parser/trees/trees.wxml-->
 <wxs module="cssHandler" src="./cssHandler.wxs" />
-<block wx:for='{{nodes}}' wx:key>
+<block wx:for='{{nodes}}' wx:key="index">
   <block wx:if="{{!item.continue}}">
     <!--图片-->
     <rich-text wx:if="{{item.name=='img'}}" style="{{cssHandler.getStyle(item.attrs.style,'inline-block')}}" nodes='{{cssHandler.setImgStyle(item,controls.imgMode)}}' data-ignore='{{item.attrs.ignore}}' data-src='{{item.attrs.src}}' bindtap='previewEvent' />
@@ -24,18 +24,18 @@
       name='{{item.attrs.name}}' author='{{item.attrs.author}}' style="{{item.attrs.style}}" data-id="{{item.attrs.id}}" data-source="{{item.attrs.source}}" binderror="errorEvent" />
     <!--无序列表 扩展-->
     <view class="u-ul" wx:elif="{{item.name=='ul'}}">
-      <view class="u-ul-li" wx:for='{{item.children}}' wx:key wx:for-item="liItem">
+      <view class="u-ul-li" wx:for='{{item.children}}' wx:key="index" wx:for-item="liItem">
         <view class="u-point"></view>
-        <block wx:for='{{liItem.children}}' wx:key wx:for-item="aItem">
+        <block wx:for='{{liItem.children}}' wx:key="index" wx:for-item="aItem">
           <trees nodes="{{[aItem]}}" controls="{{controls}}" />
         </block>
       </view>
     </view>
     <!--有序列表 扩展-->
     <view class="u-ol" wx:elif="{{item.name=='ol'}}">
-      <view class="u-ol-li" wx:for-index="idx" wx:for='{{item.children}}' wx:key wx:for-item="liItem">
+      <view class="u-ol-li" wx:for-index="idx" wx:for='{{item.children}}' wx:key="index" wx:for-item="liItem">
         <view class="u-index">{{idx+1}}.</view>
-        <block wx:for='{{liItem.children}}' wx:key wx:for-item="aItem">
+        <block wx:for='{{liItem.children}}' wx:key="index" wx:for-item="aItem">
           <trees nodes="{{[aItem]}}" controls="{{controls}}" />
         </block>
       </view>

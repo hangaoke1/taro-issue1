@@ -24,6 +24,7 @@ import TplRefundDetail from './TplRefundDetail';
 import TplCardLayout from './TplCardLayout';
 import TplDetailView from './TplDetailView';
 import TplActivePage from './TplActivePage';
+import TplRadioButton from './TplRadioButton';
 
 import './index.less';
 import eventbus from '@/lib/eventbus';
@@ -66,6 +67,7 @@ export default class Bot extends Component {
 
   render() {
     const { item, Setting } = this.props;
+    const outType = _get(item, 'content.type');
     const tpl = _get(item, 'content.template', {});
     let layout = null;
     let showFormAction = false;
@@ -146,8 +148,12 @@ export default class Bot extends Component {
         layout = <TplErrorMsg item={item} tpl={tpl}></TplErrorMsg>;
         break;
       }
+      case 'radio_button': {
+        layout = <TplRadioButton item={item} tpl={tpl}></TplRadioButton>
+        break;
+      }
       default: {
-        layout = <View className="u-tip">微信小程序不支持展示该消息类型</View>;
+      layout = <View className="u-tip">{outType === '01' ? _get(item, 'content.template', '微信小程序不支持展示该消息类型'):'微信小程序不支持展示该消息类型'}</View>;
       }
     }
 
