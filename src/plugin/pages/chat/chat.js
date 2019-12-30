@@ -278,7 +278,8 @@ class Chat extends Component {
           // console.log('屏幕高度', res.windowHeight)
           // console.log('哨兵距离底部距离: ', offsetBottom); // 667 ---> 0
           // console.log('哨兵距离底部距离计算: ', offsetBottomCalc); // 667 ---> 0
-          if (!this.state.showTopPlaceHolder && offsetBottom <= 75 * ratio) {
+
+          if (!this.state.showTopPlaceHolder && offsetBottom <= 80 * ratio) {
             this.setState(
               {
                 showTopPlaceHolder: true

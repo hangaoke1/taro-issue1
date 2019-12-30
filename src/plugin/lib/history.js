@@ -5,10 +5,19 @@ import Taro from '@tarojs/taro';
 import { get } from '../global_config';
  
 const LIMIT = 100; // 默认存储100条，FIFO原则
-const KEY = 'HISTORY_MESSAGE'; // 存储历史消息的键名
+let DEFAULT_KEY = 'HISTORY_MESSAGE'; // 存储历史消息的键名
 
+function _getKey () {
+  const userInfo = get('userInfo')
+  if (userInfo && userInfo.userId) {
+    return 'HISTORY_' + userInfo.userId
+  } else {
+    return DEFAULT_KEY
+  }
+}
 // 添加消息
 export function add (message) {
+  const KEY = _getKey();
   const limit = get('history_limit') || LIMIT;
   const data = Taro.getStorageSync(KEY);
   const oldList = data ? JSON.parse(data) : [];
@@ -19,6 +28,7 @@ export function add (message) {
 
 // 删除消息
 export function remove (id) {
+  const KEY = _getKey();
   const data = Taro.getStorageSync(KEY);
   const oldList = data ? JSON.parse(data) : [];
   const newList = oldList.filter(message => message.uuid !== id);
@@ -27,6 +37,7 @@ export function remove (id) {
 
 // 更新消息
 export function update (id, message) {
+  const KEY = _getKey();
   const data = Taro.getStorageSync(KEY);
   const oldList = data ? JSON.parse(data) : [];
   let index = -1;
@@ -44,6 +55,7 @@ export function update (id, message) {
 
 // 加载历史消息
 export function loadHistroy(id, pageSize = 10) {
+  const KEY = _getKey();
   const data = Taro.getStorageSync(KEY);
   const oldList = data ? JSON.parse(data) : [];
 
