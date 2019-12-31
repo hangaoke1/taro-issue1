@@ -61,11 +61,11 @@ class ParserRichText extends Taro.Component {
       Taro.makePhoneCall({
         phoneNumber: tel
       });
-      console.log('处理电话号码短按');
       return;
     }
 
     if (this.props.autocopy && event.detail) {
+      // TODO: 是否需要判断全局autoCopy【目前通过props.autocopy使用地方比较多】
       if (url.indexOf('qiyu://action.qiyukf.com') === -1) {
         Taro.setClipboardData({
           data: url,
