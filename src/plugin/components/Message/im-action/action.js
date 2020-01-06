@@ -19,14 +19,16 @@ export default function ActionView(props) {
     if(entryid){
       let params = {
         entryid: data.entryid,
-        stafftype: 1
+        stafftype: 1,
+        label: data.label,
+        uuid: item.uuid,
+        content: item.content
       }
       if(data.type == 2){
         params.staffid = data.id
       }else{
         params.groupid = data.id
       }
-
       anctionHandle(item.action, params);
     }else{
       anctionHandle(item.action, data);
@@ -58,8 +60,8 @@ export default function ActionView(props) {
               item.entries.map(it => {
                 return (
                   <View className="u-entry">
-                    <View className="u-dot" style={Setting.themeBg}></View>
-                    <View className="u-label" style={Setting.themeText} onClick={(ev) => { actionFun({entryid: it.entryid, type: it.type, id: it.id}) }}>{it.label}</View>
+                    <View className="u-dot" style={`${!item.disabled ? Setting.themeBg: 'background-color: #989898'}`}></View>
+                    <View className="u-label" style={`${!item.disabled ? Setting.themeText: 'color: #989898'}`} onClick={(ev) => { actionFun({entryid: it.entryid, type: it.type, id: it.id, label: it.label}) }}>{it.label}</View>
                   </View>
                 )
               })

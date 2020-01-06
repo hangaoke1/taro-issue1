@@ -72,7 +72,16 @@ export const applyKefu = (
     account: account,
     token: token
   });
-
+  // const dispatch = get('store').dispatch;
+  //将前面的分流信息全部置灰
+  // dispatch({
+  //   type: UPDATE_MESSAGE_BYACTION,
+  //   message: {
+  //     type: 'entries',
+  //     disabled: true,
+  //     action: 'selectEntries'
+  //   }
+  // })
   NIM.applyKefu(extraParms);
 };
 
