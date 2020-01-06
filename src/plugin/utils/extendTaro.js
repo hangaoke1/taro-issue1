@@ -4,7 +4,7 @@ import { get } from '../global_config';
 
 
 export const setClipboardData = url => {
-  if (get('autoCopy')) {
+  if (get('autoCopy') && url) {
     Taro.setClipboardData({
       data: url,
       success: () => {

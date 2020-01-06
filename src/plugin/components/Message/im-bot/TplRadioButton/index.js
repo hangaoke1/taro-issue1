@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 import _get from "lodash/get";
 import _cloneDeep from 'lodash/cloneDeep';
 import { changeMessageByUUID, sendText } from '@/plugin//actions/chat';
+import ParserRichText from '@/components/ParserRichText/parserRichText';
+import { parseUrlAction } from '@/actions/chat';
 import "./index.less";
 
 @connect(
@@ -44,7 +46,6 @@ class RadioButton extends Component {
         icon: "none"
       });
     } else {
-      console.log('点击btn', btn)
       sendText(btn.label)
     }
   }
@@ -69,9 +70,16 @@ class RadioButton extends Component {
     }
   }
 
+  handleLinkpress = (event) => {
+    const { detail } = event;
+    const { transferRgType } = this.props.item || {};
+    parseUrlAction(detail, transferRgType);
+  }
+
   render() {
     const { tpl, Message, item = {}, Session } = this.props;
     const list = _get(tpl, "list", []);
+    const label = _get(tpl, "label", '');
     const isRobot =
       (Session.stafftype === 1 || Session.robotInQueue === 1) &&
       Session.code === 200;
@@ -83,7 +91,10 @@ class RadioButton extends Component {
     }
     return (
       <View className="u-radiobutton" style={{ marginBottom: showBtns ? "50px" : "0" }}>
-        <Text>{tpl.label}</Text>
+        <ParserRichText
+          html={label}
+          onLinkpress={this.handleLinkpress}
+        ></ParserRichText>
         {showBtns ? (
           <View className="u-wrap">
             <View className="u-inner-wrap">

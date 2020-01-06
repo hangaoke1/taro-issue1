@@ -90,7 +90,7 @@ export default class Index extends Component {
       myPluginInterface._$configTitle(Taro.getStorageSync('YSF-TITLE'));
     }
 
-    myPluginInterface._$configAutoCopy(false)
+    myPluginInterface._$configAutoCopy(true)
 
     // myPluginInterface._$configFullScreen(true)
 
