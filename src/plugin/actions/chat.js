@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro';
 import _get from 'lodash/get';
 import _cloneDeep from 'lodash/cloneDeep';
+import _isEaqul from 'lodash/isEqual';
 import { queryAccont, querySdkSetting } from '../service';
 import { get, set } from '../global_config';
 import IMSERVICE,{ STATUS } from '../service/im';
@@ -64,6 +65,9 @@ export const applyKefu = (
 
   if(!extraParms.entryid && session && (session.code == 200 || session.code == 203) && STATUS.status == 'connecting'){
     NIM.updateCrmInfo();
+    if (get('product')){
+      sendProductCard(get('product'));
+    }
     return;
   }
 
