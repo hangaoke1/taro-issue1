@@ -104,16 +104,22 @@ class BotWorksheet extends Component {
   showChoose = () => {
     this.setState({
       showChoose: true
-    })
-  }
+    });
+  };
 
   handleChooseClose = () => {
     this.setState({
       showChoose: false
-    })
-  }
+    });
+  };
   render() {
-    const { visible, previewIndex, files, windowHeight, showChoose } = this.state;
+    const {
+      visible,
+      previewIndex,
+      files,
+      windowHeight,
+      showChoose
+    } = this.state;
     const currentFile = files[previewIndex];
     return (
       <View>
@@ -124,104 +130,109 @@ class BotWorksheet extends Component {
           bodyPadding={0}
           onClose={this.handleClose}
         >
-          <View className="u-form">
-            <View className="u-title">
-              尊敬的客户，当前为非工作时间，有问题请留言。
-            </View>
-            <View className="u-label">手机</View>
-            <Input
-              className="u-input"
-              placeholder="提示暗纹"
-              placeholder-style="color: #ccc"
-            />
+          <View className="u-form-wrap">
+              <View className="u-form">
+                <View className="u-title">
+                  尊敬的客户，当前为非工作时间，有问题请留言。
+                </View>
+                <View className="u-label">手机</View>
+                <Input
+                  className="u-input"
+                  placeholder="提示暗纹"
+                  placeholder-style="color: #ccc"
+                />
 
-            <View className="u-label">微博账号</View>
-            <Input
-              className="u-input"
-              placeholder="提示暗纹"
-              placeholder-style="color: #ccc"
-            />
+                <View className="u-label">微博账号</View>
+                <Input
+                  className="u-input"
+                  placeholder="提示暗纹"
+                  placeholder-style="color: #ccc"
+                />
 
-            <View className="u-label">选项表单</View>
-            <Input
-              className="u-input"
-              placeholder="提示暗纹"
-              placeholder-style="color: #ccc"
-            />
+                <View className="u-label">选项表单</View>
+                <Input
+                  className="u-input"
+                  placeholder="提示暗纹"
+                  placeholder-style="color: #ccc"
+                />
 
-            <View className="u-label">选项表单</View>
-            <Input
-              className="u-input"
-              placeholder="提示暗纹"
-              placeholder-style="color: #ccc"
-            />
+                <View className="u-label">选项表单</View>
+                <Input
+                  className="u-input"
+                  placeholder="提示暗纹"
+                  placeholder-style="color: #ccc"
+                />
 
-            <View className="u-label">选项表单</View>
-            <Input
-              className="u-input"
-              placeholder="提示暗纹"
-              placeholder-style="color: #ccc"
-            />
+                <View className="u-label">选项表单</View>
+                <Input
+                  className="u-input"
+                  placeholder="提示暗纹"
+                  placeholder-style="color: #ccc"
+                />
 
-            <View className="u-label">选项表单</View>
-            <Input
-              className="u-input"
-              placeholder="提示暗纹"
-              placeholder-style="color: #ccc"
-            />
+                <View className="u-label">选项表单</View>
+                <Input
+                  className="u-input"
+                  placeholder="提示暗纹"
+                  placeholder-style="color: #ccc"
+                />
 
-            <View className="u-label">选项表单</View>
-            <Input
-              className="u-input"
-              placeholder="提示暗纹"
-              placeholder-style="color: #ccc"
-            />
+                <View className="u-label">选项表单</View>
+                <Input
+                  className="u-input"
+                  placeholder="提示暗纹"
+                  placeholder-style="color: #ccc"
+                />
 
-            <View className="u-label">选项表单</View>
-            <Input
-              className="u-input"
-              placeholder="提示暗纹"
-              placeholder-style="color: #ccc"
-            />
+                <View className="u-label">选项表单</View>
+                <Input
+                  className="u-input"
+                  placeholder="提示暗纹"
+                  placeholder-style="color: #ccc"
+                />
 
-            <View className="u-label" onClick={this.showChoose}>单项选择</View>
-            <Input
-              className="u-input"
-              placeholder="提示暗纹"
-              placeholder-style="color: #ccc"
-            />
+                <View className="u-label" onClick={this.showChoose}>
+                  单项选择
+                </View>
+                <Input
+                  className="u-input"
+                  placeholder="提示暗纹"
+                  placeholder-style="color: #ccc"
+                />
 
-            <View className="u-label">附件</View>
-            <View className="u-box">
-              <View className="u-box-wrap">
-                {files.map((file, index) => {
-                  return (
-                    <View
-                      className="u-box-item"
-                      onClick={this.clickFile.bind(this, index)}
-                      key={file.url}
-                    >
-                      {file.dur ? (
-                        <View className="u-video">
-                          <Iconfont type='icon-play-circlex' />
+                <View className="u-label">附件</View>
+                <View className="u-box">
+                  <View className="u-box-wrap">
+                    {files.map((file, index) => {
+                      return (
+                        <View
+                          className="u-box-item"
+                          onClick={this.clickFile.bind(this, index)}
+                          key={file.url}
+                        >
+                          {file.dur ? (
+                            <View className="u-video">
+                              <Iconfont type="icon-play-circlex" />
+                            </View>
+                          ) : (
+                            <View className="u-image">
+                              <Image mode="center" src={file.url}></Image>
+                            </View>
+                          )}
                         </View>
-                      ) : (
-                        <View className="u-image">
-                          <Image mode="center" src={file.url}></Image>
+                      );
+                    })}
+                    {files.length < 5 && (
+                      <View className="u-box-item" onClick={this.handleChoose}>
+                        <View className="u-upload">
+                          <Iconfont type="icon-add" color="#999" size="28" />
                         </View>
-                      )}
-                    </View>
-                  );
-                })}
-                {files.length < 5 && (
-                  <View className="u-box-item" onClick={this.handleChoose}>
-                    <View className="u-upload">
-                      <Iconfont type="icon-add" color="#999" size="28" />
-                    </View>
+                      </View>
+                    )}
                   </View>
-                )}
+                </View>
               </View>
-            </View>
+            <View className="u-confirm">提交</View>
           </View>
         </FloatLayout>
         {/* 文件预览 */}
