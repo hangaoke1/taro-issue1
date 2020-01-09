@@ -73,7 +73,7 @@ export default function TplBubbleNodeList(props) {
       ) : (
         <View className="u-empty">{_get(tpl, 'empty_list_hint')}</View>
       )}
-      {!show && nodeLen > 4 ? (
+      {!show && nodeLen > 4 || action.type === 'url' ? (
         <View className="u-action" onClick={handleClick}>
           <Text className={`u-text`}>{btnLabel}</Text>
         </View>
