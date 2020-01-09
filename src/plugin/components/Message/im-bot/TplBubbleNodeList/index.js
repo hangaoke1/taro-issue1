@@ -14,7 +14,7 @@ export default function TplBubbleNodeList(props) {
     ? _get(tpl, 'list', [])
     : _get(tpl, 'list', []).slice(0, 4);
   const action = _get(tpl, 'action');
-  const btnLabel = _get(tpl, 'action.label', '查看更多')
+  const btnLabel = _get(tpl, 'action.label', '查看更多') || '查看更多'
 
   function handleClick() {
     if (!get('isRobot')) {
