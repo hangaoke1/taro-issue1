@@ -260,7 +260,6 @@ export default class IMSERVICE {
                 const mp3Url = nim.audioToMp3({
                   url: msg.file.url
                 });
-                console.log('aaaaaaa', mp3Url)
                 resolve(msg);
               }
             }

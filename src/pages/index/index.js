@@ -239,6 +239,18 @@ export default class Index extends Component {
     myPluginInterface._$clearUnreadCount();
   }
 
+  chooseFile = () => {
+    wx.showActionSheet({
+      itemList: ['上传图片', '上传视频'],
+      success (res) {
+        console.log(res.tapIndex)
+      },
+      fail (res) {
+        console.log(res.errMsg)
+      }
+    })
+  }
+
   render () {
     return (
       <View className='index'>
@@ -262,10 +274,13 @@ export default class Index extends Component {
             <Button onClick={this.handleAppId}>{Taro.getAccountInfoSync().miniProgram.appId}</Button>
           </View>
           <View>
+            <Button onClick={this.chooseFile}>选取文件</Button>
+          </View>
+          {/* <View>
             <Navigator url='/pages/test/index'>
               <Button>测试页面</Button>
             </Navigator>
-          </View>
+          </View> */}
           <View style='text-align: center;margin: 10px 0;'>消息未读数: {unReadCount}</View>
           <View><Button type="warn" onClick={this.emptyUnread}>清空消息未读数</Button></View>
           <View className="m-input-item">

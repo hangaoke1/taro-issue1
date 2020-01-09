@@ -17,7 +17,7 @@ class GImg extends Component {
 
   static defaultProps = {
     mode: 'scaleToFill',
-    radiusL: 0
+    radius: 0
   }
 
   state = {

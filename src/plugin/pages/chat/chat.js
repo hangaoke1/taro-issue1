@@ -22,6 +22,7 @@ import BotBubbleList from "../../components/BotBubbleList";
 import BotCard from "../../components/BotCard";
 import FloatButton from "../../components/FloatButton";
 import Back from "../../components/Back";
+import BotWorksheet from "../../components/BotWorksheet";
 
 import { get } from "../../global_config";
 
@@ -894,6 +895,7 @@ class Chat extends Component {
           visible={CorpStatus.evaluationVisible}
           title="请对本次服务进行评价"
           onClose={this.closeEvaluationModal}
+          autoScroll={false}
         >
           <Evaluation />
         </FloatLayout>
@@ -902,6 +904,7 @@ class Chat extends Component {
         <BotDrawerList></BotDrawerList>
         <BotBubbleList></BotBubbleList>
         <BotCard></BotCard>
+        <BotWorksheet></BotWorksheet>
         {CorpStatus.entryConfig.length ? (
           <FloatButton
             entryConfig={CorpStatus.entryConfig}

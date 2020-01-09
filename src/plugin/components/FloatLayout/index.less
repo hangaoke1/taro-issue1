@@ -8,6 +8,10 @@
     left: 0px;
     z-index: 500;
     visibility: hidden;
+    .u-title {
+        display: flex;
+        align-items: center;
+    }
     // transition: visibility 300ms cubic-bezier(0.36, 0.66, 0.04, 1);
     .m-FloatLayout-mask {
         position: absolute;
@@ -28,9 +32,19 @@
         flex-direction: column;
         background-color: #fff;
         z-index: 10;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+    
+    .ani-bottom {
         transform: translate3d(0, 100%, 0);
         transition: transform 300ms cubic-bezier(0.36, 0.66, 0.04, 1);
     }
+    .ani-right {
+        transform: translate3d(100%, 0, 0);
+        transition: transform 300ms cubic-bezier(0.36, 0.66, 0.04, 1);
+    }
+
     .layout-title {
         display: flex;
         align-content: center;
@@ -54,7 +68,7 @@
 
     &--active {
         visibility: visible;
-        .m-FloatLayout-layout {
+        .ani-bottom, .ani-top, .ani-left, .ani-right {
             transform: translate3d(0, 0, 0);
         }
         .m-FloatLayout-mask {

@@ -1,10 +1,10 @@
-import Taro, { Component } from '@tarojs/taro';
-import { View, Text, ScrollView } from '@tarojs/components';
-import PropTypes from 'prop-types';
-import Iconfont from '../Iconfont';
-import eventbus from '../../lib/eventbus';
+import Taro, { Component } from "@tarojs/taro";
+import { View, Text, ScrollView } from "@tarojs/components";
+import PropTypes from "prop-types";
+import Iconfont from "../Iconfont";
+import eventbus from "../../lib/eventbus";
 
-import './index.less';
+import "./index.less";
 
 export default class FloatLayout extends Component {
   constructor(props) {
@@ -22,13 +22,13 @@ export default class FloatLayout extends Component {
     }
   }
 
-  componentDidMount(){
-    eventbus.on('float_layout_scroll_bottom', () => {
-      console.log('滚动条')
+  componentDidMount() {
+    eventbus.on("float_layout_scroll_bottom", () => {
+      console.log("滚动条");
       this.setState({
         scrollTop: 1000
-      })
-    })
+      });
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -51,21 +51,21 @@ export default class FloatLayout extends Component {
     const { onClickMask, maskClosable } = this.props;
 
     if (maskClosable) {
-      // this.setState({
-      //     visible: false
-      // })
       this.onClose();
     }
 
     onClickMask && onClickMask();
   };
 
-  handleScroll = (event) => {
-    let {scrollTop} = event.detail;
+  handleScroll = event => {
+    if (this.props.nativeScroll) {
+      return;
+    }
+    let { scrollTop } = event.detail;
     this.setState({
       scrollTop
-    })
-  }
+    });
+  };
 
   onClose = () => {
     const { onClose } = this.props;
@@ -77,6 +77,11 @@ export default class FloatLayout extends Component {
     onClose && onClose();
   };
 
+  onTitleClick = () => {
+    const { onTitleClick } = this.props;
+    onTitleClick && onTitleClick()
+  }
+
   preventTouchMove = e => {
     e.stopPropagation();
     return;
@@ -86,31 +91,31 @@ export default class FloatLayout extends Component {
     const {
       title,
       contentHeight,
-      bodyPadding
+      bodyPadding,
+      nativeScroll,
+      position,
+      mask,
+      showBack
     } = this.props;
-    const { visible,scrollTop } = this.state;
-
+    const { visible, scrollTop } = this.state;
     return (
       <View
-        className={`m-FloatLayout ${visible ? 'm-FloatLayout--active' : ''}`}
+        className={`m-FloatLayout ${visible ? "m-FloatLayout--active" : ""}`}
       >
-        <View
-          className="m-FloatLayout-mask"
-          onClick={this.onClickMask}
-          onTouchMove={this.preventTouchMove}
-        ></View>
-        <View className="m-FloatLayout-layout">
+        {mask && (
+          <View
+            className="m-FloatLayout-mask"
+            onClick={this.onClickMask}
+            onTouchMove={this.preventTouchMove}
+          ></View>
+        )}
+        <View className={`m-FloatLayout-layout ani-${position}`}>
           <View className="layout-header">
-            {/* {title ? (
-              <View className="layout-title">
-                <Text>{title}</Text>
-                <View className="u-close" onClick={this.onClose}>
-                  <Iconfont type="icon-close" color="#666" size="36"></Iconfont>
-                </View>
-              </View>
-            ) : null} */}
             <View className="layout-title">
-              <Text>{title}</Text>
+              <View className="u-title" onClick={this.onTitleClick}>
+                {showBack && <Iconfont type="icon-arrowleft" color="#666" size="24"></Iconfont>}
+                <Text>{title}</Text>
+              </View>
               <View className="u-close" onClick={this.onClose}>
                 <Iconfont type="icon-close" color="#666" size="36"></Iconfont>
               </View>
@@ -120,15 +125,16 @@ export default class FloatLayout extends Component {
             <ScrollView
               className="layout-body_content"
               scrollY
-              scrollTop = {scrollTop}
+              scroll-anchoring
+              scrollTop={nativeScroll ? scrollTop : undefined}
               style={{
-                maxHeight: contentHeight ? contentHeight + 'px' : '60vh'
+                maxHeight: contentHeight ? contentHeight + "px" : "60vh"
               }}
               onScroll={this.handleScroll}
             >
               <View
                 className="layout-body_content_scroll_body"
-                style={{ padding: bodyPadding + 'px' }}
+                style={{ padding: bodyPadding + "px" }}
               >
                 {this.props.children}
               </View>
@@ -141,19 +147,31 @@ export default class FloatLayout extends Component {
 }
 
 FloatLayout.defaultProps = {
-  title: '',
+  title: "",
   visible: false,
   maskClosable: false,
-  bodyPadding: 32
+  bodyPadding: 32,
+  nativeScroll: true,
+  position: "bottom",
+  mask: true,
+  showBack: false
 };
 
 FloatLayout.propType = {
-  title: PropTypes.string,
+  position: PropTypes.string,
+  title: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.func
+  ]),
   visible: PropTypes.bool,
   contentHeight: PropTypes.number,
   onClickMask: PropTypes.func,
   maskClosable: PropTypes.bool,
   onClose: PropTypes.func,
   defaultVisible: PropTypes.bool,
-  bodyPadding: PropTypes.number
+  bodyPadding: PropTypes.number,
+  nativeScroll: PropTypes.bool,
+  mask: PropTypes.bool,
+  showBack: PropTypes.bool,
+  onTitleClick: PropTypes.func
 };

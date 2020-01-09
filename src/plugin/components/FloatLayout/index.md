@@ -22,6 +22,7 @@ visible | 控制是否显示，受控属性 | Boolean | false
 contentHeight | 内容区的高度 | numnber | 500
 maskClosable | 点击遮罩层是否可以隐藏浮层 | Boolean | false
 defaultVisible | 默认状态是否显示 | Boolean | -
+nativeScroll | 是否使用原生滚动 | Boolean | true
 
 
 ### 事件

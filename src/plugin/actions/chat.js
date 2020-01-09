@@ -625,12 +625,16 @@ export const sendTemplateText = item => {
  * @param {string} type 上传文件类型
  */
 export const previewFile = (wxFilePath, type = 'image') => {
+  Taro.showLoading({
+    title: '上传中'
+  })
   return new Promise((resolve, reject) => {
     NIM.getNim().then(nim => {
       nim.previewFile({
         type,
         wxFilePath,
         done: function(error, file) {
+          Taro.hideLoading()
           if (!error) {
             resolve(file);
           } else {

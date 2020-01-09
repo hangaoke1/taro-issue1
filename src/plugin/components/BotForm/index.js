@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Input, CoverView } from '@tarojs/components';
+import { View, Input } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import _get from 'lodash/get';
 import _cloneDeep from 'lodash/cloneDeep';
