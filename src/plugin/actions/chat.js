@@ -353,7 +353,7 @@ export const evalRobotAnswer = (msgidClient, evaluation) => {
  */
 export const parseUrlAction = (url, transferRgType = '') => {
   // 处理转人工请求
-  if ('qiyu://action.qiyukf.com'.indexOf(url) > -1) {
+  if (url.indexOf('qiyu://action.qiyukf.com') > -1) {
     const isRobot = get('isRobot');
     const queryObj = query2Object(url)
     const applyParams = {

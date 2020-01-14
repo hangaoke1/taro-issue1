@@ -67,7 +67,7 @@ class ParserRichText extends Taro.Component {
 
     if (this.props.autocopy && event.detail && get('autoCopy')) {
       // TODO: 是否需要判断全局autoCopy【通过props.autocopy使用地方比较多】
-      if ('qiyu://action.qiyukf.com'.indexOf(url) === -1) {
+      if (url.indexOf('qiyu://action.qiyukf.com') === -1) {
         Taro.setClipboardData({
           data: url,
           success() {
