@@ -677,9 +677,7 @@ class Chat extends Component {
       statusBarHeight
     } = this.state;
 
-    const isRobot =
-      (Session.stafftype === 1 || Session.robotInQueue === 1) &&
-      Session.code === 200; // 机器人状态
+    const isRobot = get('isRobot'); // 机器人状态
 
     let hasBot = isRobot && Bot.len;
 

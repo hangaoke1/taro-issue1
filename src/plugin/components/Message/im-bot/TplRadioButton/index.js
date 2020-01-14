@@ -7,6 +7,7 @@ import _cloneDeep from 'lodash/cloneDeep';
 import { changeMessageByUUID, sendText } from '@/plugin//actions/chat';
 import ParserRichText from '@/components/ParserRichText/parserRichText';
 import { parseUrlAction } from '@/actions/chat';
+import { get } from '@/plugin/global_config';
 import "./index.less";
 
 @connect(
@@ -35,12 +36,9 @@ class RadioButton extends Component {
 
   handleClick = (btn) => {
     const { item = {}, Session, sendText } = this.props;
-    const isRobot =
-      (Session.stafftype === 1 || Session.robotInQueue === 1) &&
-      Session.code === 200;
     const isSameSession = Session.sessionid === item.sessionid
     // 非机器人或者跨会话则失效
-    if (!isRobot || !isSameSession) {
+    if (!isSameSession || !get('isRobot')) {
       Taro.showToast({
         title: "会话已失效",
         icon: "none"
@@ -80,9 +78,7 @@ class RadioButton extends Component {
     const { tpl, Message, item = {}, Session } = this.props;
     const list = _get(tpl, "list", []);
     const label = _get(tpl, "label", '');
-    const isRobot =
-      (Session.stafftype === 1 || Session.robotInQueue === 1) &&
-      Session.code === 200;
+    const isRobot = get('isRobot');
     const isSameSession = Session.sessionid === item.sessionid
     let showBtns = list.length && !item.hideBtns;
     // 如果按钮显示，则需要进行隐藏判断
