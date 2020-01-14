@@ -352,8 +352,9 @@ export const evalRobotAnswer = (msgidClient, evaluation) => {
  * @param {number} transferRgType 转人工入口标记
  */
 export const parseUrlAction = (url, transferRgType = '') => {
-  // 处理转人工请求
   if (url.indexOf('qiyu://action.qiyukf.com') > -1) {
+    // 内部：处理转人工请求
+    // TODO: 判断command类型
     const isRobot = get('isRobot');
     const queryObj = query2Object(url)
     const applyParams = {
@@ -364,8 +365,9 @@ export const parseUrlAction = (url, transferRgType = '') => {
     if (isRobot) {
       NIM.applyKefu(applyParams);
     }
+  } else {
+    eventbus.trigger('click_action', { url });
   }
-  eventbus.trigger('click_action', { url });
 };
 
 /**
