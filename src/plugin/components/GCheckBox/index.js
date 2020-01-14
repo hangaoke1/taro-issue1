@@ -27,7 +27,7 @@ class GRadio extends Component {
               <View className={
                 classNames({
                   'u-icon': true,
-                  'u-checked': option.value === value
+                  'u-checked': value.includes(option.value)
                 })
               }
               >
@@ -47,7 +47,7 @@ GRadio.defaultProps = {
 
 GRadio.propTypes = {
   customStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  value: PropTypes.string,
+  value: PropTypes.array,
   options: PropTypes.array,
   onClick: PropTypes.func
 };
