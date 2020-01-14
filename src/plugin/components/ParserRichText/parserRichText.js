@@ -1,4 +1,5 @@
 import Taro from '@tarojs/taro';
+import { get } from '../../global_config';
 import { filterHtml, text2emoji } from '../../utils';
 import { unescape } from '../../utils/xss';
 import './parserRichText.less';
@@ -64,8 +65,8 @@ class ParserRichText extends Taro.Component {
       return;
     }
 
-    if (this.props.autocopy && event.detail) {
-      // TODO: 是否需要判断全局autoCopy【目前通过props.autocopy使用地方比较多】
+    if (this.props.autocopy && event.detail && get('autoCopy')) {
+      // TODO: 是否需要判断全局autoCopy【通过props.autocopy使用地方比较多】
       if ('qiyu://action.qiyukf.com'.indexOf(url) === -1) {
         Taro.setClipboardData({
           data: url,
