@@ -11,9 +11,10 @@ import { get } from '@/plugin/global_config';
 import "./index.less";
 
 @connect(
-  ({ Session, Message }) => ({
+  ({ Session, Message, Setting }) => ({
     Session,
-    Message
+    Message,
+    Setting
   }),
   dispatch => ({
     updateMessageByUUID(newMessage) {
@@ -75,7 +76,7 @@ class RadioButton extends Component {
   }
 
   render() {
-    const { tpl, Message, item = {}, Session } = this.props;
+    const { tpl, Message, item = {}, Session, Setting } = this.props;
     const list = _get(tpl, "list", []);
     const label = _get(tpl, "label", '');
     const isRobot = get('isRobot');
@@ -96,7 +97,7 @@ class RadioButton extends Component {
             <View className="u-inner-wrap">
             <View className="u-list">
               {list.map((btn, index) => (
-                <View className="u-item" style={{animationDelay: `${index * 200}ms`}} onClick={this.handleClick.bind(this, btn)}>{btn.label}</View>
+                <View className="u-item" style={{animationDelay: `${index * 200}ms`, borderColor: Setting.themeColor}} onClick={this.handleClick.bind(this, btn)}>{btn.label}</View>
               ))}
             </View>
             </View>
