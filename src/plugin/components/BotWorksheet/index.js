@@ -50,12 +50,15 @@ class BotWorksheet extends Component {
         forms.forEach(form => {
           if (form.type === '0') {
             form.value = form.prefill || ''
+            form.hint = form.hint || '请输入'
           }
           if (form.type === '1') {
             form.value = form.prefill || ''
+            form.hint = form.hint || '请选择'
           }
           if (form.type === '2') {
             form.value = form.prefill ? form.prefill.split(';') : []
+            form.hint = form.hint || '请选择'
           }
           if (form.type === '3') {
             form.value = []
@@ -269,6 +272,7 @@ class BotWorksheet extends Component {
 
   render() {
     const { visible, previewIndex, files, windowHeight, forms } = this.state;
+    const { Setting } = this.props;
     const currentFile = files[previewIndex];
     return (
       <View>
@@ -397,7 +401,7 @@ class BotWorksheet extends Component {
                 return layout
               })}
             </View>
-            <View className="u-confirm" onClick={this.handleSubmit}>
+            <View className="u-confirm" style={{background: Setting.themeColor}} onClick={this.handleSubmit}>
               提交
             </View>
           </View>
@@ -435,6 +439,7 @@ class BotWorksheet extends Component {
                   </View>
                   <View
                     className="u-confirm"
+                    style={{background: Setting.themeColor}}
                     onClick={this.handleChooseClose.bind(this, index)}
                   >
                     确认
@@ -474,6 +479,7 @@ class BotWorksheet extends Component {
                   </View>
                   <View
                     className="u-confirm"
+                    style={{background: Setting.themeColor}}
                     onClick={this.handleChooseClose.bind(this, index)}
                   >
                     确认

@@ -1,11 +1,18 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
+import { connect } from '@tarojs/redux';
 import PropTypes from "prop-types";
 import classNames from 'classnames';
 import Iconfont from "@/components/Iconfont";
 
 import "./index.less";
 
+@connect(
+  ({ Setting }) => ({
+    Setting
+  }),
+  dispatch => ({})
+)
 class GRadio extends Component {
   componentWillMount() {}
 
@@ -16,8 +23,8 @@ class GRadio extends Component {
   }
 
   render() {
-    const { options, value } = this.props;
-    const themeColor = "#337EFF";
+    const { options, value, Setting } = this.props;
+    const themeColor = Setting.themeColor;
     return (
       <View className="u-radio">
         {options.map(option => {

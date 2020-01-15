@@ -8,6 +8,8 @@ import classNames from 'classnames';
 import { get } from '@/plugin/global_config';
 
 import './index.less'
+
+// 工单提交
 @connect(
   ({ Setting, Session }) => ({
     Setting,
@@ -15,7 +17,6 @@ import './index.less'
   }),
   dispatch => ({})
 )
-
 class AutoWorkSheet extends Component {
 
   static propTypes = {
@@ -53,6 +54,11 @@ class AutoWorkSheet extends Component {
                  'u-list-item': true,
                  'u-disabled': tpl.submitted == 1
                 })
+              }
+              style={
+                {
+                  background: tpl.submitted != 1 ? Setting.themeColor : ''
+                }
               }
               onClick={this.handleActionClick}>填写信息</View>
         </View>
