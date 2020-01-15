@@ -1,0 +1,47 @@
+// 单行省略
+.fn_ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.u-label {
+  padding: 9px 12px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #EDEDED;
+}
+
+.u-list {
+  padding: 12px;
+}
+
+.u-list-item {
+  width: 221px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #FFF;
+  background: #337EFF;
+  border-radius: 4px;
+  .fn_ellipsis();
+  &:nth-last-of-type(1) {
+    margin-bottom: 0;
+  }
+}
+
+.u-list-item.z-disabled {
+  color: #999;
+  border: 1px solid #999;
+}
+
+.u-disabled {
+  background: #F2F2F5;
+  border: 1px solid #E1E3E6;
+  border-radius: 2px;
+  color: #999999;
+  pointer-events: none;
+}

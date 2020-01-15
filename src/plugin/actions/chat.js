@@ -459,6 +459,58 @@ export const sendBotCard = (item, msg) => {
 };
 
 /**
+ * 发送工单信息
+ * @param {}} forms 
+ * @param {*} msg 
+ */
+export const sendWorksheet = (forms, msg) => {
+  if (!canSendMessage()) {
+    Taro.showToast({
+      title: '请等待连线成功后，再发送消息',
+      icon: 'none',
+      duration: 2000
+    })
+    return;
+  }
+  const dispatch = get('store').dispatch;
+  let params = _get(msg, 'content.template.params');
+  forms.forEach(form => {
+    if (form.key === 'uploadFile') {
+      params += '&' + form.key + '=' + JSON.stringify(form.value)
+    } else {
+      params += '&' + form.key + '=' + form.value
+    }
+  })
+
+  const newMessage = _cloneDeep(msg)
+
+  return NIM.sendCustomSysMsg({
+    cmd: 202,
+    params: params,
+    template: {
+      id: 'ysf_template_auto_worksheet',
+      forms
+    }
+  }).then(res => {
+    newMessage.content.template.submitted = 1;
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+
+    let message = {
+      type: 'text',
+      uuid: genUUID16(),
+      content: '信息已提交',
+      time: new Date().getTime(),
+      status: 0, // 0成功 1发送中 -1发送失败
+      fromUser: 1
+    };
+    dispatch({ type: PUSH_MESSAGE, message });
+
+  }).catch(err => {
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  });
+}
+
+/**
  * 发送bot表单信息
  * @param {array} forms 表单数组
  * @param {object} msg  消息体
@@ -515,7 +567,7 @@ export const sendBotForm = (forms, msg) => {
     const newMessage = _cloneDeep(message)
     newMessage.status = -1
     dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
-  });;
+  });
 };
 
 /**

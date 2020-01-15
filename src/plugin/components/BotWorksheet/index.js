@@ -1,65 +1,70 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image, Block } from "@tarojs/components";
+import { connect } from '@tarojs/redux';
 import FloatLayout from "@/components/FloatLayout";
 import Iconfont from "@/components/Iconfont";
-import { previewFile } from "@/actions/chat";
+import { previewFile, sendWorksheet } from "@/actions/chat";
 import GImg from "@/components/GImg";
 import GRadio from "@/components/GRadio";
 import GCheckBox from "@/components/GCheckBox";
+import eventbus from '@/lib/eventbus';
+import _get from 'lodash/get';
 
 import "./index.less";
 
+@connect(
+  ({ Message, Setting }) => ({
+    Message,
+    Setting
+  }),
+  dispatch => ({
+    changeMessageByUUID(newMessage) {
+      dispatch(changeMessageByUUID(newMessage));
+    }
+  })
+)
 class BotWorksheet extends Component {
   state = {
-    visible: true,
+    visible: false,
     previewIndex: -1,
-    files: [],
     windowHeight: wx.getSystemInfoSync()["windowHeight"],
-    forms: [
-      {
-        id: "name",
-        type: "0",
-        label: "姓名",
-        required: "0",
-        value: "",
-        hint: "请输入姓名"
-      },
-      {
-        id: "sex",
-        type: "1",
-        label: "性别",
-        required: "1",
-        details: JSON.stringify([{ text: "男" }, { text: "女" }]),
-        value: "",
-        show: false,
-        hint: "请选择性别"
-      },
-      {
-        id: "fruit",
-        type: "2",
-        label: "喜欢吃的水果",
-        required: "0",
-        details: JSON.stringify([{ text: "苹果" }, { text: "橘子" }]),
-        value: [],
-        show: false,
-        hint: "请选择水果"
-      },
-      {
-        id: "uploadFile",
-        type: "3",
-        label: "",
-        required: "1",
-        details: "",
-        value: [],
-        show: false,
-        hint: "请选择水果"
-      }
-    ]
+    forms: [],
+    files: []
   };
 
   componentWillMount() {}
 
-  componentDidMount() {}
+  componentDidMount() {
+    eventbus.on('bot_show_auto_worksheet', uuid => {
+      eventbus.trigger('hide_keyboard');
+
+      setTimeout(() => {
+        if (this.state.uuid === uuid) {
+          this.setState({ visible: true });
+          return;
+        }
+        const { Message } = this.props;
+        const message = Message.filter(item => item.uuid === uuid)[0];
+        const forms = _get(message, 'content.template.forms', []);
+        // 0-文本输入 1-单选 2-多选,3-附件,
+        forms.forEach(form => {
+          if (form.type === '0') {
+            form.value = form.prefill || ''
+          }
+          if (form.type === '1') {
+            form.value = form.prefill || ''
+          }
+          if (form.type === '2') {
+            form.value = form.prefill ? form.prefill.split(';') : []
+          }
+          if (form.type === '3') {
+            form.value = []
+          }
+        });
+        this.setState({ uuid, visible: true, forms, message, files: [], previewIndex: -1 });
+      }, 300)
+    })
+  }
 
   handleClose = () => {
     this.setState({
@@ -197,10 +202,69 @@ class BotWorksheet extends Component {
     });
   };
 
+  checkForm = (forms, cb) => {
+    for (let i = 0; i < forms.length; i++) {
+      let { label, required, value, id } = forms[i]
+      if (id === 'uploadFile') {
+        label = label || '附件'
+        value = this.state.files
+      } else {
+        label = label || '选项'
+      }
+      // 必须填写
+      if (required === '1') {
+        // 如果是数组
+        if (Array.isArray(value)) {
+          if (value.length === 0) { return cb(label + '未填') }
+        } else {
+          if (!value) { return cb(label + '未填') }
+        }
+      }
+    }
+    return cb('')
+  }
+
   handleSubmit = () => {
     // TODO: 表单校验
-    // 参数拼接
     console.log(this.state.forms);
+    this.checkForm(this.state.forms, error => {
+      if (error) {
+        console.log('>>> 表单验证失败', error)
+        Taro.showToast({
+          title: error,
+          icon: 'none'
+        })
+      } else {
+        // 参数拼接，表单提交
+        let forms = this.state.forms.map(form => {
+          if (form.id === 'uploadFile') {
+            return {
+              key: form.id,
+              label: form.label,
+              value: this.state.files.map((item, index) => {
+                return {
+                  name: '附件_' + (index + 1) + '.' + item.ext,
+                  url: item.url,
+                  size: item.size
+                }
+              })
+            }
+          } else {
+            return {
+              key: form.id,
+              label: form.label,
+              value: form.type === '2' ? form.value.join(';') : form.value
+            }
+          }
+        })
+        console.log('>>> 表单提交', forms)
+        sendWorksheet(forms, this.state.message).then(res => {
+          this.setState({
+            visible: false
+          })
+        })
+      }
+    })
   };
 
   render() {
@@ -289,7 +353,7 @@ class BotWorksheet extends Component {
                 if (form.type === "3") {
                   layout = (
                     <View key={form.id}>
-                      <View className="u-label">附件</View>
+                      <View className="u-label">附件{form.required === "1" ? "(必填)" : ""}</View>
                       <View className="u-box">
                         <View className="u-box-wrap">
                           {files.map((file, index) => {
@@ -426,9 +490,9 @@ class BotWorksheet extends Component {
               <View className="u-back" onClick={this.closePreview}>
                 <Iconfont type="icon-arrowleft" color="#fff" size="24" />
               </View>
-              <View className="u-name">asdf.jpg</View>
+              <View className="u-name">{`附件_${previewIndex + 1}.${currentFile.ext}`}</View>
               <View className="u-delete" onClick={this.deleteFile}>
-                <Iconfont type="icon-delete" color="#fff" size="24" />
+                <Iconfont type="icon-delete-linex" color="#fff" size="24" />
               </View>
             </View>
             {currentFile.dur ? (

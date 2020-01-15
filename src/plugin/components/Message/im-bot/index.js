@@ -24,6 +24,7 @@ import TplRefundDetail from './TplRefundDetail';
 import TplCardLayout from './TplCardLayout';
 import TplDetailView from './TplDetailView';
 import TplActivePage from './TplActivePage';
+import TplAutoWorksheet from './TplAutoWorksheet';
 
 import './index.less';
 import eventbus from '@/lib/eventbus';
@@ -70,6 +71,10 @@ export default class Bot extends Component {
     let layout = null;
     let showFormAction = false;
     switch (tpl.id) {
+      case 'auto_worksheet': {
+        layout = <TplAutoWorksheet item={item} tpl={tpl}></TplAutoWorksheet>;
+        break;
+      }
       case 'active_page': {
         layout = <TplActivePage item={item} tpl={tpl}></TplActivePage>;
         break;
