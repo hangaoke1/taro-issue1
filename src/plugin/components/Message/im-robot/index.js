@@ -6,6 +6,7 @@ import Avatar from '../u-avatar';
 import ParserRichText from '@/components/ParserRichText/parserRichText';
 import Iconfont from '@/components/Iconfont';
 import Modal from '@/components/Modal';
+import { get } from '@/plugin/global_config';
 
 import {
   sendRelateText,
@@ -23,6 +24,7 @@ import './index.less';
 export default function RobotView(props) {
   const [isOpened, setIsOpened] = useState(false);
   const [reason, setReason] = useState('');
+  const [disableList, setDisableList] = useState([])
   // 0: 不显示 1: 未评价 2: 有用 3: 没用
   const { item, index } = props;
   let {
@@ -37,6 +39,7 @@ export default function RobotView(props) {
   } = item;
   const dispatch = useDispatch();
   const Session = useSelector(state => state.Session);
+  const Setting = useSelector(state => state.Setting);
 
   // 根据index修改消息内容
   function changeMessage(message) {
@@ -73,15 +76,11 @@ export default function RobotView(props) {
       index
     );
 
-    evalRobotAnswer(idClient, userEvaluation).then(() => {
-      // console.log('-----🙏success 评价完成🙏----');
-    });
+    evalRobotAnswer(idClient, userEvaluation).then(() => {});
 
     // 用户差评且无需评价原因
     if (userEvaluation === 3 && evaluation_reason === 0) {
-      evaluationContent(idClient, '').then(() => {
-        // console.log('-----🙏success 差评原因提交完成🙏----');
-      });
+      evaluationContent(idClient, '').then(() => {});
     }
 
     // 用户差评且需要评价原因
@@ -98,13 +97,18 @@ export default function RobotView(props) {
       index
     );
 
-    evaluationContent(idClient, reason).then(() => {
-      // console.log('-----🙏success 差评原因提交完成🙏----');
-    });
+    evaluationContent(idClient, reason).then(() => {});
   }
 
   // 点击关联问题
   function handleQuestionClick(q) {
+
+    // 判断是否是机器人
+    if (!get('isRobot')) {
+      setDisableList([...disableList, q])
+      return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+    }
+
     const { question, id } = q;
 
     dispatch(
@@ -149,10 +153,11 @@ export default function RobotView(props) {
             {item.list.map(q => (
               <View
                 className="u-qaitem"
+                style={Setting.themeText}
                 key={q.id}
                 onClick={() => handleQuestionClick(q)}
               >
-                <View className="u-dot" />
+                <View className={`u-dot`} style={Setting.themeBg}/>
                 {q.question}
               </View>
             ))}
@@ -163,14 +168,14 @@ export default function RobotView(props) {
             <View className="u-button" onClick={() => handleAction(2)}>
               <Iconfont
                 type="icon-dianzanx"
-                color={evaluation === 2 ? '#5092e1' : '#ccc'}
+                color={evaluation === 2 ? Setting.themeColor : '#ccc'}
                 size="16"
               />
             </View>
             <View className="u-button" onClick={() => handleAction(3)}>
               <Iconfont
                 type="icon-dianchapingx"
-                color={evaluation === 3 ? '#5092e1' : '#ccc'}
+                color={evaluation === 3 ? Setting.themeColor : '#ccc'}
                 size="16"
               />
             </View>

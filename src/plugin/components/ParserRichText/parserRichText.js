@@ -1,4 +1,5 @@
 import Taro from '@tarojs/taro';
+import { get } from '../../global_config';
 import { filterHtml, text2emoji } from '../../utils';
 import { unescape } from '../../utils/xss';
 import './parserRichText.less';
@@ -14,26 +15,76 @@ class ParserRichText extends Taro.Component {
     }
   };
 
+  // 长按事件
+  handleLinklongpress = event => {
+    let url = unescape(event.detail);
+    event.preventDefault();
+    event.stopPropagation();
+    if (url.startsWith('tel:')) {
+      const tel = url.split('tel:')[1];
+      Taro.showActionSheet({
+        itemList: ['呼叫', '复制号码', '添加到手机通讯录'],
+        success(res) {
+          if (res.tapIndex === 0) {
+            Taro.makePhoneCall({
+              phoneNumber: tel
+            });
+          }
+          if (res.tapIndex === 1) {
+            Taro.setClipboardData({
+              data: tel,
+              success() {
+                Taro.showToast({
+                  title: '号码已复制'
+                });
+              }
+            });
+          }
+          if (res.tapIndex === 2) {
+            Taro.addPhoneContact({
+              // firstName: tel,
+              mobilePhoneNumber: tel
+            });
+          }
+        },
+        fail(res) {
+          console.log(res.errMsg);
+        }
+      });
+      return false;
+    }
+  };
+
   handleLinkpress = event => {
-    let url = unescape(event.detail)
-    if (this.props.autocopy && event.detail) {
-      if (url !== 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
-        wx.setClipboardData({
+    let url = unescape(event.detail);
+    if (url.startsWith('tel:')) {
+      const tel = url.split('tel:')[1];
+      Taro.makePhoneCall({
+        phoneNumber: tel
+      });
+      return;
+    }
+
+    if (this.props.autocopy && event.detail && get('autoCopy')) {
+      // TODO: 是否需要判断全局autoCopy【通过props.autocopy使用地方比较多】
+      if (url.indexOf('qiyu://action.qiyukf.com') === -1) {
+        Taro.setClipboardData({
           data: url,
           success() {
-            wx.showToast({
-              title: '链接已复制',
-            })
+            Taro.showToast({
+              title: '链接已复制'
+            });
           }
-        })
+        });
       }
     }
-    this.props.onLinkpress && this.props.onLinkpress({ type: event.type, detail: url });
+    this.props.onLinkpress &&
+      this.props.onLinkpress({ type: event.type, detail: url });
   };
 
   handleError = error => {
-    console.log('error:', error)
-  }
+    console.log('error:', error);
+  };
 
   render() {
     let {
@@ -56,7 +107,7 @@ class ParserRichText extends Taro.Component {
 
     html = text2emoji(html);
 
-    const style = Object.assign({}, tagStyle, customerTagStyle)
+    const style = Object.assign({}, tagStyle, customerTagStyle);
 
     return (
       <parser
@@ -70,9 +121,10 @@ class ParserRichText extends Taro.Component {
         show-with-animation={showWithAnimation}
         animation-duration={animationDuration}
         onLinkpress={this.handleLinkpress}
+        onLinklongpress={this.handleLinklongpress}
         onError={this.handleError}
       />
-    )
+    );
   }
 }
 
@@ -85,8 +137,8 @@ ParserRichText.defaultProps = {
   animationDuration: 400,
   selectable: true,
   tagStyle: {
-    img: 'width: auto; height: auto;max-width: 100%;max-height: 400px;',
-    video: 'width: auto; height: auto;max-width: 100%;max-height: 400px;'
+    img: 'width: auto; height: auto;max-width: 100%;',
+    video: 'width: auto; height: auto;max-width: 100%;max-height: 500px;'
   },
   customerTagStyle: {},
   imgMode: 'aspectFit',

@@ -1,4 +1,4 @@
-import { INIT_CURRENT_EVALUATION, INIT_LAST_EVALUATION, INIT_EVALUATION_SETTING } from '../constants/evaluation';
+import { INIT_CURRENT_EVALUATION, INIT_LAST_EVALUATION, INIT_EVALUATION_SETTING, UPDATE_EVALUATION_SESSIONID } from '../constants/evaluation';
 
 const init = {
   lastEvaluation: {},
@@ -16,6 +16,8 @@ const init = {
 
 const Evaluation = (state = init, action) => {
   switch (action.type) {
+    case UPDATE_EVALUATION_SESSIONID:
+      return {...state, sessionid: action.value }
     case INIT_CURRENT_EVALUATION:
       return { ...state, currentEvaluation: JSON.parse(JSON.stringify({ ...state.currentEvaluation, ...action.value }))};
     case INIT_LAST_EVALUATION:

@@ -1,15 +1,19 @@
 import Taro from '@tarojs/taro';
 import _get from 'lodash/get';
 import _cloneDeep from 'lodash/cloneDeep';
+import _isEaqul from 'lodash/isEqual';
 import { queryAccont, querySdkSetting } from '../service';
 import { get, set } from '../global_config';
 import IMSERVICE,{ STATUS } from '../service/im';
-import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID, REMOVE_MESSAGE_BYUUID,UPDATE_MESSAGE_BYACTION } from '../constants/message';
+import { PUSH_MESSAGE, UPDATE_MESSAGE_BYUUID, REMOVE_MESSAGE_BYUUID,UPDATE_MESSAGE_BYACTION, UNSHIFT_MESSAGE, INIT_MESSAGE } from '../constants/message';
 import { DEL_ENTRY_BYKEY } from '../constants/chat';
 import { SET_ASSOCIATE_RES } from '../constants/associate';
 import { SET_SETTING } from '../constants/setting';
+import { UPDATE_EVALUATION_SESSIONID } from '../constants/evaluation';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '@/lib/uuid';
+import { loadHistroy } from '@/lib/history';
+import { query2Object } from '@/utils/index';
 
 eventbus.on('do_send_product_card', function(extraParms){
   sendProductCard(extraParms);
@@ -34,10 +38,12 @@ export const getSdkSetting = () => {
   if (!appKey) return;
   return querySdkSetting({
     appKey,
-    fromType: 'ios'
+    fromType: 'wx_sdk'
   }).then(res => {
     console.log('获取访客端配置', res)
     dispatch({ type: SET_SETTING, value: res.result });
+  }).catch(err => {
+    dispatch({ type: SET_SETTING, value: '' });
   })
 }
 
@@ -59,6 +65,9 @@ export const applyKefu = (
 
   if(!extraParms.entryid && session && (session.code == 200 || session.code == 203) && STATUS.status == 'connecting'){
     NIM.updateCrmInfo();
+    if (get('product')){
+      sendProductCard(get('product'));
+    }
     return;
   }
 
@@ -67,7 +76,16 @@ export const applyKefu = (
     account: account,
     token: token
   });
-
+  // const dispatch = get('store').dispatch;
+  //将前面的分流信息全部置灰
+  // dispatch({
+  //   type: UPDATE_MESSAGE_BYACTION,
+  //   message: {
+  //     type: 'entries',
+  //     disabled: true,
+  //     action: 'selectEntries'
+  //   }
+  // })
   NIM.applyKefu(extraParms);
 };
 
@@ -113,6 +131,8 @@ export const sendText = text => dispatch => {
     return;
   }
 
+  eventbus.trigger('reset_scrollIntoView');
+
   let message = {
     type: 'text',
     uuid: genUUID16(),
@@ -149,7 +169,7 @@ export const sendRelateText = item => dispatch => {
     })
     return;
   }
-
+  eventbus.trigger('reset_scrollIntoView');
   let message = {
     content: item.text,
     type: 'text',
@@ -237,6 +257,57 @@ export const sendImage = res => dispatch => {
 };
 
 /**
+ * 发送语音消息
+ * @param {object} res 微信skd返回对象 
+ */
+export const sendVoice = res => dispatch => {
+  if (!canSendMessage()) {
+    Taro.showToast({
+      title: '请等待连线成功后，再发送消息',
+      icon: 'none',
+      duration: 2000
+    })
+    return;
+  }
+
+  const tempFilePath = res.tempFilePath;
+  const uuid = genUUID16()
+  let message = {
+    type: 'audio',
+    idClient: '',
+    content: {
+      dur: res.duration,
+      url: tempFilePath
+    },
+    time: Date.now(),
+    status: 1,
+    fromUser: 1,
+    resendContent: res,
+    uuid
+  };
+  dispatch({ type: PUSH_MESSAGE, message });
+
+  NIM.sendVoiceMsg(tempFilePath).then(msg => {
+    const newMessage = {
+      type: 'audio',
+      idClient: msg.idClient,
+      content: msg.file,
+      time: msg.time,
+      status: msg.status,
+      fromUser: 1,
+      status: 0,
+      uuid
+    };
+
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  }).catch(err => {
+    const newMessage = _cloneDeep(message);
+    newMessage.status = -1
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  });
+}
+
+/**
  * 机器人差评原因
  * @param {string} msgidClient 客户端消息唯一标志
  * @param {string} evalcontent 差评原因
@@ -281,16 +352,21 @@ export const evalRobotAnswer = (msgidClient, evaluation) => {
  * @param {number} transferRgType 转人工入口标记
  */
 export const parseUrlAction = (url, transferRgType = '') => {
-
-  // 处理转人工请求
-  if (url === 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
+  if (url.indexOf('qiyu://action.qiyukf.com') > -1) {
+    // 内部：处理转人工请求
+    // TODO: 判断command类型
     const isRobot = get('isRobot');
-    if (isRobot) {
-      NIM.applyKefu({
-        stafftype: 1,
-        transferRgType
-      });
+    const queryObj = query2Object(url)
+    const applyParams = {
+      stafftype: 1,
+      transferRgType,
     }
+    queryObj.groupid && (applyParams.groupid = queryObj.groupid)
+    if (isRobot) {
+      NIM.applyKefu(applyParams);
+    }
+  } else {
+    eventbus.trigger('click_action', { url });
   }
 };
 
@@ -525,7 +601,7 @@ export const sendTemplateText = item => {
     })
     return;
   }
-
+  eventbus.trigger('reset_scrollIntoView');
   const dispatch = get('store').dispatch;
 
   const message = {
@@ -573,14 +649,7 @@ export const previewFile = (wxFilePath, type = 'image') => {
       nim.previewFile({
         type,
         wxFilePath,
-        // uploadprogress: function(obj) {
-        //     console.log('文件总大小: ' + obj.total + 'bytes');
-        //     console.log('已经上传的大小: ' + obj.loaded + 'bytes');
-        //     console.log('上传进度: ' + obj.percentage);
-        //     console.log('上传进度文本: ' + obj.percentageText);
-        // },
         done: function(error, file) {
-          // console.log('上传image' + (!error ? '成功' : '失败'));
           if (!error) {
             resolve(file);
           } else {
@@ -645,14 +714,33 @@ export const isShuntEntriesStatus = () => {
 
 
 // 访客主动退出会话
-export const exitSession = () => {
+export const exitSession = (callback) => {
   const session = get('store').getState().Session;
+  const dispatch = get('store').dispatch;
 
   let extraParms = {
     sessionid: session.sessionid
   }
 
-  NIM && NIM.exitSession(extraParms)
+  NIM && NIM.exitSession(extraParms).
+    then(msg => {
+      callback(msg);
+    }).catch(error => {
+      callback(error);
+    })
+
+  let message = {
+    type: 'systip',
+    content: '您退出了咨询',
+    time: new Date().getTime()
+  };
+
+  dispatch({ type: PUSH_MESSAGE, message });
+}
+
+// 访客切换账号时断掉长连接
+export const closeSocket = () => {
+  NIM && NIM.closeSocket();
 }
 
 // 发送商品链接
@@ -722,6 +810,9 @@ export const resendMessage = function (item) {
     if (item.type === 'image') {
       sendImage(item.resendContent)(dispatch)
     }
+    if (item.type === 'audio') {
+      sendVoice(item.resendContent)(dispatch)
+    }
   }, 300)
 }
 
@@ -733,4 +824,26 @@ export const delApplyHumanStaffEntry = () => dispatch => {
     type: DEL_ENTRY_BYKEY,
     value: 'applyHumanStaff'
   })
+}
+
+// 加载历史消息
+export const unshiftMessage =  (uuid, pageSize = 10) => {
+  const dispatch = get('store').dispatch;
+  const messages = loadHistroy(uuid, pageSize) || [];
+  dispatch({ type: UNSHIFT_MESSAGE, messages, finished: messages.length < pageSize });
+}
+
+// 初始化消息
+export const initMessage =  (uuid, pageSize = 10) => {
+  const dispatch = get('store').dispatch;
+  const messages = loadHistroy(uuid, pageSize) || [];
+  console.log('加载消息长度: ', messages.length, pageSize)
+  dispatch({ type: INIT_MESSAGE, messages, finished: messages.length < pageSize });
+}
+
+// 设置评价sessionid
+export const setEvaluationSessionId = (sessionid) => {
+  const dispatch = get('store').dispatch;
+  const Session = get('store').getState().Session;
+  dispatch({ type: UPDATE_EVALUATION_SESSIONID, value: sessionid || Session.sessionid});
 }

@@ -1,5 +1,6 @@
+import Taro from '@tarojs/taro'
 import { set, get, initDeviceid } from './global_config';
-import { exitSession } from './actions/chat';
+import { exitSession, closeSocket } from './actions/chat';
 import eventbus from '@/lib/eventbus';
 
 
@@ -109,7 +110,7 @@ export const _$logoutSync = () => {
   set('deviceid', initDeviceid(true));
   _$setUserInfoSync(null);
   // 注销后yunxin账户都会变化，需要断掉当前会话
-  exitSession();
+  exitSession(closeSocket);
 }
 
 
@@ -121,7 +122,7 @@ export const _$logout = () => {
         set('deviceid', initDeviceid(true));
         _$setUserInfoSync(null);
         // 注销后yunxin账户都会变化，需要断掉当前会话
-        exitSession();
+        exitSession(closeSocket);
         resolve('logout success');
       }catch(err){
         reject(err);
@@ -255,7 +256,18 @@ export const _$clearUnreadCount = () => {
  */
 export const _$onClickAction = (cb) => {
   eventbus.on('click_action', (extralParams) => {
-    cb(extralParams);
+    cb(extralParams, Taro.navigateTo);
+  })
+}
+
+/**
+ * 监听文件打开事件
+ * @param {fun} cb
+ */
+export const _$onFileOpenAction = (cb) => {
+  set('file_open_action', true)
+  eventbus.on('file_open_action', (fileObj) => {
+    cb(fileObj);
   })
 }
 
@@ -361,9 +373,37 @@ export const _$configTitleSync = title => {
 }
 
 /**
+ * 人工会话下，输入框上方自定义事件类型快捷入口点击
+ * @param {fun} cb
+ */
+export const _$onEntranceClick = (cb) => {
+  eventbus.on('on_entrance_click', (data) => {
+    cb(data);
+  })
+}
+
+/**
+ * 配置历史消息保存条数量
+ * @param {Number} limit 
+ */
+export const _$setHistoryLimit = (limit) => {
+  limit = Number(limit);
+  if (!Number.isInteger(limit)) return;
+  set('history_limit', limit)
+}
+
+/*
  * 配置链接点击行为
  * @param {boolean} autoCopy 是否自动处理链接点击复制行为
  */
 export const _$configAutoCopy = autoCopy => {
   set('autoCopy', !!autoCopy)
+}
+
+/**
+ * 是否为全面屏模式
+ * @param {bool} val 
+ */
+export const _$configFullScreen = val => {
+  set('fullScreen', !!val)
 }

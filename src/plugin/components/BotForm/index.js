@@ -12,8 +12,9 @@ import MImg from './m-img'
 import './index.less';
 
 @connect(
-  ({ Message }) => ({
-    Message
+  ({ Message, Setting }) => ({
+    Message,
+    Setting
   }),
   dispatch => ({
     changeMessageByUUID(newMessage) {
@@ -113,6 +114,7 @@ export default class BotForm extends Component {
   };
 
   render() {
+    const { Setting } = this.props;
     const { visible, forms, message } = this.state;
     const tpl = _get(message, 'content.template', {});
     return message ? (
@@ -151,7 +153,7 @@ export default class BotForm extends Component {
               );
             })}
           </View>
-          <Button className="u-submit" onClick={this.handleSubmit}>
+          <Button className="u-submit" onClick={this.handleSubmit} style={Setting.themeButton}>
             提交
           </Button>
         </View>

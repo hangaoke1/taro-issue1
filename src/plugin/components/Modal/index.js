@@ -1,4 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
+import { connect } from '@tarojs/redux';
 import { View } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -7,6 +8,12 @@ import Iconfont from '../Iconfont';
 
 import './index.less';
 
+@connect(
+  ({ Setting }) => ({
+    Setting
+  }),
+  dispatch => ({})
+)
 export default class WeModal extends Component {
   static propTypes = {
     title: PropTypes.string,
@@ -83,9 +90,9 @@ export default class WeModal extends Component {
 
   render() {
     const { _isOpened } = this.state;
-    const { title, cancelText, confirmText } = this.props;
+    const { title, cancelText, confirmText, Setting } = this.props;
     const showFooter = cancelText || confirmText
-
+    const themeButton = Setting.themeButton;
     const rootClass = classNames(
       'we-modal',
       {
@@ -113,7 +120,7 @@ export default class WeModal extends Component {
           <View className="we-modal__content">{this.props.children}</View>
           { showFooter ? <View className="we-modal__footer">
             {cancelText ? <View className={`we-modal__cancel ${btnCount === 1 ? 'we-modal__large' : ''}`} onClick={this.handleCancel}>{cancelText}</View> : null}
-            {confirmText ? <View className={`we-modal__confirm ${btnCount === 1 ? 'we-modal__large' : ''}`} onClick={this.handleConfirm}>{confirmText}</View> : null}
+            {confirmText ? <View style={themeButton} className={`we-modal__confirm ${btnCount === 1 ? 'we-modal__large' : ''}`} onClick={this.handleConfirm}>{confirmText}</View> : null}
           </View>:null }
         </View>
       </View>

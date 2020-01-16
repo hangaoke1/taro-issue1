@@ -24,13 +24,15 @@ import TplRefundDetail from './TplRefundDetail';
 import TplCardLayout from './TplCardLayout';
 import TplDetailView from './TplDetailView';
 import TplActivePage from './TplActivePage';
+import TplRadioButton from './TplRadioButton';
 
 import './index.less';
 import eventbus from '@/lib/eventbus';
 
 @connect(
-  ({ Session }) => ({
-    Session
+  ({ Session, Setting }) => ({
+    Session,
+    Setting
   }),
   dispatch => ({})
 )
@@ -64,7 +66,8 @@ export default class Bot extends Component {
   };
 
   render() {
-    const { item } = this.props;
+    const { item, Setting } = this.props;
+    const outType = _get(item, 'content.type');
     const tpl = _get(item, 'content.template', {});
     let layout = null;
     let showFormAction = false;
@@ -145,19 +148,32 @@ export default class Bot extends Component {
         layout = <TplErrorMsg item={item} tpl={tpl}></TplErrorMsg>;
         break;
       }
+      case 'radio_button': {
+        layout = <TplRadioButton item={item} tpl={tpl}></TplRadioButton>
+        break;
+      }
       default: {
-        // layout = <View className="u-tip">暂不支持该bot类型{tpl.id}</View>;
-        layout = <View className="u-tip">微信小程序不支持展示该消息类型</View>;
+      layout = <View className="u-tip">{outType === '01' ? _get(item, 'content.template', '微信小程序不支持展示该消息类型'):'微信小程序不支持展示该消息类型'}</View>;
       }
     }
 
-    let className = 'm-bot';
-    className += item.fromUser ? ' m-bot-right' : ' m-bot-left';
-    className += tpl.id === 'qiyu_template_text' ? ' z-blue-style' : '';
+    let className = item.fromUser ? 'm-bot m-bot-right' : 'm-bot m-bot-left';
+    let themeColor = item && item.fromUser ? _get(Setting, 'themeColor') : '';
+
+    // 下列模版特殊处理聊天内容却与b背景颜色
     if ([
       'qiyu_template_goods',
+      'qiyu_template_item',
+      'qiyu_template_botForm'
+    ].includes(tpl.id)) {
+      themeColor = '#fff';
+    }
+
+    // 下列模版特殊处理聊天内容区域宽度
+    if ([
       'bubble_list',
       'bubble_node_list',
+      'qiyu_template_goods',
       'qiyu_template_item'
     ].includes(tpl.id)) {
       className += ' z-large';
@@ -166,11 +182,11 @@ export default class Bot extends Component {
     return (
       <View className={className}>
         <Avatar fromUser={item.fromUser} staff={item.staff} />
-        <View className="u-text-arrow" />
+        <View className="u-text-arrow" style={`${item.fromUser ? 'border-left-color: ' + themeColor : ''}`} />
         <View className="u-content">
-          <View className="u-text">{layout}</View>
+          <View className="u-text" style={`${item.fromUser ? 'background-color: ' + themeColor : ''}`}>{layout}</View>
           {showFormAction ? (
-            <View className="u-action" onClick={this.showForm}>
+            <View className="u-action" onClick={this.showForm} style={Setting.themeText}>
               填写表单
             </View>
           ) : null}

@@ -4,6 +4,7 @@ import { connect } from '@tarojs/redux';
 import _get from 'lodash/get';
 import CardLayoutListLoad from '@/components/Bot/m-card-layout-list-load';
 import { sendTemplateText } from '@/actions/chat';
+import Back from "@/components/Back";
 
 import './cardLayoutView.less';
 
@@ -55,6 +56,7 @@ class cardLayoutView extends Component {
     const tpl = _get(item, 'content.template');
     return (
       <View className="m-card-layout-view" style="height: 100vh">
+        <Back />
         <CardLayoutListLoad
           init={true}
           item={item}

@@ -1,8 +1,11 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View } from '@tarojs/components';
+import { connect } from '@tarojs/redux';
+import { View, Image } from '@tarojs/components';
+import _get from 'lodash/get';
 import eventbus from '../../../lib/eventbus';
 import Avatar from '../u-avatar';
-
+import Iconfont from '@/components/Iconfont';
+import { resendMessage } from '@/actions/chat';
 import './index.less';
 
 // const mock = {
@@ -19,37 +22,59 @@ import './index.less';
 //   time: "1565752835763",
 //   type: "audio"
 // }
+
+@connect(
+  ({ Setting }) => ({
+    Setting
+  }),
+  dispatch => ({})
+)
 export default class ImAudio extends Component {
 
   state = {
-    playing: false,
-    audioCtx: null
+    playing: false
   }
 
   handleClick = () => {
-    if (!this.state.audioCtx) return;
+    if (!this.audioCtx) return;
 
     if (!this.state.playing) {
       eventbus.trigger('audio_stop');
-      this.state.audioCtx.play();
+      this.audioCtx.play();
     } else {
-      this.state.audioCtx.stop();
+      this.audioCtx.stop();
     }
   }
 
   play = () => {
-    if (this.state.audioCtx) {
-      this.state.audioCtx.play();
+    if (this.audioCtx) {
+      this.audioCtx.play();
     }
   }
 
   stop = () => {
-    if (this.state.audioCtx) {
-      this.state.audioCtx.stop();
+    if (this.audioCtx) {
+      this.audioCtx.stop();
     }
   }
 
+  handleResend = (item, e) => {
+    e.stopPropagation();
+    resendMessage(item);
+  }
+
   componentWillMount () { }
+
+
+  componentDidUpdate(prevProps){
+    if (this.audioCtx && !this.audioCtx.src) {
+      const item = this.props.item;
+      const audioInfo = item ? item.content : {};
+      if (audioInfo.url) {
+        this.audioCtx.src = audioInfo.url;
+      }
+    }
+  }
 
   componentDidMount () {
     const audioCtx = Taro.createInnerAudioContext();
@@ -57,7 +82,9 @@ export default class ImAudio extends Component {
     const audioInfo = item ? item.content : {};
 
     audioCtx.autoplay = false;
-    audioCtx.src = audioInfo.mp3Url;
+
+    audioCtx.src = audioInfo.url || '';
+
     audioCtx.onPlay(() => {
       this.setState({ playing: true })
     })
@@ -67,14 +94,11 @@ export default class ImAudio extends Component {
     audioCtx.onEnded(() => {
       this.setState({ playing: false })
     })
-    audioCtx.onError((res) => {
-      // console.log(res.errMsg)
-      // console.log(res.errCode)
+    audioCtx.onError((error) => {
+      console.error(error)
     })
 
-    this.setState({
-      audioCtx
-    })
+    this.audioCtx = audioCtx
 
     eventbus.on('audio_stop', this.stop)
   }
@@ -84,9 +108,11 @@ export default class ImAudio extends Component {
   }
 
   render () {
-    const { item } = this.props;
+    const { item, Setting } = this.props;
     const { playing } = this.state;
     const audioInfo = item ? item.content : {};
+    const themeColor = item && item.fromUser ? _get(Setting, 'themeColor') : '';
+    const status = _get(item, 'status', 0);
 
     return item ? (
       <View
@@ -95,11 +121,25 @@ export default class ImAudio extends Component {
         }
       >
         <Avatar fromUser={item.fromUser} staff={item.staff} />
-        <View className='u-text-arrow' />
-        <View className='u-text' onClick={this.handleClick}>
+        <View className='u-text-arrow' style={`${item.fromUser ? 'border-left-color: ' + themeColor : ''}`} />
+        <View className='u-text' style={`${item.fromUser ? 'background-color: ' + themeColor : ''}`} onClick={this.handleClick}>
           { item.fromUser ? null : <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View>}
-          {Math.round(audioInfo.dur / 1000)}&quot;
+          {Math.round(audioInfo.dur / 1000) || 1}&quot;
           { item.fromUser ? <View className={`u-voice-icon ${playing ? 'z-audio-playing' : ''}`}></View> : null}
+
+          {status === 1 && item.fromUser ? (
+            <View className="u-status">
+              <Image
+                style="width: 25px;height:25px;"
+                src="https://qiyukf.nosdn.127.net/sdk/res/default/loading_3782900ab9d04a1465e574a7d50af408.gif"
+              />
+            </View>
+          ) : null}
+          {status === -1 && item.fromUser ? (
+            <View className="u-status" onClick={this.handleResend.bind(this, item)}>
+              <Iconfont type="icon-tishixinxi" color="red" size="25" />
+            </View>
+          ) : null}
         </View>
       </View>
     ) : null;

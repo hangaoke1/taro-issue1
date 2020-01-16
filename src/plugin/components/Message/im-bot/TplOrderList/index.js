@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import eventbus from '@/lib/eventbus';
 import { setClipboardData } from '@/utils/extendTaro';
-
+import { get } from '@/plugin/global_config';
 import MShop from '@/components/Bot/m-shop';
 import './index.less';
 
@@ -17,6 +17,10 @@ export default function TplOrderList(props) {
     if (action.type === 'url') {
       setClipboardData(action.target);
     } else {
+      // 判断是否是机器人
+      if (!get('isRobot')) {
+        return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+      }
       eventbus.trigger('bot_show_order_list', item);
     }
   }

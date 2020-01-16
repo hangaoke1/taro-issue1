@@ -15,9 +15,11 @@ const Session = (state = initSession, action) => {
         code : action.value
       }
     case UPDATE_SESSION:
-      return {
+      let newSession = {
         ...state, ...action.value
       }
+      set('sessionid', newSession.sessionid);
+      return newSession
     default:
       return state;
   }

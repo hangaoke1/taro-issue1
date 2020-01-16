@@ -26,9 +26,14 @@
   padding-top: 8px;
   white-space: nowrap;
   background-color: #F6F6F6;
-
+  ::-webkit-scrollbar{
+    width: 0;
+    height: 0;
+    color: transparent;
+  }
   &-item {
     display: inline-block;
+    min-width: 30px;
     padding: 4px 10px;
     margin-left: 10px;
     font-size: 12px;
@@ -37,7 +42,16 @@
     border: 1.5px solid #e1e3e6;
     background-color: #fff;
     border-radius: 14px;
+    transform: translateX(100px);
+    opacity: 0;
+    animation:mymove 1s cubic-bezier(0.36, 0.66, 0.04, 1) forwards;
   }
+  @keyframes mymove
+  {
+    from {transform: translateX(100px);opacity: 0;}
+    to {transform: translateX(0px);opacity: 1;}
+  }
+
 }
 
 .z-bot-disable {

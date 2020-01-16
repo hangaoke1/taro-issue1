@@ -1,4 +1,5 @@
 import Taro from '@tarojs/taro';
+import { useSelector } from '@tarojs/redux';
 import PropTypes from 'prop-types';
 import { View, Image } from '@tarojs/components';
 import _get from 'lodash/get';
@@ -14,6 +15,8 @@ export default function TextView(props) {
   const status = _get(item, 'status', 0);
   const { content, type, transferRgType } = item;
   const isRich = type === 'rich';
+  const Setting = useSelector(state => state.Setting);
+  const themeColor = item.fromUser ? _get(Setting, 'themeColor') : '#fff';
 
   function handleLinkpress(event) {
     const { detail } = event;
@@ -32,8 +35,8 @@ export default function TextView(props) {
       }
     >
       <Avatar fromUser={item.fromUser} staff={item.staff} />
-      <View className="u-text-arrow" />
-      <View className="u-text">
+      <View className="u-text-arrow" style={`${item.fromUser ? 'border-left-color: ' + themeColor : ''}`} />
+      <View className="u-text" style={`background: ${themeColor}`}>
         <ParserRichText
           html={content}
           onLinkpress={handleLinkpress}
@@ -47,7 +50,6 @@ export default function TextView(props) {
             <Image
               style="width: 25px;height:25px;"
               src="https://qiyukf.nosdn.127.net/sdk/res/default/loading_3782900ab9d04a1465e574a7d50af408.gif"
-              // src="http://veralsp.qytest.netease.com/prd/res/img/loading_03ce3dcc84af110e9da8699a841e5200.gif"
             />
           </View>
         ) : null}

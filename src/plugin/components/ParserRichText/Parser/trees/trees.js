@@ -32,6 +32,12 @@ Component({
         composed: true
       });
     },
+    longpressEvent(e) {
+      this.triggerEvent('linklongpress', e.currentTarget.dataset.href, {
+        bubbles: true,
+        composed: true
+      });
+    },
     errorEvent(e) {
       //尝试加载其他源
       if (!this.data.controls[e.currentTarget.dataset.id] && e.currentTarget.dataset.source.length > 1) {

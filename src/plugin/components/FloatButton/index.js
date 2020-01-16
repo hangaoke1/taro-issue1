@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import Iconfont from '../Iconfont';
-
+import { get } from "../../global_config";
 import './index.less';
 
 
@@ -10,7 +10,8 @@ export default class FloatButton extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false
+      visible: false,
+      statusBarHeight: wx.getSystemInfoSync()['statusBarHeight']
     }
   }
 
@@ -28,10 +29,13 @@ export default class FloatButton extends Component {
 
   render() {
     const { icon, contentWidth, entryConfig } = this.props;
-    const { visible } = this.state;
+    const { visible, statusBarHeight } = this.state;
+    const styleObj = entryConfig.length > 1 ? { right: `${visible ? '0px' : -contentWidth + 'px'}` } : {}
 
+    const isFullScreen = get("fullScreen");
+    styleObj.top = statusBarHeight + 20 + (isFullScreen ? 50 : 0) + 'px'
     return (
-      <View className="m-FloatButton" style={entryConfig.length > 1 ? { right: `${visible ? '0px' : -contentWidth + 'px'}` }: null}>
+      <View className="m-FloatButton" style={styleObj}>
         {
           entryConfig.length > 1 ?
             <View className="m-FloatButton_trigger" onClick={this.handleClick.bind(this, visible)}>

@@ -1,17 +1,23 @@
 import Taro, { Component } from '@tarojs/taro';
+import { connect } from '@tarojs/redux';
 import { View, CoverView } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import { genClassAndStyle } from '@/utils';
 import { setClipboardData } from '@/utils/extendTaro';
 import { sendTemplateText } from '@/actions/chat';
-
+import { get } from '@/plugin/global_config';
 import FloatLayout from '@/components/FloatLayout';
 import CardLayoutList from '@/components/Bot/m-card-layout-list';
 import MDetailViewList from '@/components/Bot/m-detail-view-list';
 
 import './index.less';
-
+@connect(
+  ({ Setting }) => ({
+    Setting
+  }),
+  dispatch => ({})
+)
 class DetailView extends Component {
   static propTypes = {
     item: PropTypes.object,
@@ -30,7 +36,18 @@ class DetailView extends Component {
     this.setState({ visible: false });
   };
 
+  handleLinklongpress = (action) => {
+    if (action.type === 'url') {
+      setClipboardData(action.target);
+    }
+  }
+
   handleActionClick = action => {
+    // 判断是否是机器人
+    if (!get('isRobot')) {
+      return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+    }
+
     if (action.type === 'url') {
       setClipboardData(action.target);
     }
@@ -54,7 +71,7 @@ class DetailView extends Component {
   };
 
   render() {
-    const { item, tpl } = this.props;
+    const { item, tpl, Setting } = this.props;
     const { visible } = this.state;
     return item ? (
       <View className="m-detail-view">
@@ -73,6 +90,8 @@ class DetailView extends Component {
           <View
             className="u-action"
             onClick={this.handleActionClick.bind(this, tpl.thumbnail.action)}
+            onLongPress={this.handleLinklongpress.bind(this, tpl.thumbnail.action)}
+            style={`color: ${Setting.themeColor}`}
           >
             {tpl.thumbnail.action.label}
           </View>

@@ -255,9 +255,32 @@ _$configTitle的同步方法。
 
 | 字段    | 类型   | 描述  |
 | :----: | :----: | :---- |
-| url | String | 访问的链接地址 |
-| from   | String | 链接访问的来源模块 |
+| data | Object | url: 访问的链接地址, from: 链接访问的来源模块 |
+| navigateTo | Function | 插件跳转函数 |
+`因小程序插件回调中，主程序无法直接调用自身的navigateTo函数进行跳转，所以额外提供参数供使用方进行页面跳转`
+```js
+myPluginInterface._$onClickAction((data, navigateTo) => {
+  console.log('点击事件参数', data)
+  // 注意此处必须使用navigateTo
+  navigateTo({
+    url: '/pages/test/index'
+  })
+})
+```
 
+#### 输入框上方快捷入口点击响应
+
+`人工会话`下输入框上方快捷入口`自定义类型 action = custom`点击响应
+
+##### _$onEntranceClick(cb: function) 监听响应操作
+
+回调函数中参数格式：
+
+| 字段    | 类型   | 描述  |
+| :----: | :----: | :---- |
+| action | String | 事件类型[custom] |
+| label   | String | 快捷入口名称 |
+| data   | String | 快捷入口自定义数据 |
 
 ##### _$configAutoCopy(autoCopy)  关闭默认链接的复制操作
 
@@ -292,4 +315,54 @@ myPluginInterface._$onunread(res => {
 const myPluginInterface = requirePlugin('myPlugin');
 myPluginInterface._$clearUnreadCount(); // 会触发_$onunread 回调
 console.log('未读消息清空完成!');
+```
+
+## 历史消息处理
+鉴于小程序性能问题，不建议设置过长历史消息条数。如果使用时未配置`userInfo.userId`的话，多个账户之前的历史消息是`共享`的，例如A账号与客服产生10条消息记录，此时注销A账号，登录B账号，只要是同一台设备，则B账号也能看到这10条消息，如果需要根据账号隔离历史记录，请配置`userInfo.userId`
+
+#### `_$setHistoryLimit(number)` 设置历史消息保留条数，默认100条
+```js
+const myPluginInterface = requirePlugin('myPlugin');
+myPluginInterface._$setHistoryLimit(200); // 保留200条历史消息
+```
+
+## 文件消息处理
+`默认情况下sdk自行处理包括图片、音频、视频类型的文件打开操作，但是由于小程序对于插件api调用的限制，sdk无法直接打开文档及其他类型的问题，此时需要用户自行监听事件进行处理`
+
+#### `_$onFileOpenAction(cb: function)` 处理用户打开文件操作
+回调函数中参数格式：
+
+| 字段    | 类型   | 描述  |
+| :----: | :----: | :---- |
+| name | String | 文件名称 |
+| url | String | 文件下载地址 |
+| tempFilePath | String | 文件本地临时地址 |
+| size | Number | 文件大小 |
+| md5   | String | 文件md5 |
+
+`调用该函数后，对于sdk无法处理的文件打开操作会通过回调事件，由用户自行处理`
+```js
+// 简单示例
+myPluginInterface._$onFileOpenAction((fileObj) => {
+  const name = fileObj.name || '';
+  const nameArr = name.split('.');
+  const ext = (nameArr[nameArr.length - 1] || '').toLocaleLowerCase();
+  // 针对文档类型，直接调用微信api进行打开
+  if (['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf'].includes(ext)) {
+    wx.openDocument({
+      filePath: fileObj.tempFilePath,
+      success: function (res) {}
+    })
+  } else {
+    wx.showToast({
+      title: '暂不支持该文件类型预览'
+    })
+  }
+})
+```
+
+## 全面屏适配
+由于微信小程序本身的限制，导致用户全局配置`navigationStyle: 'custom'`时，会导致插件页面的导航栏被隐藏从而无法进行页面后退，并且由于微信小程序并没有相关api提供到插件开发者去控制导航栏，目前考虑到部分用户业务场景无法通过配置单独的页面进行导航栏显示/隐藏控制，故七鱼插件为开发者提供了全面屏配置参数
+```js
+myPluginInterface._$configFullScreen(true)
 ```

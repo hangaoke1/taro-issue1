@@ -1,8 +1,9 @@
 import Taro, { useState } from '@tarojs/taro';
-import { View } from '@tarojs/components';
+import { View, Block } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
-
+import { get } from '@/plugin/global_config';
+import { setClipboardData } from '@/utils/extendTaro';
 import './index.less';
 
 export default function TplBubbleNodeList(props) {
@@ -12,17 +13,33 @@ export default function TplBubbleNodeList(props) {
   const nodeList = show
     ? _get(tpl, 'list', [])
     : _get(tpl, 'list', []).slice(0, 4);
+  const action = _get(tpl, 'action');
+  const btnLabel = _get(tpl, 'action.label', '查看更多') || '查看更多'
 
   function handleClick() {
-    setShow(true);
+    if (!get('isRobot')) {
+      return Taro.showToast({ title: '消息已失效，无法选择', icon: 'none'})
+    }
+    // 5.7 气泡节点列表优化
+    if (!action) {
+      setShow(true);
+    } else {
+      if (action.type === 'url') {
+        setClipboardData(action.target)
+      }
+      if (action.type === 'display') {
+        setShow(true);
+      }
+    }
   }
 
   return (
     <View className="m-bubble-node">
-      <View className="u-label">{_get(tpl, 'label')}</View>
-      <View className="u-title">{_get(tpl, 'title.label')}</View>
       {nodeList.length ? (
-        <View className="u-list">
+        <Block>
+          <View className="u-label">{_get(tpl, 'label')}</View>
+          <View className="u-title">{_get(tpl, 'title.label')}</View>
+          <View className="u-list">
           {nodeList.map((node, index) => {
             return (
               <View
@@ -52,12 +69,13 @@ export default function TplBubbleNodeList(props) {
             );
           })}
         </View>
+        </Block>
       ) : (
         <View className="u-empty">{_get(tpl, 'empty_list_hint')}</View>
       )}
-      {!show && nodeLen > 4 ? (
+      {!show && nodeLen > 4 || action.type === 'url' ? (
         <View className="u-action" onClick={handleClick}>
-          查看更多
+          <Text className={`u-text`}>{btnLabel}</Text>
         </View>
       ) : null}
     </View>

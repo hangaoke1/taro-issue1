@@ -27,6 +27,24 @@ export default class Index extends Component {
   }
 
   componentDidMount () {
+    // 设置历史消息记录保留条数
+    myPluginInterface._$setHistoryLimit(30);
+
+    // 人工会话下，输入框上方自定义事件类型快捷入口点击回调demo
+    myPluginInterface._$onEntranceClick((info) => {
+      // {
+      //   label: "链接外跳",
+      //   action: "open_link",
+      //   data: "https://www.baidu.com"
+      // }
+      console.log('自定义事件触发', info);
+      Taro.showToast({
+        title: '触发自定义事件:' + info.data,
+        icon: 'none'
+      })
+    })
+
+    // 未读消息监听demo
     myPluginInterface._$onunread((obj) => {
       const { total, msg } = obj;
       console.log('监听到未读消息: ', total, msg)
@@ -35,9 +53,27 @@ export default class Index extends Component {
       })
     })
 
+    // doc、pdf等文档打开demo
+    myPluginInterface._$onFileOpenAction((fileObj) => {
+      const name = fileObj.name || '';
+      const nameArr = name.split('.');
+      const ext = (nameArr[nameArr.length - 1] || '').toLocaleLowerCase();
+      if (['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf'].includes(ext)) {
+        Taro.openDocument({
+          filePath: fileObj.tempFilePath,
+          success: function (res) {}
+        })
+      } else {
+        Taro.showToast({
+          title: '暂不支持该文件类型预览',
+          icon: 'none'
+        })
+      }
+    })
+
     if(Taro.getStorageSync('YSF-APPKEY') && Taro.getStorageSync('YSF-DOMAIN')){
       myPluginInterface._$configAppKey(Taro.getStorageSync('YSF-APPKEY'));
-      myPluginInterface.__configDomain( Taro.getStorageSync('YSF-DOMAIN'));
+      myPluginInterface.__configDomain(Taro.getStorageSync('YSF-DOMAIN'));
     }
 
     if(Taro.getStorageSync('YSF-APPID')){
@@ -54,9 +90,14 @@ export default class Index extends Component {
       myPluginInterface._$configTitle(Taro.getStorageSync('YSF-TITLE'));
     }
 
-    myPluginInterface._$configAutoCopy(false)
+    myPluginInterface._$configAutoCopy(true)
 
-    myPluginInterface._$onClickAction((v) => { console.log('点击事件', v) })
+    // myPluginInterface._$configFullScreen(true)
+
+    myPluginInterface._$onClickAction((v, navigateTo) => {
+      console.log('点击事件参数', v)
+      console.log('点击事件跳转函数', navigateTo)
+    })
   }
 
   componentWillUnmount () { }
@@ -218,11 +259,11 @@ export default class Index extends Component {
           <View>
             <Button onClick={this.handleAppId}>{Taro.getAccountInfoSync().miniProgram.appId}</Button>
           </View>
-          {/* <View>
+          <View>
             <Navigator url='/pages/test/index'>
-              <Button>测试</Button>
+              <Button>测试页面</Button>
             </Navigator>
-          </View> */}
+          </View>
           <View style='text-align: center;margin: 10px 0;'>消息未读数: {unReadCount}</View>
           <View><Button type="warn" onClick={this.emptyUnread}>清空消息未读数</Button></View>
           <View className="m-input-item">

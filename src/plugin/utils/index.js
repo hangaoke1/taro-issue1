@@ -71,3 +71,33 @@ export const clickAction = (extralParams = {}) => {
   }
   eventbus.trigger('click_action', extralParams);
 }
+
+/**
+ * 文件大小计算
+ * @param {number} size 单位byte
+ */
+export const size2String = (size = 0) => {
+  const kb = size / 1024
+  const mb = kb / 1024
+  if (mb > 1) {
+    return mb.toFixed(1) + 'MB'
+  }
+  return kb.toFixed(1) + 'KB'
+}
+
+/**
+ * url查询参数转换成对象
+ * query2Object
+ */
+export const query2Object = (url = '') => {
+  let obj = {}
+  let queryStr = url.split('?')[1] || '';
+  queryStr.split('&').forEach(item => {
+    if (item) {
+      const key = item.split('=')[0]
+      const value = item.split('=')[1]
+      obj[key] = value
+    }
+  })
+  return obj
+}
