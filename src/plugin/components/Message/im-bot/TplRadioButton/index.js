@@ -8,6 +8,7 @@ import { changeMessageByUUID, sendText } from '@/plugin//actions/chat';
 import ParserRichText from '@/components/ParserRichText/parserRichText';
 import { parseUrlAction } from '@/actions/chat';
 import { get } from '@/plugin/global_config';
+import _debounce from "@/lib/debounce";
 import "./index.less";
 
 @connect(
@@ -34,8 +35,8 @@ class RadioButton extends Component {
   componentWillMount() {}
 
   componentDidMount() {}
-
-  handleClick = (btn) => {
+  
+  handleClick = _debounce((btn) => {
     const { item = {}, Session, sendText } = this.props;
     const isSameSession = Session.sessionid === item.sessionid
     // 非机器人或者跨会话则失效
@@ -47,7 +48,7 @@ class RadioButton extends Component {
     } else {
       sendText(btn.label)
     }
-  }
+  }, 300, true)
 
   getIndex = (message, uuid) => {
     for(let i = 0; i < message.length; i++) {
