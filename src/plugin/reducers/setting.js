@@ -4,12 +4,12 @@ import { SET_SETTING } from '../constants/setting';
 // 访客端配置
 const Setting = (state = {
   setting:{},
-  themeColor: '',
-  themeBg: '',
-  themeText: '',
-  themeBorder: '',
-  themeButton: '',
-  themeTextButton: ''
+  themeColor: '',       // 主题色
+  themeBg: '',          // 主题背景[style]
+  themeText: '',        // 主题文字[style]
+  themeBorder: '',      // 主题边框[style]
+  themeButton: '',      // 主题按钮[style]
+  themeTextButton: ''   // 主题文字按钮[style]
 }, action) => {
   switch(action.type){
     case SET_SETTING:
