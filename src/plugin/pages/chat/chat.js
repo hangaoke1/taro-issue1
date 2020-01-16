@@ -58,8 +58,6 @@ import _debounce from "@/lib/debounce"; // loadsh debounce在小程序下引用�
 import functionList from "./function.config";
 import "./chat.less";
 
-const dAssociate = _debounce(associate, 300, false);
-
 @connect(
   ({ Session, Message, Options, CorpStatus, Bot, Associate, Setting }) => ({
     Session,
@@ -571,15 +569,15 @@ class Chat extends Component {
     }
   };
 
-  handleAssociate = text => {
+  handleAssociate = _debounce((text) => {
     this.setState({
       showAssociate: true
     });
-    dAssociate(text);
-  };
+    associate(text);
+  }, 300, true)
 
   // 点击联想文本
-  handleAssociateClick = text => {
+  handleAssociateClick = _debounce((text) => {
     if (!text.trim()) {
       return;
     }
@@ -587,7 +585,7 @@ class Chat extends Component {
     sendText(text);
     eventbus.trigger("reset_input");
     this.handleEmptyAssociate();
-  };
+  }, 300, true)
 
   handleEmptyAssociate = () => {
     this.setState({
@@ -678,9 +676,7 @@ class Chat extends Component {
       statusBarHeight
     } = this.state;
 
-    const isRobot =
-      (Session.stafftype === 1 || Session.robotInQueue === 1) &&
-      Session.code === 200; // 机器人状态
+    const isRobot = get('isRobot'); // 机器人状态
 
     let hasBot = isRobot && Bot.len;
 

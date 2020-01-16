@@ -668,6 +668,15 @@ export const onevaluationresult = (content) => {
  */
 export const receiveShuntEntries = (content) => {
   const dispatch = get('store').dispatch;
+  // //将前面的分流信息全部置灰
+  dispatch({
+    type: UPDATE_MESSAGE_BYACTION,
+    message: {
+      type: 'entries',
+      disabled: true,
+      action: 'selectEntries'
+    }
+  })
 
   let time = new Date().getTime();
 

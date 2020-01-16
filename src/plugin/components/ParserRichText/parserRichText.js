@@ -1,4 +1,5 @@
 import Taro from '@tarojs/taro';
+import { get } from '../../global_config';
 import { filterHtml, text2emoji } from '../../utils';
 import { unescape } from '../../utils/xss';
 import './parserRichText.less';
@@ -61,12 +62,12 @@ class ParserRichText extends Taro.Component {
       Taro.makePhoneCall({
         phoneNumber: tel
       });
-      console.log('处理电话号码短按');
       return;
     }
 
-    if (this.props.autocopy && event.detail) {
-      if (url !== 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
+    if (this.props.autocopy && event.detail && get('autoCopy')) {
+      // TODO: 是否需要判断全局autoCopy【通过props.autocopy使用地方比较多】
+      if (url.indexOf('qiyu://action.qiyukf.com') === -1) {
         Taro.setClipboardData({
           data: url,
           success() {
