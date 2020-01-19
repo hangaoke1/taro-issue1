@@ -53,10 +53,10 @@ export default function ChatBox(props) {
       return;
     }
 
-    setValue('');
-    if (_isFunction(props.onConfirm)) {
-      props.onConfirm(event);
+    if (_isFunction(props.onConfirm) && value) {
+      props.onConfirm(value);
     }
+    setValue('');
   };
 
   // 处理用户输入

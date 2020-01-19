@@ -241,9 +241,8 @@ class Chat extends Component {
     }, delay);
   };
 
-  handleConfirm = event => {
+  handleConfirm = value => {
     const { sendText } = this.props;
-    let value = event.detail.value;
 
     // 清空联想文本
     this.handleEmptyAssociate();
