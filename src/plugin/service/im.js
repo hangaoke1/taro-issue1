@@ -155,7 +155,7 @@ export default class IMSERVICE {
               reject(error);
             } else {
               STATUS.status = 'connecting';
-              console.log('sendCustomSysMsg success', content);
+              // console.log('sendCustomSysMsg success', content);
               resolve(error, msg);
             }
           }

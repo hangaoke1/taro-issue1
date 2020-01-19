@@ -1,6 +1,6 @@
 import Taro, { useState } from '@tarojs/taro';
 import { View, Textarea } from '@tarojs/components';
-import { ParserRichText } from '../ParserRichText/parserRichText';
+import ParserRichText from '../ParserRichText/parserRichText';
 import eventbus from '../../lib/eventbus';
 
 import './index.less';

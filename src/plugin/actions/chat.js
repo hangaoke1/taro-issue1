@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro';
 import _get from 'lodash/get';
 import _cloneDeep from 'lodash/cloneDeep';
+import _isEaqul from 'lodash/isEqual';
 import { queryAccont, querySdkSetting } from '../service';
 import { get, set } from '../global_config';
 import IMSERVICE,{ STATUS } from '../service/im';
@@ -12,6 +13,7 @@ import { UPDATE_EVALUATION_SESSIONID } from '../constants/evaluation';
 import eventbus from '../lib/eventbus';
 import { genUUID16 } from '@/lib/uuid';
 import { loadHistroy } from '@/lib/history';
+import { query2Object } from '@/utils/index';
 
 eventbus.on('do_send_product_card', function(extraParms){
   sendProductCard(extraParms);
@@ -63,6 +65,9 @@ export const applyKefu = (
 
   if(!extraParms.entryid && session && (session.code == 200 || session.code == 203) && STATUS.status == 'connecting'){
     NIM.updateCrmInfo();
+    if (get('product')){
+      sendProductCard(get('product'));
+    }
     return;
   }
 
@@ -71,7 +76,16 @@ export const applyKefu = (
     account: account,
     token: token
   });
-
+  // const dispatch = get('store').dispatch;
+  //将前面的分流信息全部置灰
+  // dispatch({
+  //   type: UPDATE_MESSAGE_BYACTION,
+  //   message: {
+  //     type: 'entries',
+  //     disabled: true,
+  //     action: 'selectEntries'
+  //   }
+  // })
   NIM.applyKefu(extraParms);
 };
 
@@ -338,17 +352,22 @@ export const evalRobotAnswer = (msgidClient, evaluation) => {
  * @param {number} transferRgType 转人工入口标记
  */
 export const parseUrlAction = (url, transferRgType = '') => {
-  // 处理转人工请求
-  if (url === 'qiyu://action.qiyukf.com?command=applyHumanStaff') {
+  if (url.indexOf('qiyu://action.qiyukf.com') > -1) {
+    // 内部：处理转人工请求
+    // TODO: 判断command类型
     const isRobot = get('isRobot');
-    if (isRobot) {
-      NIM.applyKefu({
-        stafftype: 1,
-        transferRgType
-      });
+    const queryObj = query2Object(url)
+    const applyParams = {
+      stafftype: 1,
+      transferRgType,
     }
+    queryObj.groupid && (applyParams.groupid = queryObj.groupid)
+    if (isRobot) {
+      NIM.applyKefu(applyParams);
+    }
+  } else {
+    eventbus.trigger('click_action', { url });
   }
-  eventbus.trigger('click_action', { url });
 };
 
 /**

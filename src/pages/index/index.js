@@ -90,15 +90,13 @@ export default class Index extends Component {
       myPluginInterface._$configTitle(Taro.getStorageSync('YSF-TITLE'));
     }
 
-    myPluginInterface._$configAutoCopy(false)
+    myPluginInterface._$configAutoCopy(true)
 
     // myPluginInterface._$configFullScreen(true)
 
     myPluginInterface._$onClickAction((v, navigateTo) => {
-      console.log('点击事件', v)
-      navigateTo({
-        url: '/pages/test/index'
-      })
+      console.log('点击事件参数', v)
+      console.log('点击事件跳转函数', navigateTo)
     })
   }
 
