@@ -14,7 +14,8 @@ import {
   receiveTransfer,
   onReceiveAssociate,
   queueFail,
-  receiveEvaluationShowEntry
+  receiveEvaluationShowEntry,
+  receiveServiceRead
 } from '../actions/nimMsgHandle';
 import {
   FROM_TYPE,
@@ -42,7 +43,8 @@ import {
   EXIT_SESSION_CMD,
   SEND_PRODUCT_CARD_CMD,
   RECEIVE_SHOW_EVALUATION_ENTRY,
-  WILL_RECONNECT_TITLE
+  WILL_RECONNECT_TITLE,
+  RECEIVE_READ_CMD
 } from '../constants';
 import { getCurrentUrl } from '@/lib/unread';
 
@@ -216,6 +218,37 @@ export default class IMSERVICE {
         .then(nim => {
           nim.sendFile({
             type: 'image',
+            scene: 'p2p',
+            to: to,
+            wxFilePath: tempFilePath,
+            beforesend: function(msg) {},
+            uploadprogress: function(obj) {},
+            uploaddone: function(error, file) {},
+            done: (error, msg) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(msg);
+              }
+            }
+          });
+        })
+        .catch(reject);
+    });
+  }
+
+  /**
+   * 发送视频消息
+   * @param {string} tempFilePath 微信视频临时路径
+   * @param {number} to 标志发送方
+   * @return {promise<>}
+   */
+  sendVideoMsg(tempFilePath, to = -1) {
+    return new Promise((resolve, reject) => {
+      this.getNim()
+        .then(nim => {
+          nim.sendFile({
+            type: 'video',
             scene: 'p2p',
             to: to,
             wxFilePath: tempFilePath,
@@ -568,6 +601,9 @@ export default class IMSERVICE {
           break;
         case RECEIVE_SHOW_EVALUATION_ENTRY:
           receiveEvaluationShowEntry(content);
+          break;
+        case RECEIVE_READ_CMD:
+          receiveServiceRead(content)
           break;
         default:
           console.log('oncustomsysmsg 未知指令' + JSON.stringify(msg));

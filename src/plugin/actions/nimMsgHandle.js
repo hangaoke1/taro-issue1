@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro';
 import _get from 'lodash/get';
 import { get, set } from '../global_config';
 import { PUSH_MESSAGE, UPDATE_MESSAGE_BYKEY, UPDATE_MESSAGE_BYACTION } from '../constants/message';
-import { INIT_SESSION, REASON_MAP, SET_SESSION_CODE, UPDATE_SESSION } from '../constants/session';
+import { INIT_SESSION, REASON_MAP, SET_SESSION_CODE, UPDATE_SESSION, UPDATE_READ_TIME } from '../constants/session';
 import { INIT_EVALUATION_SETTING, INIT_CURRENT_EVALUATION, INIT_LAST_EVALUATION, UPDATE_EVALUATION_SESSIONID } from '../constants/evaluation';
 import {
   SET_EVALUATION_VISIBLE, SET_ENTRY_CONFIG, DEL_ENTRY_BYKEY, SET_CHAT_INPUT_DISABLED,
@@ -901,5 +901,22 @@ export const receiveEvaluationShowEntry = (content) => {
       text: '评价',
       key: 'evaluation'
     }
+  })
+}
+
+
+/**
+ * 客服已阅读消息
+ */
+export const receiveServiceRead = (content) => {
+  // TODO: 更新时间戳
+  console.log('>>> 更新时间戳', content.timestamp)
+  Taro.setStorageSync(
+    'SERVICE_LAST_READ_TIME', content.timestamp
+  )
+  const dispatch = get('store').dispatch;
+  dispatch({
+    type: UPDATE_READ_TIME,
+    value: content.timestamp
   })
 }

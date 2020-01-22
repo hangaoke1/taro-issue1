@@ -75,6 +75,8 @@ export const RECEIVE_ASSOCIATE_CMD = 25
 // 回合数大于指定回合数的时候显示评价入口
 export const RECEIVE_SHOW_EVALUATION_ENTRY = 108;
 
+export const RECEIVE_READ_CMD = 9
+
 /**
 * 收到的自定义指令 ------end--------
 */

@@ -48,6 +48,11 @@ const Message = (state = initMessages, action) => {
               return state;
             }
 
+            // 访客消息 增加是否是人工状态下发送
+            if (action.message && action.message.fromUser === 1) {
+              action.message.withKefu = get('isKefuOnline')
+            }
+
             // 分配uuid
             if (!_get(action, 'message.uuid')) {
                 action.message.uuid = genUUID16();

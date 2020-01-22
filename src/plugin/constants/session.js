@@ -6,6 +6,7 @@ export const SET_SESSION_CODE = `${namespace}/SET_SESSION_CODE`;
 
 export const UPDATE_SESSION = `${namespace}/UPDATE_SESSION`;
 
+export const UPDATE_READ_TIME = `${namespace}/UPDATE_READ_TIME`
 
 /*
 * 会话关闭提示语

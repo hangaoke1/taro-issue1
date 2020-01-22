@@ -257,6 +257,65 @@ export const sendImage = res => dispatch => {
 };
 
 /**
+ * 发送视频消息
+ * @param {object} res 微信sdk返回对象
+ */
+export const sendVideo = res => dispatch => {
+  if (!canSendMessage()) {
+    Taro.showToast({
+      title: '请等待连线成功后，再发送消息',
+      icon: 'none',
+      duration: 2000
+    })
+    return;
+  }
+
+  const tempFilePath = res.tempFilePath;
+
+  // 1. 生成空消息
+  // 2. 更新消息
+  const uuid = genUUID16()
+
+  let message = {
+    type: 'video',
+    idClient: '',
+    content: {
+      w: res.width,
+      h: res.height
+    },
+    time: Date.now(),
+    status: 1,
+    fromUser: 1,
+    resendContent: {
+      tempFilePaths: [tempFilePath]
+    },
+    uuid
+  };
+
+  dispatch({ type: PUSH_MESSAGE, message });
+
+  NIM.sendVideoMsg(tempFilePath).then(msg => {
+    const newMessage = {
+      type: 'video',
+      idClient: msg.idClient,
+      content: msg.file,
+      time: msg.time,
+      status: msg.status,
+      fromUser: 1,
+      status: 0,
+      withKefu: get('isKefuOnline'),
+      uuid
+    };
+
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  }).catch(err => {
+    const newMessage = _cloneDeep(message);
+    newMessage.status = -1
+    dispatch({ type: UPDATE_MESSAGE_BYUUID, message: newMessage });
+  });
+};
+
+/**
  * 发送语音消息
  * @param {object} res 微信skd返回对象 
  */
