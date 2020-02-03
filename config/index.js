@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 const config = {
   projectName: 'taro-plu',
   date: '2019-6-20',
@@ -12,71 +12,58 @@ const config = {
   sourceRoot: 'src',
   outputRoot: 'miniprogram',
   alias: {
-    '@/plugin': path.resolve(__dirname, '..', 'src/plugin'),
-    '@/components': path.resolve(__dirname, '..', 'src/plugin/components'),
-    '@/lib': path.resolve(__dirname, '..', 'src/plugin/lib'),
-    '@/actions': path.resolve(__dirname, '..', 'src/plugin/actions'),
-    '@/utils': path.resolve(__dirname, '..', 'src/plugin/utils'),
-    '@/styles': path.resolve(__dirname, '..', 'src/plugin/styles')
+    '@': path.resolve(__dirname, '..', 'src/plugin')
   },
-  plugins: {
-    babel: {
-      sourceMap: true,
-      presets: [
-        ['env', {
+  babel: {
+    sourceMap: true,
+    presets: [
+      [
+        'env',
+        {
           modules: false
-        }]
-      ],
-      plugins: [
-        'transform-decorators-legacy',
-        'transform-class-properties',
-        'transform-object-rest-spread'
+        }
       ]
-    }
-  },
-  defineConstants: {
-  },
-  copy: {
-    patterns: [
-      { from: 'src/plugin/components/ParserRichText/Parser/trees/cssHandler.wxs', to: 'plugin/components/ParserRichText/Parser/trees/cssHandler.wxs' }
     ],
-    options: {
-    }
+    plugins: [ 'transform-decorators-legacy', 'transform-class-properties', 'transform-object-rest-spread' ]
   },
-  weapp: {
+  plugins: {},
+  defineConstants: {},
+  mini: {
     compile: {
-      exclude: ['src/plugin/vendors/nim/NIM_Web_NIM_weixin_v6.8.0.js','src/plugin/vendors/nim/NIM_Web_NIM_weixin.test.min.js']
+      exclude: [
+        function (modulePath) {
+          return modulePath.indexOf('NIM_Web_NIM_weixin_v6.8.0') >= 0 || modulePath.indexOf('NIM_Web_NIM_weixin.test.min') >= 0
+        }
+      ]
     },
-    module: {
-      postcss: {
-        autoprefixer: {
-          enable: true,
-          config: {
-            browsers: [
-              'last 3 versions',
-              'Android >= 4.1',
-              'ios >= 8'
-            ]
-          }
-        },
-        pxtransform: {
-          enable: true,
-          config: {
+    postcss: {
+      autoprefixer: {
+        enable: true,
+        config: {
+          browsers: [
+            'last 3 versions',
+            'Android >= 4.1',
+            'ios >= 8'
+          ]
+        }
+      },
+      pxtransform: {
+        enable: true,
+        config: {
 
-          }
-        },
-        url: {
-          enable: true,
-          config: {
-            limit: 10240 // 设定转换尺寸上限
-          }
-        },
-        cssModules: {
-          enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
-          config: {
-            namingPattern: 'module', // 转换模式，取值为 global/module
-            generateScopedName: '[name]__[local]___[hash:base64:5]'
-          }
+        }
+      },
+      url: {
+        enable: true,
+        config: {
+          limit: 10240 // 设定转换尺寸上限
+        }
+      },
+      cssModules: {
+        enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
+        config: {
+          namingPattern: 'module', // 转换模式，取值为 global/module
+          generateScopedName: '[name]__[local]___[hash:base64:5]'
         }
       }
     }
@@ -89,11 +76,7 @@ const config = {
         autoprefixer: {
           enable: true,
           config: {
-            browsers: [
-              'last 3 versions',
-              'Android >= 4.1',
-              'ios >= 8'
-            ]
+            browsers: [ 'last 3 versions', 'Android >= 4.1', 'ios >= 8' ]
           }
         },
         cssModules: {
