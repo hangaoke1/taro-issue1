@@ -1,12 +1,6 @@
 {
   "pages": {
-    "chat": "pages/chat/chat",
-    "detailView": "pages/tpl/detailView",
-    "cardLayoutView": "pages/tpl/cardLayoutView",
-    "filePreview": "pages/file/preview"
-  },
-  "publicComponents": {
-    "Iconfont": "components/Iconfont/index"
+    "chat": "pages/chat/chat"
   },
   "main": "index.js"
 }

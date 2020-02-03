@@ -21,12 +21,9 @@ const enhancer = composeEnhancers(
   // other store enhancers if any
 );
 
-const mock = ''
-
 export default function configStore() {
   const store = createStore(rootReducer, enhancer);
   set('store', store);
 
-  mock && store.dispatch({ type: 'MESSAGE/PUSH_MESSAGE', message: mock });
   return store;
 }
