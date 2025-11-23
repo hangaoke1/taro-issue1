@@ -35,12 +35,12 @@
 		"redux-thunk": "^2.3.0"
 	},
 	"devDependencies": {
-		"@tarojs/mini-runner": "2.0.2",
+		"@tarojs/mini-runner": "3.6.37",
 		"@tarojs/plugin-babel": "2.0.2",
 		"@tarojs/plugin-csso": "2.0.2",
 		"@tarojs/plugin-less": "2.0.2",
 		"@tarojs/plugin-uglifyjs": "2.0.2",
-		"@tarojs/webpack-runner": "2.0.2",
+		"@tarojs/webpack-runner": "3.6.37",
 		"@types/react": "^16.4.6",
 		"@types/webpack-env": "^1.13.6",
 		"babel-eslint": "^8.2.3",
@@ -50,7 +50,7 @@
 		"babel-plugin-transform-object-rest-spread": "^6.26.0",
 		"babel-plugin-transform-runtime": "^6.23.0",
 		"babel-preset-env": "^1.6.1",
-		"eslint": "^4.19.1",
+		"eslint": "^9.39.1",
 		"eslint-config-taro": "2.0.2",
 		"eslint-plugin-import": "^2.12.0",
 		"eslint-plugin-react": "^7.8.2",
