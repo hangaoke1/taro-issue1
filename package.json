@@ -35,12 +35,12 @@
 		"redux-thunk": "^2.3.0"
 	},
 	"devDependencies": {
-		"@tarojs/mini-runner": "2.0.2",
+		"@tarojs/mini-runner": "2.2.22",
 		"@tarojs/plugin-babel": "2.0.2",
 		"@tarojs/plugin-csso": "2.0.2",
 		"@tarojs/plugin-less": "2.0.2",
 		"@tarojs/plugin-uglifyjs": "2.0.2",
-		"@tarojs/webpack-runner": "2.0.2",
+		"@tarojs/webpack-runner": "2.2.22",
 		"@types/react": "^16.4.6",
 		"@types/webpack-env": "^1.13.6",
 		"babel-eslint": "^8.2.3",
